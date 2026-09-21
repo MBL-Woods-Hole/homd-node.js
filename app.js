@@ -14,8 +14,8 @@ import path from "path";
 //=============================================================
 ENV.PROCESS_DIR = path.join(ENV.BASE_DIR, ENV.PROCESS_DIR_BASENAME);
 ENV.PATH_TO_STATIC_DOWNLOADS = path.join(
-  ENV.BASE_DIR,
-  ENV.PATH_TO_STATIC_DOWNLOADS_BASENAME,
+    ENV.BASE_DIR,
+    ENV.PATH_TO_STATIC_DOWNLOADS_BASENAME,
 );
 ENV.PATH_TO_DATA = path.join(ENV.BASE_DIR, ENV.PATH_TO_DATA_BASENAME);
 ENV.PATH_TO_SEARCH = path.join(ENV.BASE_DIR, ENV.PATH_TO_SEARCH_BASENAME);
@@ -52,6 +52,11 @@ const dirname = import.meta.dirname;
 // See helpers.js
 ///////////////////////////////////
 
+/////////////////////////////
+//  npx eslint . --fix
+//  npx prettier --write .
+////////////////////////////
+
 //const app_root = path.resolve(dirname);
 
 import C from "./public/constants.js";
@@ -86,11 +91,11 @@ import bodyParser from "body-parser";
 
 const app = express();
 app.use(
-  bodyParser.urlencoded({
-    extended: false, // allows for richer json like experience https://www.npmjs.com/package/qs#readme
-    limit: "50mb", // size of body
-    parameterLimit: 100000, // number of parameters
-  }),
+    bodyParser.urlencoded({
+        extended: false, // allows for richer json like experience https://www.npmjs.com/package/qs#readme
+        limit: "50mb", // size of body
+        parameterLimit: 100000, // number of parameters
+    }),
 );
 app.use(bodyParser.json());
 
@@ -99,15 +104,15 @@ app.set("trust proxy", true); // now req.ip SHOULD return the requesting IP addr
 //app.timeout = 240000 // default is 120000
 // https://blog.jscrambler.com/best-practices-for-secure-session-management-in-node
 app.use(
-  session({
-    secret: "veryimportantsecret",
-    resave: false,
-    saveUninitialized: false,
-    //Default cookie  { path: '/', httpOnly: true, secure: false, maxAge: null }
-    cookie: {
-      maxAge: 1800000, // 1 hour==3600000
-    },
-  }),
+    session({
+        secret: "veryimportantsecret",
+        resave: false,
+        saveUninitialized: false,
+        //Default cookie  { path: '/', httpOnly: true, secure: false, maxAge: null }
+        cookie: {
+            maxAge: 1800000, // 1 hour==3600000
+        },
+    }),
 );
 
 import flash from "express-flash";
@@ -135,10 +140,10 @@ import search from "./routes/routes_search.js";
 // 2- Make sure LOG_LEVEL (in .env file) is set to 'silent' <= for logger.info()
 
 if (process.env.NODE_ENV === "production") {
-  console.log("!!Turning off console logging for production mode!!");
-  console.log("To debug: run `npm run debug`");
-  console.log = function () {}; // turn off console.logging
-  // to see console.logs: "npm run debug"
+    console.log("!!Turning off console logging for production mode!!");
+    console.log("To debug: run `npm run debug`");
+    console.log = function () {}; // turn off console.logging
+    // to see console.logs: "npm run debug"
 }
 
 app.use(flash());
@@ -204,59 +209,59 @@ app.get("/*", function (req, res, next) {
 */
 // error handler middleware:
 app.use((error, req, res) => {
-  logger.error(error);
-  //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
-  //if(process.env.ENV === 'development'){
-  //if(process.env.ENV === 'production'){
-  //node_log.debug(error.toString())
-  //}
+    logger.error(error);
+    //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
+    //if(process.env.ENV === 'development'){
+    //if(process.env.ENV === 'production'){
+    //node_log.debug(error.toString())
+    //}
 
-  res.render("pages/lost", {
-    url: req.url,
-    pgname: "lost",
-    title: "HOMD Lost",
-    config: JSON.stringify(process.env),
-    ver_info: JSON.stringify({
-      rna_ver: C.rRNA_refseq_version,
-      gen_ver: C.genomic_refseq_version,
-      tax_ver: C.homd_taxonomy_version,
-    }),
+    res.render("pages/lost", {
+        url: req.url,
+        pgname: "lost",
+        title: "HOMD Lost",
+        config: JSON.stringify(process.env),
+        ver_info: JSON.stringify({
+            rna_ver: C.rRNA_refseq_version,
+            gen_ver: C.genomic_refseq_version,
+            tax_ver: C.homd_taxonomy_version,
+        }),
 
-    msg: "We're Sorry -- Something Broke!<br><br>If it happens again please let us know. Below is the error message:",
-    trace: error.toString(),
-  });
+        msg: "We're Sorry -- Something Broke!<br><br>If it happens again please let us know. Below is the error message:",
+        trace: error.toString(),
+    });
 });
 // LAST Middleware:
 app.use(function (req, res) {
-  //console.log('in 404; Requested: ',req.url)
-  res.status(404);
-  // respond with html page
+    //console.log('in 404; Requested: ',req.url)
+    res.status(404);
+    // respond with html page
 
-  if (req.accepts("html")) {
-    res.render("pages/lost", {
-      url: req.url,
-      pgname: "lost",
-      title: "HOMD Lost",
-      config: JSON.stringify(process.env),
-      ver_info: JSON.stringify({
-        rna_ver: C.rRNA_refseq_version,
-        gen_ver: C.genomic_refseq_version,
-      }),
+    if (req.accepts("html")) {
+        res.render("pages/lost", {
+            url: req.url,
+            pgname: "lost",
+            title: "HOMD Lost",
+            config: JSON.stringify(process.env),
+            ver_info: JSON.stringify({
+                rna_ver: C.rRNA_refseq_version,
+                gen_ver: C.genomic_refseq_version,
+            }),
 
-      msg: "Sorry -- We can't find the page you requested.",
-      trace: JSON.stringify(req.url),
-    });
-    return;
-  }
+            msg: "Sorry -- We can't find the page you requested.",
+            trace: JSON.stringify(req.url),
+        });
+        return;
+    }
 
-  // respond with json
-  if (req.accepts("json")) {
-    res.send({ error: "Not found" });
-    return;
-  }
+    // respond with json
+    if (req.accepts("json")) {
+        res.send({ error: "Not found" });
+        return;
+    }
 
-  // default to plain-text. send()
-  res.type("txt").send("Not found");
+    // default to plain-text. send()
+    res.type("txt").send("Not found");
 });
 
 /*
@@ -269,278 +274,280 @@ import CustomTaxa from "./routes/helpers/taxa_class.js";
 // This array is passed to Promise.all(), which then calls the callback,
 // passing the array of results in the same order.
 const promises = [
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.taxon_lookup_fn),
-    "json",
-  ),
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.lineage_lookup_fn),
-    "json",
-  ),
-  //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.genome_lookup_fn),
-    "json",
-  ),
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.refseq_lookup_fn),
-    "json",
-  ),
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.references_lookup_fn),
-    "json",
-  ),
-  //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.info_lookup_fn),'json'),
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.taxcounts_fn),
-    "json",
-  ),
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.annotation_lookup_fn),
-    "json",
-  ),
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.taxon_lookup_fn),
+        "json",
+    ),
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.lineage_lookup_fn),
+        "json",
+    ),
+    //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.genome_lookup_fn),
+        "json",
+    ),
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.refseq_lookup_fn),
+        "json",
+    ),
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.references_lookup_fn),
+        "json",
+    ),
+    //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.info_lookup_fn),'json'),
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.taxcounts_fn),
+        "json",
+    ),
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.annotation_lookup_fn),
+        "json",
+    ),
 
-  helpers.readFromFile(
-    path.join("public", "data", C.image_location_locfn),
-    "json",
-  ), // image name and text
-  helpers.readFromFile(
-    path.join("public", "data", C.image_location_taxfn),
-    "json",
-  ), // match image w/ otid or tax rank
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.contig_lookup_fn),
-    "json",
-  ),
+    helpers.readFromFile(
+        path.join("public", "data", C.image_location_locfn),
+        "json",
+    ), // image name and text
+    helpers.readFromFile(
+        path.join("public", "data", C.image_location_taxfn),
+        "json",
+    ), // match image w/ otid or tax rank
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.contig_lookup_fn),
+        "json",
+    ),
 
-  //2024-Sept  // #10,11,12
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.site_lookup_fn),
-    "json",
-  ),
-  //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv'),
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.missing_ncbi_genomes_fn),
-    "json",
-  ),
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, "GCA_NO_NCBI_DB.csv"),
-    "csv",
-  ),
+    //2024-Sept  // #10,11,12
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.site_lookup_fn),
+        "json",
+    ),
+    //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv'),
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.missing_ncbi_genomes_fn),
+        "json",
+    ),
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, "GCA_NO_NCBI_DB.csv"),
+        "csv",
+    ),
 
-  //Oct 2025  // #13,14,15
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.crispr_lookup_fn),
-    "json",
-  ),
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.phage_lookup_fn),
-    "json",
-  ),
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.amr_lookup_fn),
-    "json",
-  ),
+    //Oct 2025  // #13,14,15
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.crispr_lookup_fn),
+        "json",
+    ),
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.phage_lookup_fn),
+        "json",
+    ),
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.amr_lookup_fn),
+        "json",
+    ),
 
-  //DEC 2025  // #16
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.abundance_fn),
-    "json",
-  ),
-  //JAN 2026  // #17
-  helpers.readFromFile(
-    path.join(process.env.PATH_TO_DATA, C.pg_lookup_fn),
-    "json",
-  ),
-  // ETC ...
+    //DEC 2025  // #16
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.abundance_fn),
+        "json",
+    ),
+    //JAN 2026  // #17
+    helpers.readFromFile(
+        path.join(process.env.PATH_TO_DATA, C.pg_lookup_fn),
+        "json",
+    ),
+    // ETC ...
 ];
 Promise.all(promises).then((results) => {
-  //baseList = result[0];
-  //currentList = result[1];
-  //console.log(results[0]['998'])
-  C.taxon_lookup = results[0]; // lookup by otid  TaxonLookup
-  //console.log('parsing1')
-  //console.log('C.taxon_lookup1',C.taxon_lookup['374'])
-  C.taxon_lineage_lookup = results[1]; // lookup by otid  TaxonLineagelookup
+    //baseList = result[0];
+    //currentList = result[1];
+    //console.log(results[0]['998'])
+    C.taxon_lookup = results[0]; // lookup by otid  TaxonLookup
+    //console.log('parsing1')
+    //console.log('C.taxon_lookup1',C.taxon_lookup['374'])
+    C.taxon_lineage_lookup = results[1]; // lookup by otid  TaxonLineagelookup
 
-  // let homd_taxonomy = Object.keys(C.taxon_lineage_lookup).map(function test(el){
-  //         return C.taxon_lineage_lookup[el]
-  //     })
-  let homd_taxonomy = Object.values(C.taxon_lineage_lookup);
-  //console.log(homd_taxonomy)
-  C.homd_taxonomy = new CustomTaxa(homd_taxonomy); // TaxonHierarchy
+    // let homd_taxonomy = Object.keys(C.taxon_lineage_lookup).map(function test(el){
+    //         return C.taxon_lineage_lookup[el]
+    //     })
+    let homd_taxonomy = Object.values(C.taxon_lineage_lookup);
+    //console.log(homd_taxonomy)
+    C.homd_taxonomy = new CustomTaxa(homd_taxonomy); // TaxonHierarchy
 
-  C.genome_lookup = results[2]; // lookup by gid GenomeLookup
-  //console.log('parsing4')
-  C.refseq_lookup = results[3]; //  TaxonRefSeqLookup
-  //console.log('parsing5')
-  C.taxon_references_lookup = results[4]; // lookup by otid TaxonReferencesLookup
-  //console.log('parsing6')
-  //C.taxon_info_lookup         = results[5];  // lookup by otid TaxonInfoLookup
-  //console.log('parsing7')
-  C.taxon_counts_lookup = results[5]; // lookup by lineage TaxonCounts
-  C.annotation_lookup = results[6]; // AnnotationLookup
+    C.genome_lookup = results[2]; // lookup by gid GenomeLookup
+    //console.log('parsing4')
+    C.refseq_lookup = results[3]; //  TaxonRefSeqLookup
+    //console.log('parsing5')
+    C.taxon_references_lookup = results[4]; // lookup by otid TaxonReferencesLookup
+    //console.log('parsing6')
+    //C.taxon_info_lookup         = results[5];  // lookup by otid TaxonInfoLookup
+    //console.log('parsing7')
+    C.taxon_counts_lookup = results[5]; // lookup by lineage TaxonCounts
+    C.annotation_lookup = results[6]; // AnnotationLookup
 
-  C.images_loc = results[7]; // image name and text
-  C.images_tax = results[8]; // match image w/ otid or tax rank
-  C.contig_lookup = results[9];
+    C.images_loc = results[7]; // image name and text
+    C.images_tax = results[8]; // match image w/ otid or tax rank
+    C.contig_lookup = results[9];
 
-  C.site_lookup = results[10];
-  //C.no_ncbi_annotation    = results[11];
-  C.no_ncbi_genomes = results[11];
-  C.no_ncbi_blast_dbs = results[12];
+    C.site_lookup = results[10];
+    //C.no_ncbi_annotation    = results[11];
+    C.no_ncbi_genomes = results[11];
+    C.no_ncbi_blast_dbs = results[12];
 
-  C.crispr_lookup = results[13];
-  C.phage_lookup = results[14];
-  C.amr_lookup = results[15];
-  C.abundance_lookup = results[16]; // should have same taxa keys as C.taxon_counts_lookup
-  C.pangenome_lookup = results[17];
-  /// END of results files
-  C.dropped_taxids = Object.values(C.taxon_lookup)
-    .filter((item) => item.active_status.toLowerCase() === "dropped")
-    .map((x) => x.otid);
-  C.reference_taxids = Object.values(C.taxon_lookup)
-    .filter(
-      (item) =>
-        item.active_status.toLowerCase() === "reference" &&
-        item.active_status.toLowerCase() !== "dropped",
-    )
-    .map((x) => x.otid);
-  C.no_refseq_otids = Object.values(C.taxon_lookup)
-    .filter(
-      (item) =>
-        !Object.hasOwn(C.refseq_lookup, item.otid) &&
-        item.active_status.toLowerCase() !== "dropped",
-    )
-    .map((x) => x.otid);
-  C.otids_w_abundance = Object.values(C.abundance_lookup)
-    .filter((item) => {
-      if (item.otid != "") {
-        return item.otid;
-      }
-    })
-    .map((x) => parseInt(x.otid).toString()); // turns '010' to '10'
+    C.crispr_lookup = results[13];
+    C.phage_lookup = results[14];
+    C.amr_lookup = results[15];
+    C.abundance_lookup = results[16]; // should have same taxa keys as C.taxon_counts_lookup
+    C.pangenome_lookup = results[17];
+    /// END of results files
+    C.dropped_taxids = Object.values(C.taxon_lookup)
+        .filter((item) => item.active_status.toLowerCase() === "dropped")
+        .map((x) => x.otid);
+    C.reference_taxids = Object.values(C.taxon_lookup)
+        .filter(
+            (item) =>
+                item.active_status.toLowerCase() === "reference" &&
+                item.active_status.toLowerCase() !== "dropped",
+        )
+        .map((x) => x.otid);
+    C.no_refseq_otids = Object.values(C.taxon_lookup)
+        .filter(
+            (item) =>
+                !Object.hasOwn(C.refseq_lookup, item.otid) &&
+                item.active_status.toLowerCase() !== "dropped",
+        )
+        .map((x) => x.otid);
+    C.otids_w_abundance = Object.values(C.abundance_lookup)
+        .filter((item) => {
+            if (item.otid != "") {
+                return item.otid;
+            }
+        })
+        .map((x) => parseInt(x.otid).toString()); // turns '010' to '10'
 
-  C.has_abundance_data = helpers.get_has_abundance();
+    C.has_abundance_data = helpers.get_has_abundance();
 
-  //logger.info('C.otids_w_abundance',C.otids_w_abundance)
+    //logger.info('C.otids_w_abundance',C.otids_w_abundance)
 
-  //examples
-  let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup));
-  logger.info(
-    `C.taxon_lookup............#ofKeys: ${Object.keys(C.taxon_lookup).length} size(KB): ${size / 1024}`,
-  );
+    //examples
+    let size = Buffer.byteLength(JSON.stringify(C.taxon_lookup));
+    logger.info(
+        `C.taxon_lookup............#ofKeys: ${Object.keys(C.taxon_lookup).length} size(KB): ${size / 1024}`,
+    );
 
-  size = Buffer.byteLength(JSON.stringify(C.taxon_references_lookup));
-  logger.info(
-    `C.taxon_references_lookup.#ofKeys ${Object.keys(C.taxon_references_lookup).length}   size(KB): ${size / 1024}`,
-  );
-  //logger.info(C.phage_lookup)
-  size = Buffer.byteLength(JSON.stringify(C.taxon_lineage_lookup));
-  logger.info(
-    `C.taxon_lineage_lookup....#ofKeys ${Object.keys(C.taxon_lineage_lookup).length}  size(KB): ${size / 1024}`,
-  );
+    size = Buffer.byteLength(JSON.stringify(C.taxon_references_lookup));
+    logger.info(
+        `C.taxon_references_lookup.#ofKeys ${Object.keys(C.taxon_references_lookup).length}   size(KB): ${size / 1024}`,
+    );
+    //logger.info(C.phage_lookup)
+    size = Buffer.byteLength(JSON.stringify(C.taxon_lineage_lookup));
+    logger.info(
+        `C.taxon_lineage_lookup....#ofKeys ${Object.keys(C.taxon_lineage_lookup).length}  size(KB): ${size / 1024}`,
+    );
 
-  //size = Buffer.byteLength(JSON.stringify(C.taxon_info_lookup))
-  //logger.info('C.taxon_info_lookup #ofKeys',Object.keys(C.taxon_info_lookup).length} \t\tsize(KB): ${size/1024)
+    //size = Buffer.byteLength(JSON.stringify(C.taxon_info_lookup))
+    //logger.info('C.taxon_info_lookup #ofKeys',Object.keys(C.taxon_info_lookup).length} \t\tsize(KB): ${size/1024)
 
-  size = Buffer.byteLength(JSON.stringify(C.refseq_lookup));
-  logger.info(
-    `C.refseq_lookup...........#ofKeys ${Object.keys(C.refseq_lookup).length}  size(KB): ${size / 1024}`,
-  );
+    size = Buffer.byteLength(JSON.stringify(C.refseq_lookup));
+    logger.info(
+        `C.refseq_lookup...........#ofKeys ${Object.keys(C.refseq_lookup).length}  size(KB): ${size / 1024}`,
+    );
 
-  size = Buffer.byteLength(JSON.stringify(C.genome_lookup));
-  logger.info(
-    `C.genome_lookup...........#ofKeys ${Object.keys(C.genome_lookup).length} size(KB): ${size / 1024}`,
-  );
+    size = Buffer.byteLength(JSON.stringify(C.genome_lookup));
+    logger.info(
+        `C.genome_lookup...........#ofKeys ${Object.keys(C.genome_lookup).length} size(KB): ${size / 1024}`,
+    );
 
-  size = Buffer.byteLength(JSON.stringify(C.annotation_lookup));
-  logger.info(
-    `C.annotation_lookup.......#ofKeys ${Object.keys(C.annotation_lookup).length} size(KB): ${size / 1024}`,
-  );
+    size = Buffer.byteLength(JSON.stringify(C.annotation_lookup));
+    logger.info(
+        `C.annotation_lookup.......#ofKeys ${Object.keys(C.annotation_lookup).length} size(KB): ${size / 1024}`,
+    );
 
-  size = Buffer.byteLength(JSON.stringify(C.taxon_counts_lookup));
-  logger.info(
-    `C.taxon_counts_lookup.....#ofKeys ${Object.keys(C.taxon_counts_lookup).length} size(KB): ${size / 1024}`,
-  );
+    size = Buffer.byteLength(JSON.stringify(C.taxon_counts_lookup));
+    logger.info(
+        `C.taxon_counts_lookup.....#ofKeys ${Object.keys(C.taxon_counts_lookup).length} size(KB): ${size / 1024}`,
+    );
 
-  size = Buffer.byteLength(JSON.stringify(C.contig_lookup));
-  logger.info(
-    `C.contig_lookup...........#ofKeys ${Object.keys(C.contig_lookup).length}  size(KB): ${size / 1024}`,
-  );
+    size = Buffer.byteLength(JSON.stringify(C.contig_lookup));
+    logger.info(
+        `C.contig_lookup...........#ofKeys ${Object.keys(C.contig_lookup).length}  size(KB): ${size / 1024}`,
+    );
 
-  size = Buffer.byteLength(JSON.stringify(C.homd_taxonomy));
-  logger.info(
-    `C.homd_taxonomy...........             size(KB): ${size / 1024}`,
-  );
+    size = Buffer.byteLength(JSON.stringify(C.homd_taxonomy));
+    logger.info(
+        `C.homd_taxonomy...........             size(KB): ${size / 1024}`,
+    );
 
-  size = Buffer.byteLength(JSON.stringify(C.site_lookup));
-  logger.info(
-    `C.site_lookup.............#ofKeys ${Object.keys(C.site_lookup).length}  size(KB): ${size / 1024}`,
-  );
+    size = Buffer.byteLength(JSON.stringify(C.site_lookup));
+    logger.info(
+        `C.site_lookup.............#ofKeys ${Object.keys(C.site_lookup).length}  size(KB): ${size / 1024}`,
+    );
 
-  logger.info(`C.no_ncbi_genomes.........#of els ${C.no_ncbi_genomes.length}`);
-  logger.info(
-    `C.no_ncbi_blast_dbs.......#of els ${C.no_ncbi_blast_dbs.length}`,
-  );
-  logger.info(`Components of C.homd_taxonomy:`);
-  for (var n in C.homd_taxonomy) {
-    logger.info(`   ${n}`);
-  }
-  ///////// TESTING ////////////////////////////////////////////////////////////////////
-  //console.log(C.taxon_lookup)
-  //class
-  //helpers.print(['app data1',C.taxon_lookup[389]])
-  //Absconditabacteria (SR1) [C-1]
-  console.log("C.site_lookup", C.site_lookup[282]);
-  //logger.info('C.no_ncbi_blast_dbs',C.no_ncbi_blast_dbs)
-  //logger.info('C.taxon_lookup.length',Object.keys(C.taxon_lookup).length)
-  //helpers.print(['lineage 673',C.taxon_lookup[673]])
-  //helpers.print(['Lookup 673',C.taxon_lookup[673]])
-  //logger.info('refseq 12',C.refseq_lookup[12])
-  //helpers.print(['SEQF10010',C.genome_lookup['SEQF10010']])
+    logger.info(
+        `C.no_ncbi_genomes.........#of els ${C.no_ncbi_genomes.length}`,
+    );
+    logger.info(
+        `C.no_ncbi_blast_dbs.......#of els ${C.no_ncbi_blast_dbs.length}`,
+    );
+    logger.info(`Components of C.homd_taxonomy:`);
+    for (var n in C.homd_taxonomy) {
+        logger.info(`   ${n}`);
+    }
+    ///////// TESTING ////////////////////////////////////////////////////////////////////
+    //console.log(C.taxon_lookup)
+    //class
+    //helpers.print(['app data1',C.taxon_lookup[389]])
+    //Absconditabacteria (SR1) [C-1]
+    console.log("C.site_lookup", C.site_lookup[282]);
+    //logger.info('C.no_ncbi_blast_dbs',C.no_ncbi_blast_dbs)
+    //logger.info('C.taxon_lookup.length',Object.keys(C.taxon_lookup).length)
+    //helpers.print(['lineage 673',C.taxon_lookup[673]])
+    //helpers.print(['Lookup 673',C.taxon_lookup[673]])
+    //logger.info('refseq 12',C.refseq_lookup[12])
+    //helpers.print(['SEQF10010',C.genome_lookup['SEQF10010']])
 
-  //logger.info('362 Correct',C.taxon_lineage_lookup[886])
-  //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
-  //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Hornefia minuta_species'])
-  //logger.info('Euryarchaeota_phylum',C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Euryarchaeota_phylum'])
-  //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
-  //logger.info('id 944 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[944])
-  //logger.info('id 943 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[943])
-  //logger.info('id 30 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[30])
-  //logger.info('id 29 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[29])
-  //logger.info('id 598 class',C.homd_taxonomy.taxa_tree_dict_map_by_id[598])
-  //logger.info('id 599 order',C.homd_taxonomy.taxa_tree_dict_map_by_id[599])
-  //logger.info('id 603 fam ERR',C.homd_taxonomy.taxa_tree_dict_map_by_id[603])
-  //logger.info('636_species',C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank['9_species'])
-  /////////////////////////////////////////////////////////////////////////////////////
-  C.taxa_with_subspecies = Object.values(
-    C.homd_taxonomy.taxa_tree_dict_map_by_rank["subspecies"],
-  ).map((x) => x.otid);
+    //logger.info('362 Correct',C.taxon_lineage_lookup[886])
+    //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Streptococcus oralis subsp. dentisani clade 058_species'])
+    //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Hornefia minuta_species'])
+    //logger.info('Euryarchaeota_phylum',C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank['Euryarchaeota_phylum'])
+    //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
+    //logger.info('id 944 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[944])
+    //logger.info('id 943 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[943])
+    //logger.info('id 30 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[30])
+    //logger.info('id 29 phy',C.homd_taxonomy.taxa_tree_dict_map_by_id[29])
+    //logger.info('id 598 class',C.homd_taxonomy.taxa_tree_dict_map_by_id[598])
+    //logger.info('id 599 order',C.homd_taxonomy.taxa_tree_dict_map_by_id[599])
+    //logger.info('id 603 fam ERR',C.homd_taxonomy.taxa_tree_dict_map_by_id[603])
+    //logger.info('636_species',C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank['9_species'])
+    /////////////////////////////////////////////////////////////////////////////////////
+    C.taxa_with_subspecies = Object.values(
+        C.homd_taxonomy.taxa_tree_dict_map_by_rank["subspecies"],
+    ).map((x) => x.otid);
 
-  C.homd_stats = helpers.calculate_homd_stats();
+    C.homd_stats = helpers.calculate_homd_stats();
 
-  logger.info(`Dropped Taxa:.............${C.dropped_taxids.length}`);
-  logger.info(`Reference Taxa:...........${C.reference_taxids.length}`);
-  logger.info(`C.taxa_with_subspecies....${C.taxa_with_subspecies.length}`);
-  logger.info(`C.no_refseq_otids.........${C.no_refseq_otids.length}`);
-  //logger.info(JSON.stringify(C.homd_taxonomy, null, '\t'))
-  //let search_string = "exo";
-  //let anno = "prokka";
-  //search.search_test(anno, search_string).then((result) => {
-  //console.log('in app.js',result)
+    logger.info(`Dropped Taxa:.............${C.dropped_taxids.length}`);
+    logger.info(`Reference Taxa:...........${C.reference_taxids.length}`);
+    logger.info(`C.taxa_with_subspecies....${C.taxa_with_subspecies.length}`);
+    logger.info(`C.no_refseq_otids.........${C.no_refseq_otids.length}`);
+    //logger.info(JSON.stringify(C.homd_taxonomy, null, '\t'))
+    //let search_string = "exo";
+    //let anno = "prokka";
+    //search.search_test(anno, search_string).then((result) => {
+    //console.log('in app.js',result)
 
-  //  if(result.length == 0){
-  //                 console.log("Nothing found for string: `"+search_string+"` in "+anno)
-  //         }else{
-  //                 for(let gid in result){
-  //                    console.log(gid)
-  //                 }
-  //                     //console.log('Search String: `'+search_string+"`in "+anno,'FOUND:',i); //data[i]);
-  //                     //console.log('181',results[0].result[0].doc);
-  //                 //});
-  //         }
-  //})
+    //  if(result.length == 0){
+    //                 console.log("Nothing found for string: `"+search_string+"` in "+anno)
+    //         }else{
+    //                 for(let gid in result){
+    //                    console.log(gid)
+    //                 }
+    //                     //console.log('Search String: `'+search_string+"`in "+anno,'FOUND:',i); //data[i]);
+    //                     //console.log('181',results[0].result[0].doc);
+    //                 //});
+    //         }
+    //})
 });
 
 logger.info("start here in app.js");
