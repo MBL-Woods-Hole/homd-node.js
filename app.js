@@ -187,29 +187,9 @@ app.use("/help", help);
 app.use("/download", download);
 app.use("/search", search);
 
-// for non-routing pages such as heatmap, counts and bar_charts
-/*
-app.get("/*", function (req, res, next) {
-  //console.warn('req.params',req.params);
-  // var url = req.params[0];
-  //     // I want to create a page like: counts_table_2014080_13452.html
-  //     // for each link
-  //     if (url === 'visuals/user_viz_data/ctable.html') { //
-  //         // Yay this is the File A...
-  //         console.warn("The user file  has been requested");
-  //         router.get('/visuals/user_viz_data/ctable.html',  function(req, res) {
-  //             console.warn('trying to open ctable.html');
-  //         });
-  //     } else {
-  //         // we don't care about any other file, let it download too
-  //         console.warn("No Route Found");
-  //         next();
-  //     }
-});
-*/
 // error handler middleware:
-app.use((error, req, res) => {
-    logger.error(error);
+app.use((err, req, res, next) => {
+    console.log("in app.js", error);
     //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
     //if(process.env.ENV === 'development'){
     //if(process.env.ENV === 'production'){
@@ -230,6 +210,7 @@ app.use((error, req, res) => {
         msg: "We're Sorry -- Something Broke!<br><br>If it happens again please let us know. Below is the error message:",
         trace: error.toString(),
     });
+    next();
 });
 // LAST Middleware:
 app.use(function (req, res) {

@@ -112,7 +112,8 @@ router.get("/refseq_tree", function refseq_tree(req, res) {
 
             svg_data: JSON.stringify(data),
             //path: 'public/trees/'+fname,
-            otid: fullname,
+            target: fullname,
+            otid: otid,
         });
     });
 });

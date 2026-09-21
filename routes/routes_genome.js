@@ -1439,10 +1439,10 @@ router.get("/conserved_protein_tree", function conservedProteinTree(req, res) {
     // let myurl = url.URL(req.url, true);
     //const http = require('http');
     let findme = "DEFAULTxxxxFINDMExxxxxxxxxx"; // will be either gid OR otid (other is 'undefined')
-    let otid;
+    let otid = req.query.otid;
 
-    if (req.query.otid) {
-        otid = req.query.otid.replace(/^0+/, "");
+    if (otid) {
+        otid = otid.replace(/^0+/, "");
         //findme = helpers.make_otid_display_name(otid);
         findme = helpers.make_otid_display_nameOLDSTYLEHMTS(otid); // ie: HMT-123
     } else if (req.query.gid) {
@@ -1463,7 +1463,7 @@ router.get("/conserved_protein_tree", function conservedProteinTree(req, res) {
     } else {
         filepath = ENV.FILEPATH_TO_FTP + ENV.CP_TREE_PATH;
     }
-    logger.info(filepath, findme);
+    console.log(filepath, findme);
 
     fs.readFile(filepath, "utf8", (err, data) => {
         if (err) {
@@ -1483,6 +1483,7 @@ router.get("/conserved_protein_tree", function conservedProteinTree(req, res) {
             ver_info: JSON.stringify(C.version_information),
             svg_data: JSON.stringify(data),
             target: findme,
+            otid: otid,
         });
     });
 
@@ -1554,6 +1555,7 @@ router.get("/ribosomal_protein_tree", function ribosomalProteinTree(req, res) {
 
             svg_data: JSON.stringify(data),
             target: findme,
+            otid: otid,
         });
     });
     // https.get(filepath, (response) => {
@@ -1620,6 +1622,7 @@ router.get("/rRNA_gene_tree", function rRNAGeneTree(req, res) {
 
             svg_data: JSON.stringify(data),
             target: findme,
+            otid: otid,
         });
     });
 });

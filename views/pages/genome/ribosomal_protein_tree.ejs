@@ -8,20 +8,52 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
 var findme = "<%= target %>"
+var otid = "<%= otid %>"
+var regex
+var ln = otid.length
+//console.log('ln', ln)
+if(ln === 1){
+  // search for HMT-00x and HMT-000x
+  regex = new RegExp(`HMT-0{2,3}${otid}`, "gi"); 
+}else if(ln === 2){
+  // search for HMT-0xx and HMT-00xx
+  regex = new RegExp(`HMT-0{1,2}${otid}`, "gi"); 
+}else if(ln === 3){
+   // search for HMT-xxx and HMT-0xxx
+   regex = new RegExp(`HMT-0{0,1}${otid}`, "gi"); 
+}else if(ln === 4){
+   // search for HMT-xxxx
+   regex = new RegExp(`HMT-0{1,2}${otid}`, "gi"); 
 
-//console.log(taxidfullname)
-//$("text:contains('"+taxidfullname+"')").css({"fill": "red"}, {"background-color": "#FFFF00" })
-window.scrollTo({
-        top: $("text:contains('"+findme+"')").offset().top-50,
-        left:0,
-        behavior:'smooth'
-        })
+}else{
+  // error
+}
 
-let target = $("text:contains('"+findme+"')")
-$(target).css({"fill": "fuchsia","font-size":"120%","background-color":"gray" });
-$(target).children("tspan").css({"fill": "fuchsia","font-size":"120%" });
-$(target).children("text").css({"fill": "fuchsia","font-size":"120%" });
-$(target).children("a").css({"fill": "fuchsia","font-size":"120%" });
+
+function scrollToTspanRegex(regex) {
+  // 1. Select all <tspan> elements in the document
+  const tspans = document.querySelectorAll('tspan');
+  
+  // 2. Iterate through them to find a match using the regex
+  for (const tspan of tspans) {
+    const text = tspan.textContent || '';
+    
+    if (regex.test(text)) {
+      // 3. Scroll smoothly to the matching element
+      tspan.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      
+      // Optional: highlight the element temporarily
+      tspan.style.transition = 'fill 0.3s';
+      tspan.style.fill = 'red';
+      
+      console.log('Scrolled to tspan with text:', text);
+      //return tspan; // Stop after the first match
+    }
+  }
+  
+  return null;
+}
+scrollToTspanRegex(regex);
 </script>
 
 </body>
