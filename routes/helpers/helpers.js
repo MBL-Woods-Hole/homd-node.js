@@ -201,7 +201,7 @@ export const make_otid_display_name = (otid) => {
     return "HMT-" + ("0000" + otid.toString()).slice(-4);
 };
 export const make_otid_display_nameOLDSTYLEHMTS = (otid) => {
-    return "HMT-" + ("000" + otid.toString()).slice(-4);
+    return "HMT-" + ("000" + otid.toString()).slice(-3);
 };
 
 export const addslashes = (str) => (str + "").replace(/[\][\\"']/g, "\\$&");
