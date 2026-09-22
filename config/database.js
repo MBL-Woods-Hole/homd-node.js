@@ -38,7 +38,8 @@ const pool = mysql.createPool({
   queueLimit: 0,  // '0' means unlimited queue
   enableKeepAlive: true,
   keepAliveInitialDelay: 10000,
-  connectTimeout: 30000
+  connectTimeout: 30000,
+  maxPreparedStatements: 100 // Caps cache per connection
 });
 
 export default pool;
