@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import pool from "../config/database.js";
+import { pool, promisePool } from "../config/database.js";
 import C from "../public/constants.js";
 import * as helpers from "./helpers/helpers.js";
 //import pino from 'pino';
@@ -9,27 +9,73 @@ import logger from "../config/app_config.js";
 // Generalized query function
 export const run_query = async (sql, req, res) => {
     //logger.info(`Request from: ${req.ip}`)
-    helpers.logPoolStatus(pool, sql);
+    helpers.logPoolStatus(promisePool, sql);
     try {
-        const [rows] = await pool.query(sql);
+        const [rows] = await promisePool.query(sql);
         return rows;
     } catch (e) {
         logger.error(`Database Query Error: ${e}`);
         res.status(500).send("Error fetching MySQL data");
+    } finally {
+        // promisePool.query: no need for release stmt
     }
 };
-
-export const run_query_stream = async (sql, res) => {
-    helpers.logPoolStatus(pool, sql);
+//
+export const run_query_stream_async = async (sql, res) => {
+    helpers.logPoolStatus(promisePool, sql);
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await promisePool.getConnection();
 
         const queryStream = await conn.connection.query(sql).stream();
         return queryStream;
     } catch (e) {
         logger.error(`Database Query Error: ${e}`);
         res.status(500).send("Error fetching MySQL stream");
+    } finally {
+        conn.release();
     }
+};
+//
+export const run_query_stream = (sql, res) => {
+    //helpers.logPoolStatus(pool, sql);
+    let conn;
+    console.log("pool", pool);
+    const stream = pool.query(sql).stream();
+    return stream;
+    // pool.getConnection((err, conn) => {
+    //       if (err){
+    //        console.log('ERROOR',)
+    //        throw err;
+    //        }
+    //
+    //       const stream = conn.query(sql).stream();
+    //       return stream
+    //       // stream.on('data', (row) => {
+    // //         console.log(row);
+    // //       });
+    // //
+    // //       stream.on('end', () => {
+    // //         // Crucial: always release the connection back to the pool when finished
+    // //         connection.release();
+    // //       });
+    // //
+    // //       stream.on('error', (err) => {
+    // //         connection.release();
+    // //         throw err;
+    // //       });
+    //     });
+    //
+
+    // try {
+    //         conn = pool.getConnection();
+    //
+    //         const queryStream = conn.connection.query(sql).stream();
+    //         return queryStream;
+    //     } catch (e) {
+    //         logger.error(`Database Query Error: ${e}`);
+    //         res.status(500).send("Error fetching MySQL stream");
+    //     }
 };
 //
 // export const run_parallel_queries = async (sql_list, req, res) => {

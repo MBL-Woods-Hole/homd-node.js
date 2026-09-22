@@ -1,7 +1,7 @@
 //db.js
 //import mysql from 'mysql2';
-import mysql from 'mysql2/promise'; // Use the promise-based API for modern async/await
-
+//import mysql as mysql_promise from 'mysql2/promise'; // Use the promise-based API for modern async/await
+import mysql from 'mysql2';
 // 
 // // Create the connection pool
 // const pool = mysql.createPool({
@@ -42,7 +42,12 @@ const pool = mysql.createPool({
   maxPreparedStatements: 100 // Caps cache per connection
 });
 
-export default pool;
+const promisePool = pool.promise();
+
+//module.exports = { pool, promisePool };
+
+export { pool, promisePool };
+export default { pool, promisePool };
 
 // Get the Promise-wrapped pool for async/await usage
 //const promisePool = pool.promise();

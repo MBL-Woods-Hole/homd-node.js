@@ -16,94 +16,94 @@ import * as queries from "./queries.js";
 import logger from "../config/app_config.js";
 
 function renderTaxonTable(req, res, args) {
-  res.render("pages/taxa/taxontable", {
-    title: "HOMD :: Taxon Table",
-    pgtitle: "Human Oral/Nasal Microbial Taxa",
-    pgname: "taxon/taxon_table", //for AbountThisPage
-    config: JSON.stringify(ENV),
-    ver_info: JSON.stringify(C.version_information),
+    res.render("pages/taxa/taxontable", {
+        title: "HOMD :: Taxon Table",
+        pgtitle: "Human Oral/Nasal Microbial Taxa",
+        pgname: "taxon/taxon_table", //for AbountThisPage
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
 
-    data: JSON.stringify(args.send_list),
-    count_txt: args.count_txt,
-    filter: JSON.stringify(args.filter),
-    filter_on: args.filter_on,
-    phyla: JSON.stringify(helpers_taxa.get_all_phyla().sort()),
-  });
+        data: JSON.stringify(args.send_list),
+        count_txt: args.count_txt,
+        filter: JSON.stringify(args.filter),
+        filter_on: args.filter_on,
+        phyla: JSON.stringify(helpers_taxa.get_all_phyla().sort()),
+    });
 }
 
 router.get("/reset_ttable", function tax_table_reset(req, res) {
-  logger.info("in RESET-session");
-  req.session.ttable_filter = helpers_taxa.get_default_tax_filter();
-  //res.location(req.get('taxon_table') || "/");
-  res.redirect("taxon_table");
+    logger.info("in RESET-session");
+    req.session.ttable_filter = helpers_taxa.get_default_tax_filter();
+    //res.location(req.get('taxon_table') || "/");
+    res.redirect("taxon_table");
 });
 //
 router.get("/taxon_table", function TaxTable_GET(req, res) {
-  logger.info("in TT get");
-  let filter, send_list;
+    logger.info("in TT get");
+    let filter, send_list;
 
-  //logger.info('get-session ',req.session.ttable_filter)
-  // QUESTION - Should filter hold through EVERYTHING?
-  filter = helpers_taxa.get_default_tax_filter();
-  req.session.ttable_filter = filter;
-  // if(req.session.ttable_filter){
-  //         //logger.info('filetr session')
-  //         filter = req.session.ttable_filter
-  //     }else{
-  //         //logger.info('filetr from default')
-  //         filter = helpers_taxa.get_default_tax_filter()
-  //         req.session.ttable_filter = filter
-  //     }
+    //logger.info('get-session ',req.session.ttable_filter)
+    // QUESTION - Should filter hold through EVERYTHING?
+    filter = helpers_taxa.get_default_tax_filter();
+    req.session.ttable_filter = filter;
+    // if(req.session.ttable_filter){
+    //         //logger.info('filetr session')
+    //         filter = req.session.ttable_filter
+    //     }else{
+    //         //logger.info('filetr from default')
+    //         filter = helpers_taxa.get_default_tax_filter()
+    //         req.session.ttable_filter = filter
+    //     }
 
-  send_list = helpers_taxa.apply_ttable_filter(req, filter);
-  logger.info(`Table LENGTH: ${send_list.length}`);
-  //let big_tax_list0 = Object.values(C.taxon_lookup);
-  //let specific = send_list.filter(item => (item.otid == '209'))
-  //logger.info('sendlist209',specific)
-  //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
-  let count_text = "Number of Records Found: " + send_list.length.toString();
+    send_list = helpers_taxa.apply_ttable_filter(req, filter);
+    logger.info(`Table LENGTH: ${send_list.length}`);
+    //let big_tax_list0 = Object.values(C.taxon_lookup);
+    //let specific = send_list.filter(item => (item.otid == '209'))
+    //logger.info('sendlist209',specific)
+    //let big_tax_list = big_tax_list0.filter(item => C.tax_status_on.indexOf(item.status.toLowerCase()) !== -1 )
+    let count_text = "Number of Records Found: " + send_list.length.toString();
 
-  let args = {
-    filter: filter,
-    send_list: send_list,
-    count_txt: count_text,
-    filter_on: helpers_taxa.get_filter_on(filter),
-  };
+    let args = {
+        filter: filter,
+        send_list: send_list,
+        count_txt: count_text,
+        filter_on: helpers_taxa.get_filter_on(filter),
+    };
 
-  renderTaxonTable(req, res, args);
+    renderTaxonTable(req, res, args);
 });
 
 router.post("/taxon_table", function TaxTable_POST(req, res) {
-  logger.info("in TT post");
-  logger.info(req.body);
-  let send_list;
-  helpers_taxa.set_ttable_session(req);
-  //logger.info('ttable_session',req.session.ttable_filter)
-  let filter = req.session.ttable_filter;
-  //logger.info('filter1',filter)
-  send_list = helpers_taxa.apply_ttable_filter(req, filter);
+    logger.info("in TT post");
+    logger.info(req.body);
+    let send_list;
+    helpers_taxa.set_ttable_session(req);
+    //logger.info('ttable_session',req.session.ttable_filter)
+    let filter = req.session.ttable_filter;
+    //logger.info('filter1',filter)
+    send_list = helpers_taxa.apply_ttable_filter(req, filter);
 
-  let count_text = "Number of Records Found: " + send_list.length.toString();
-  //logger.info('filter2',filter)
-  let args = {
-    filter: filter,
-    send_list: send_list,
-    count_txt: count_text,
-    filter_on: helpers_taxa.get_filter_on(filter),
-  };
+    let count_text = "Number of Records Found: " + send_list.length.toString();
+    //logger.info('filter2',filter)
+    let args = {
+        filter: filter,
+        send_list: send_list,
+        count_txt: count_text,
+        filter_on: helpers_taxa.get_filter_on(filter),
+    };
 
-  renderTaxonTable(req, res, args);
+    renderTaxonTable(req, res, args);
 });
 router.get(
-  "/advanced_taxtable_search",
-  function advanced_taxtable_search(req, res) {
-    res.render("pages/taxa/tax_table_filter_advanced", {
-      title: "HOMD :: Taxon Search",
-      pgname: "", // for AbountThisPage
-      config: JSON.stringify(ENV),
-      ver_info: JSON.stringify(C.version_information),
-    });
-  },
+    "/advanced_taxtable_search",
+    function advanced_taxtable_search(req, res) {
+        res.render("pages/taxa/tax_table_filter_advanced", {
+            title: "HOMD :: Taxon Search",
+            pgname: "", // for AbountThisPage
+            config: JSON.stringify(ENV),
+            ver_info: JSON.stringify(C.version_information),
+        });
+    },
 );
 //
 //
@@ -176,654 +176,686 @@ router.get(
 //   res.send(json);
 // })
 router.get("/tax_hierarchy", function tax_hierarchy_GET(req, res) {
-  logger.info("GET Hierarchy");
-  let otid,
-    species = "";
-  if (req.query.otid) {
-    otid = req.query.otid.replace(/^0+/, "");
-    species =
-      C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank[otid + "_species"]
-        .taxon;
-    //logger.info(species)
-  }
-  let lineage;
-  let bnode =
-    C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank["Bacteria_domain"];
-  lineage = helpers_taxa.make_lineage(bnode); // [str obj]
-  let bcts = helpers_taxa.get_counts(lineage[0], "").lst;
-  let anode =
-    C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank["Archaea_domain"];
-  lineage = helpers_taxa.make_lineage(anode); // [str obj]
-  let acts = helpers_taxa.get_counts(lineage[0], "").lst;
+    logger.info("GET Hierarchy");
+    let otid,
+        species = "";
+    if (req.query.otid) {
+        otid = req.query.otid.replace(/^0+/, "");
+        species =
+            C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank[otid + "_species"]
+                .taxon;
+        //logger.info(species)
+    }
+    let lineage;
+    let bnode =
+        C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank["Bacteria_domain"];
+    lineage = helpers_taxa.make_lineage(bnode); // [str obj]
+    let bcts = helpers_taxa.get_counts(lineage[0], "").lst;
+    let anode =
+        C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank["Archaea_domain"];
+    lineage = helpers_taxa.make_lineage(anode); // [str obj]
+    let acts = helpers_taxa.get_counts(lineage[0], "").lst;
 
-  res.render("pages/taxa/taxhierarchy", {
-    title: "HOMD :: Taxon Hierarchy",
-    pgname: "taxon/hierarchy", // for AbountThisPage
-    config: JSON.stringify(ENV),
-    data: {},
-    species: species,
-    bcounts: JSON.stringify(bcts),
-    acounts: JSON.stringify(acts),
-    //dhtmlx: JSON.stringify(C.dhtmlxTreeData),
-    ver_info: JSON.stringify(C.version_information),
-  });
+    res.render("pages/taxa/taxhierarchy", {
+        title: "HOMD :: Taxon Hierarchy",
+        pgname: "taxon/hierarchy", // for AbountThisPage
+        config: JSON.stringify(ENV),
+        data: {},
+        species: species,
+        bcounts: JSON.stringify(bcts),
+        acounts: JSON.stringify(acts),
+        //dhtmlx: JSON.stringify(C.dhtmlxTreeData),
+        ver_info: JSON.stringify(C.version_information),
+    });
 });
 router.post("/tax_hierarchy", function tax_hierarchy_POST(req, res) {
-  //logger.info('POST Hierarchy')
-  //logger.info('req.body',req.body)
-  // POST is when you click on each leaf
-  let tax_name = req.body.name;
-  let rank = req.body.rank;
-  let html = "",
-    node,
-    child_name,
-    child_rank,
-    id,
-    display_rank,
-    encoded_child_name,
-    cts,
-    lineage;
-  let ospace = "&nbsp;",
-    space;
-  let num = C.ranks.indexOf(rank) + 1;
-  space = ospace.repeat(num * 2);
-  //let green_colors = ['#316764','#497F76','#609687','#78AE99','#8FC5AA','#A7DDBC']
-  let green_colors = [
-    "#9FD4A3",
-    "#AEDCAE",
-    "#BEE3BA",
-    "#CDEBC5",
-    "#DDF2D1",
-    "#ECFADC",
-  ];
-  let pnode =
-    C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name + "_" + rank];
-  //logger.info('parent-node',pnode)
-  let children_ids = pnode.children_ids;
+    //logger.info('POST Hierarchy')
+    //logger.info('req.body',req.body)
+    // POST is when you click on each leaf
+    let tax_name = req.body.name;
+    let rank = req.body.rank;
+    let html = "",
+        node,
+        child_name,
+        child_rank,
+        id,
+        display_rank,
+        encoded_child_name,
+        cts,
+        lineage;
+    let ospace = "&nbsp;",
+        space;
+    let num = C.ranks.indexOf(rank) + 1;
+    space = ospace.repeat(num * 2);
+    //let green_colors = ['#316764','#497F76','#609687','#78AE99','#8FC5AA','#A7DDBC']
+    let green_colors = [
+        "#9FD4A3",
+        "#AEDCAE",
+        "#BEE3BA",
+        "#CDEBC5",
+        "#DDF2D1",
+        "#ECFADC",
+    ];
+    let pnode =
+        C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
+            tax_name + "_" + rank
+        ];
+    //logger.info('parent-node',pnode)
+    let children_ids = pnode.children_ids;
 
-  // sort ids by node.taxon??
-  children_ids.sort((a, b) => {
-    let xnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[a];
-    let ynode = C.homd_taxonomy.taxa_tree_dict_map_by_id[b];
-    return helpers.compareStrings_alpha(xnode.taxon, ynode.taxon);
-  });
-  for (let n in children_ids) {
-    node = C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]];
+    // sort ids by node.taxon??
+    children_ids.sort((a, b) => {
+        let xnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[a];
+        let ynode = C.homd_taxonomy.taxa_tree_dict_map_by_id[b];
+        return helpers.compareStrings_alpha(xnode.taxon, ynode.taxon);
+    });
+    for (let n in children_ids) {
+        node = C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]];
 
-    child_name = node.taxon;
-    encoded_child_name = encodeURIComponent(node.taxon);
-    //logger.info('encoded name',encoded_child_name)
-    child_rank = node.rank;
-    if (child_rank === "klass") {
-      display_rank = "Class";
-    } else {
-      display_rank = helpers.capitalizeFirst(child_rank);
+        child_name = node.taxon;
+        encoded_child_name = encodeURIComponent(node.taxon);
+        //logger.info('encoded name',encoded_child_name)
+        child_rank = node.rank;
+        if (child_rank === "klass") {
+            display_rank = "Class";
+        } else {
+            display_rank = helpers.capitalizeFirst(child_rank);
+        }
+        lineage = helpers_taxa.make_lineage(node); // [str obj]
+        cts = helpers_taxa.get_counts(lineage[0], "").lst;
+        if (node.children_ids.length === 0) {
+            //otid = node.otid
+            //let lineage = helpers_taxa.make_lineage(node)
+            //logger.info('lin',lineage[0])
+
+            html += "<ul>";
+            html += "<li class='tax-item'>";
+            let hmt = helpers.make_otid_display_name(node.otid);
+            let hmt_lnk =
+                "<a href='tax_description?otid=" +
+                node.otid +
+                "'>" +
+                hmt +
+                "</a>";
+            if (child_rank === "species") {
+                html +=
+                    space +
+                    "<span class='species otid-link-sp' nowrap><small>" +
+                    display_rank +
+                    ":</small> <i>" +
+                    child_name +
+                    "</i> (" +
+                    hmt_lnk +
+                    ")";
+                html +=
+                    " <a title='Genome Count' href='/genome/genome_table?otid=" +
+                    node.otid +
+                    "' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" +
+                    cts.genome_counts +
+                    "&nbsp;</a>";
+                html +=
+                    " <a title='RefSeq Count' href='/refseq/refseq_tree?otid=" +
+                    node.otid +
+                    "' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" +
+                    cts.refseq_counts +
+                    "&nbsp;</a>";
+                html += "</span>";
+            } else {
+                // child name needs to be species + subspecies
+                //logger.info('mynode',node)
+                let parent_taxon =
+                    C.homd_taxonomy.taxa_tree_dict_map_by_id[node.parent_id]
+                        .taxon;
+                html +=
+                    space +
+                    "<span class='subspecies otid-link-ssp' nowrap><small>" +
+                    display_rank +
+                    ":</small> <i>" +
+                    parent_taxon +
+                    "</i> " +
+                    child_name +
+                    " (" +
+                    hmt_lnk +
+                    ")";
+                html +=
+                    " <a title='Genome Count' href='/genome/genome_table?otid=" +
+                    node.otid +
+                    "' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" +
+                    cts.genome_counts +
+                    "&nbsp;</a>";
+                html +=
+                    " <a title='RefSeq Count' href='/refseq/refseq_tree?otid=" +
+                    node.otid +
+                    "' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" +
+                    cts.refseq_counts +
+                    "&nbsp;</a>";
+                html += "</span>";
+            }
+
+            html += "</li>";
+            html += "</ul>";
+        } else {
+            //logger.info('node',node,'cts',cts)
+            //logger.info('sent node',node)
+
+            id = child_name + "_" + child_rank;
+
+            html += "<ul>";
+            html += "<li class='tax-item'>";
+            html +=
+                space +
+                "<a onclick=get_leaf('" +
+                encoded_child_name +
+                "','" +
+                child_rank +
+                "')";
+            html += "    role='button'";
+            html += "    type='button'";
+            html +=
+                "    style='background:" +
+                green_colors[C.ranks.indexOf(rank)] +
+                ";'";
+            html += "    class='" + node.rank + " btn btn-sm'>";
+            if (child_rank === "species") {
+                html +=
+                    "    <small>" +
+                    display_rank +
+                    ":</small> <i>" +
+                    child_name +
+                    "</i>";
+            } else {
+                html +=
+                    "    <small>" + display_rank + ":</small> " + child_name;
+            }
+            html +=
+                " <span title='Taxon Count' class='pill pill-indigo'>" +
+                cts.tax_counts +
+                "</span>";
+            html +=
+                " <span title='Genome Count' class='pill pill-orange'>" +
+                cts.genome_counts +
+                "</span>";
+            html +=
+                " <span title='RefSeq Count' class='pill pill-khaki'>" +
+                cts.refseq_counts +
+                "</span>";
+            html += "</a>";
+            html +=
+                " <span id='" +
+                id +
+                "_span' class='fa_widget'><i class='fa-solid fa-angle-right'></i></span>";
+            html += "<div  id='" + id + "_div'></div>";
+            html += "</li>";
+            html += "</ul>";
+            //logger.info('myhtlml',html)
+        }
     }
-    lineage = helpers_taxa.make_lineage(node); // [str obj]
-    cts = helpers_taxa.get_counts(lineage[0], "").lst;
-    if (node.children_ids.length === 0) {
-      //otid = node.otid
-      //let lineage = helpers_taxa.make_lineage(node)
-      //logger.info('lin',lineage[0])
-
-      html += "<ul>";
-      html += "<li class='tax-item'>";
-      let hmt = helpers.make_otid_display_name(node.otid);
-      let hmt_lnk =
-        "<a href='tax_description?otid=" + node.otid + "'>" + hmt + "</a>";
-      if (child_rank === "species") {
-        html +=
-          space +
-          "<span class='species otid-link-sp' nowrap><small>" +
-          display_rank +
-          ":</small> <i>" +
-          child_name +
-          "</i> (" +
-          hmt_lnk +
-          ")";
-        html +=
-          " <a title='Genome Count' href='/genome/genome_table?otid=" +
-          node.otid +
-          "' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" +
-          cts.genome_counts +
-          "&nbsp;</a>";
-        html +=
-          " <a title='RefSeq Count' href='/refseq/refseq_tree?otid=" +
-          node.otid +
-          "' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" +
-          cts.refseq_counts +
-          "&nbsp;</a>";
-        html += "</span>";
-      } else {
-        // child name needs to be species + subspecies
-        //logger.info('mynode',node)
-        let parent_taxon =
-          C.homd_taxonomy.taxa_tree_dict_map_by_id[node.parent_id].taxon;
-        html +=
-          space +
-          "<span class='subspecies otid-link-ssp' nowrap><small>" +
-          display_rank +
-          ":</small> <i>" +
-          parent_taxon +
-          "</i> " +
-          child_name +
-          " (" +
-          hmt_lnk +
-          ")";
-        html +=
-          " <a title='Genome Count' href='/genome/genome_table?otid=" +
-          node.otid +
-          "' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" +
-          cts.genome_counts +
-          "&nbsp;</a>";
-        html +=
-          " <a title='RefSeq Count' href='/refseq/refseq_tree?otid=" +
-          node.otid +
-          "' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" +
-          cts.refseq_counts +
-          "&nbsp;</a>";
-        html += "</span>";
-      }
-
-      html += "</li>";
-      html += "</ul>";
-    } else {
-      //logger.info('node',node,'cts',cts)
-      //logger.info('sent node',node)
-
-      id = child_name + "_" + child_rank;
-
-      html += "<ul>";
-      html += "<li class='tax-item'>";
-      html +=
-        space +
-        "<a onclick=get_leaf('" +
-        encoded_child_name +
-        "','" +
-        child_rank +
-        "')";
-      html += "    role='button'";
-      html += "    type='button'";
-      html +=
-        "    style='background:" + green_colors[C.ranks.indexOf(rank)] + ";'";
-      html += "    class='" + node.rank + " btn btn-sm'>";
-      if (child_rank === "species") {
-        html +=
-          "    <small>" + display_rank + ":</small> <i>" + child_name + "</i>";
-      } else {
-        html += "    <small>" + display_rank + ":</small> " + child_name;
-      }
-      html +=
-        " <span title='Taxon Count' class='pill pill-indigo'>" +
-        cts.tax_counts +
-        "</span>";
-      html +=
-        " <span title='Genome Count' class='pill pill-orange'>" +
-        cts.genome_counts +
-        "</span>";
-      html +=
-        " <span title='RefSeq Count' class='pill pill-khaki'>" +
-        cts.refseq_counts +
-        "</span>";
-      html += "</a>";
-      html +=
-        " <span id='" +
-        id +
-        "_span' class='fa_widget'><i class='fa-solid fa-angle-right'></i></span>";
-      html += "<div  id='" + id + "_div'></div>";
-      html += "</li>";
-      html += "</ul>";
-      //logger.info('myhtlml',html)
-    }
-  }
-  res.send(html);
+    res.send(html);
 });
 
 //
 //
 router.post("/tax_hierarchy_bylevel", (req, res) => {
-  logger.info("in tax_hierarchy_bylevel");
-  let requested_rank = req.body.rank;
-  let html_obj = { ahtml: "", bhtml: "" };
-  let node, anode, bnode;
+    logger.info("in tax_hierarchy_bylevel");
+    let requested_rank = req.body.rank;
+    let html_obj = { ahtml: "", bhtml: "" };
+    let node, anode, bnode;
 
-  //logger.info('anode',anode)
-  //Archaea node
-  anode = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank["Archaea_domain"];
-  for (let n in anode.children_ids) {
-    node = C.homd_taxonomy.taxa_tree_dict_map_by_id[anode.children_ids[n]];
-    html_obj.ahtml += get_hierarchy_html(node, requested_rank);
-  }
-  //Bacteria node
-  bnode = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank["Bacteria_domain"];
-  for (let n in bnode.children_ids) {
-    node = C.homd_taxonomy.taxa_tree_dict_map_by_id[bnode.children_ids[n]];
-    //logger.info('mynode1',node)
-    html_obj.bhtml += get_hierarchy_html(node, requested_rank);
-  }
+    //logger.info('anode',anode)
+    //Archaea node
+    anode = C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank["Archaea_domain"];
+    for (let n in anode.children_ids) {
+        node = C.homd_taxonomy.taxa_tree_dict_map_by_id[anode.children_ids[n]];
+        html_obj.ahtml += get_hierarchy_html(node, requested_rank);
+    }
+    //Bacteria node
+    bnode =
+        C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank["Bacteria_domain"];
+    for (let n in bnode.children_ids) {
+        node = C.homd_taxonomy.taxa_tree_dict_map_by_id[bnode.children_ids[n]];
+        //logger.info('mynode1',node)
+        html_obj.bhtml += get_hierarchy_html(node, requested_rank);
+    }
 
-  //logger.info(html_obj.bhtml)
+    //logger.info(html_obj.bhtml)
 
-  res.send(JSON.stringify(html_obj));
+    res.send(JSON.stringify(html_obj));
 });
 /////////////////////
 function get_hierarchy_html(node, requested_rank) {
-  //logger.info('mynode2',node)
-  if (C.ranks.indexOf(node.rank) > C.ranks.indexOf(requested_rank)) {
-    return "";
-  }
-
-  let html = "",
-    child_name,
-    child_rank,
-    id,
-    display_rank,
-    encoded_child_name,
-    cts,
-    cnode;
-  let green_colors = [
-    "#9FD4A3",
-    "#AEDCAE",
-    "#BEE3BA",
-    "#CDEBC5",
-    "#DDF2D1",
-    "#ECFADC",
-  ];
-  child_name = node.taxon;
-  let lineage = helpers_taxa.make_lineage(node); // [str obj]
-  cts = helpers_taxa.get_counts(lineage[0], "").lst;
-  encoded_child_name = encodeURIComponent(node.taxon);
-  //logger.info('encoded name',encoded_child_name)
-  child_rank = node.rank;
-  let ospace = "&nbsp;",
-    space;
-  let num = C.ranks.indexOf(child_rank) + 1;
-  space = ospace.repeat(num * 2);
-  if (child_rank === "klass") {
-    display_rank = "Class";
-  } else {
-    display_rank = helpers.capitalizeFirst(child_rank);
-  }
-  id = child_name + "_" + child_rank;
-
-  html += "<ul>";
-  html += "<li class='tax-item'>";
-  if (node.children_ids.length === 0) {
-    //logger.info('xx',node.rank)
-    let hmt = helpers.make_otid_display_name(node.otid);
-    let hmt_lnk =
-      "<a href='tax_description?otid=" + node.otid + "'>" + hmt + "</a>";
-    if (child_rank === "species") {
-      html +=
-        space +
-        "<span class='species otid-link-sp' nowrap><small>" +
-        display_rank +
-        ":</small> <i>" +
-        child_name +
-        "</i> (" +
-        hmt_lnk +
-        ")";
-      html +=
-        " <a title='Genome Count' href='/genome/genome_table?otid=" +
-        node.otid +
-        "' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" +
-        cts.genome_counts +
-        "&nbsp;</a>";
-      html +=
-        " <a title='RefSeq Count' href='/refseq/refseq_tree?otid=" +
-        node.otid +
-        "' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" +
-        cts.refseq_counts +
-        "&nbsp;</a>";
-      html += " </span>";
-    } else {
-      //subspecies SAME html (could be combined)
-      //logger.info('Not Used::SSpecies')
-      html +=
-        space +
-        "<span class='subspecies otid-link-ssp' nowrap><small>" +
-        display_rank +
-        ":</small> <i>" +
-        child_name +
-        "</i> (" +
-        hmt_lnk +
-        ")";
-      html +=
-        " <a title='Genome Count' href='/genome/genome_table?otid=" +
-        node.otid +
-        "' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" +
-        cts.genome_counts +
-        "&nbsp;</a>";
-      html +=
-        " <a title='RefSeq Count' href='/refseq/refseq_tree?otid=" +
-        node.otid +
-        "' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" +
-        cts.refseq_counts +
-        "&nbsp;</a>";
-      html += " </span>";
+    //logger.info('mynode2',node)
+    if (C.ranks.indexOf(node.rank) > C.ranks.indexOf(requested_rank)) {
+        return "";
     }
-  } else {
-    node.children_ids.sort((a, b) => {
-      let xnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[a];
-      let ynode = C.homd_taxonomy.taxa_tree_dict_map_by_id[b];
-      return helpers.compareStrings_alpha(xnode.taxon, ynode.taxon);
-    });
-    if (node.rank === requested_rank) {
-      html +=
-        space +
-        "<a onclick=get_leaf('" +
-        encoded_child_name +
-        "','" +
-        child_rank +
-        "')";
-      html += "    role='button'";
-      html += "    type='button'";
-      html +=
-        "    style='background:" +
-        green_colors[C.ranks.indexOf(node.rank) - 1] +
-        ";'";
-      html += "    class='" + node.rank + " btn btn-sm'>";
 
-      if (child_rank === "species") {
-        //logger.info('node.rank',node.rank,C.ranks.indexOf(node.rank),green_colors[C.ranks.indexOf(node.rank)-1])
-        html +=
-          "    <small>" + display_rank + ":</small> <i>" + child_name + "</i>";
-      } else {
-        html += "    <small>" + display_rank + ":</small> " + child_name;
-      }
-
-      html +=
-        " <span title='Taxon Count' class='pill pill-indigo'>" +
-        cts.tax_counts +
-        "</span>";
-      html +=
-        " <span title='Genome Count' class='pill pill-orange'>" +
-        cts.genome_counts +
-        "</span>";
-      html +=
-        " <span title='RefSeq Count' class='pill pill-khaki'>" +
-        cts.refseq_counts +
-        "</span>";
-      html += "</a>";
-
-      html +=
-        " <span id='" +
-        id +
-        "_span' class='fa_widget'><i class='fa-solid fa-angle-right'></i></span>";
-      html += "<div id='" + id + "_div'></div>";
+    let html = "",
+        child_name,
+        child_rank,
+        id,
+        display_rank,
+        encoded_child_name,
+        cts,
+        cnode;
+    let green_colors = [
+        "#9FD4A3",
+        "#AEDCAE",
+        "#BEE3BA",
+        "#CDEBC5",
+        "#DDF2D1",
+        "#ECFADC",
+    ];
+    child_name = node.taxon;
+    let lineage = helpers_taxa.make_lineage(node); // [str obj]
+    cts = helpers_taxa.get_counts(lineage[0], "").lst;
+    encoded_child_name = encodeURIComponent(node.taxon);
+    //logger.info('encoded name',encoded_child_name)
+    child_rank = node.rank;
+    let ospace = "&nbsp;",
+        space;
+    let num = C.ranks.indexOf(child_rank) + 1;
+    space = ospace.repeat(num * 2);
+    if (child_rank === "klass") {
+        display_rank = "Class";
     } else {
-      //logger.info('Not requested_rank::',node.rank)
-      html +=
-        space +
-        "<a onclick=get_leaf('" +
-        encoded_child_name +
-        "','" +
-        child_rank +
-        "')";
-      html += "    role='button'";
-      html += "    type='button'";
-      html +=
-        "    style='background:" +
-        green_colors[C.ranks.indexOf(child_rank) - 1] +
-        ";'";
-      html += "    class='" + node.rank + " btn btn-sm'>";
-
-      if (child_rank === "species") {
-        html +=
-          "    <small>" + display_rank + ":</small> <i>" + child_name + "</i>";
-      } else {
-        html += "    <small>" + display_rank + ":</small> " + child_name;
-      }
-
-      html +=
-        " <span title='Taxon Count'  class='pill pill-indigo'>" +
-        cts.tax_counts +
-        "</span>";
-      html +=
-        " <span title='Genome Count' class='pill pill-orange'>" +
-        cts.genome_counts +
-        "</span>";
-      html +=
-        " <span title='RefSeq Count' class='pill pill-khaki'>" +
-        cts.refseq_counts +
-        "</span>";
-      html += "</a>";
-      html +=
-        " <span id='" +
-        id +
-        "_span' class='fa_widget'><i class='fa-solid fa-angle-down'></i></span>";
-
-      html += "<div id='" + id + "_div'>";
-      for (let n in node.children_ids) {
-        cnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[n]];
-        html += get_hierarchy_html(cnode, requested_rank);
-        //logger.info(requested_rank,node.rank)
-      }
-      html += "</div>";
+        display_rank = helpers.capitalizeFirst(child_rank);
     }
-  }
-  html += "</li>";
-  html += "</ul>";
+    id = child_name + "_" + child_rank;
 
-  return html;
+    html += "<ul>";
+    html += "<li class='tax-item'>";
+    if (node.children_ids.length === 0) {
+        //logger.info('xx',node.rank)
+        let hmt = helpers.make_otid_display_name(node.otid);
+        let hmt_lnk =
+            "<a href='tax_description?otid=" + node.otid + "'>" + hmt + "</a>";
+        if (child_rank === "species") {
+            html +=
+                space +
+                "<span class='species otid-link-sp' nowrap><small>" +
+                display_rank +
+                ":</small> <i>" +
+                child_name +
+                "</i> (" +
+                hmt_lnk +
+                ")";
+            html +=
+                " <a title='Genome Count' href='/genome/genome_table?otid=" +
+                node.otid +
+                "' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" +
+                cts.genome_counts +
+                "&nbsp;</a>";
+            html +=
+                " <a title='RefSeq Count' href='/refseq/refseq_tree?otid=" +
+                node.otid +
+                "' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" +
+                cts.refseq_counts +
+                "&nbsp;</a>";
+            html += " </span>";
+        } else {
+            //subspecies SAME html (could be combined)
+            //logger.info('Not Used::SSpecies')
+            html +=
+                space +
+                "<span class='subspecies otid-link-ssp' nowrap><small>" +
+                display_rank +
+                ":</small> <i>" +
+                child_name +
+                "</i> (" +
+                hmt_lnk +
+                ")";
+            html +=
+                " <a title='Genome Count' href='/genome/genome_table?otid=" +
+                node.otid +
+                "' class='pill pill-orange' style='color:blue;text-decoration: underline;'>&nbsp;" +
+                cts.genome_counts +
+                "&nbsp;</a>";
+            html +=
+                " <a title='RefSeq Count' href='/refseq/refseq_tree?otid=" +
+                node.otid +
+                "' class='pill pill-khaki' target='_blank' style='color:blue;text-decoration: underline;'>&nbsp;" +
+                cts.refseq_counts +
+                "&nbsp;</a>";
+            html += " </span>";
+        }
+    } else {
+        node.children_ids.sort((a, b) => {
+            let xnode = C.homd_taxonomy.taxa_tree_dict_map_by_id[a];
+            let ynode = C.homd_taxonomy.taxa_tree_dict_map_by_id[b];
+            return helpers.compareStrings_alpha(xnode.taxon, ynode.taxon);
+        });
+        if (node.rank === requested_rank) {
+            html +=
+                space +
+                "<a onclick=get_leaf('" +
+                encoded_child_name +
+                "','" +
+                child_rank +
+                "')";
+            html += "    role='button'";
+            html += "    type='button'";
+            html +=
+                "    style='background:" +
+                green_colors[C.ranks.indexOf(node.rank) - 1] +
+                ";'";
+            html += "    class='" + node.rank + " btn btn-sm'>";
+
+            if (child_rank === "species") {
+                //logger.info('node.rank',node.rank,C.ranks.indexOf(node.rank),green_colors[C.ranks.indexOf(node.rank)-1])
+                html +=
+                    "    <small>" +
+                    display_rank +
+                    ":</small> <i>" +
+                    child_name +
+                    "</i>";
+            } else {
+                html +=
+                    "    <small>" + display_rank + ":</small> " + child_name;
+            }
+
+            html +=
+                " <span title='Taxon Count' class='pill pill-indigo'>" +
+                cts.tax_counts +
+                "</span>";
+            html +=
+                " <span title='Genome Count' class='pill pill-orange'>" +
+                cts.genome_counts +
+                "</span>";
+            html +=
+                " <span title='RefSeq Count' class='pill pill-khaki'>" +
+                cts.refseq_counts +
+                "</span>";
+            html += "</a>";
+
+            html +=
+                " <span id='" +
+                id +
+                "_span' class='fa_widget'><i class='fa-solid fa-angle-right'></i></span>";
+            html += "<div id='" + id + "_div'></div>";
+        } else {
+            //logger.info('Not requested_rank::',node.rank)
+            html +=
+                space +
+                "<a onclick=get_leaf('" +
+                encoded_child_name +
+                "','" +
+                child_rank +
+                "')";
+            html += "    role='button'";
+            html += "    type='button'";
+            html +=
+                "    style='background:" +
+                green_colors[C.ranks.indexOf(child_rank) - 1] +
+                ";'";
+            html += "    class='" + node.rank + " btn btn-sm'>";
+
+            if (child_rank === "species") {
+                html +=
+                    "    <small>" +
+                    display_rank +
+                    ":</small> <i>" +
+                    child_name +
+                    "</i>";
+            } else {
+                html +=
+                    "    <small>" + display_rank + ":</small> " + child_name;
+            }
+
+            html +=
+                " <span title='Taxon Count'  class='pill pill-indigo'>" +
+                cts.tax_counts +
+                "</span>";
+            html +=
+                " <span title='Genome Count' class='pill pill-orange'>" +
+                cts.genome_counts +
+                "</span>";
+            html +=
+                " <span title='RefSeq Count' class='pill pill-khaki'>" +
+                cts.refseq_counts +
+                "</span>";
+            html += "</a>";
+            html +=
+                " <span id='" +
+                id +
+                "_span' class='fa_widget'><i class='fa-solid fa-angle-down'></i></span>";
+
+            html += "<div id='" + id + "_div'>";
+            for (let n in node.children_ids) {
+                cnode =
+                    C.homd_taxonomy.taxa_tree_dict_map_by_id[
+                        node.children_ids[n]
+                    ];
+                html += get_hierarchy_html(cnode, requested_rank);
+                //logger.info(requested_rank,node.rank)
+            }
+            html += "</div>";
+        }
+    }
+    html += "</li>";
+    html += "</ul>";
+
+    return html;
 }
 
 router.get("/tax_level", function tax_level_get(req, res) {
-  res.render("pages/taxa/taxlevel", {
-    title: "HOMD :: Taxon Level",
-    pgname: "taxon/level", // for AbountThisPage
-    config: JSON.stringify(ENV),
-    level: "domain",
-    //oral: oral,
-    ver_info: JSON.stringify(C.version_information),
-  });
+    res.render("pages/taxa/taxlevel", {
+        title: "HOMD :: Taxon Level",
+        pgname: "taxon/level", // for AbountThisPage
+        config: JSON.stringify(ENV),
+        level: "domain",
+        //oral: oral,
+        ver_info: JSON.stringify(C.version_information),
+    });
 });
 //
 //
 router.post("/tax_level", function tax_level_post(req, res) {
-  logger.info("in taxlevel POST");
-  logger.info(req.body);
+    logger.info("in taxlevel POST");
+    logger.info(req.body);
 
-  let rank = req.body.rank;
-  let count_type = req.body.count_type;
-  //let count_type = 'both'
+    let rank = req.body.rank;
+    let count_type = req.body.count_type;
+    //let count_type = 'both'
 
-  const tax_resp = [];
-  fs.readFile(
-    path.join(ENV.PATH_TO_DATA, C.taxcounts_fn),
-    "utf8",
-    function readTaxCountsFile(err, data) {
-      if (err) {
-        console.error(err);
-        return;
-      }
-
-      let taxdata = JSON.parse(data);
-      //logger.info('taxdata ',taxdata)
-      C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank].map((taxitem) => {
-        // get lineage of taxitem
-
-        let lineage = [taxitem.taxon];
-
-        let new_search_id = taxitem.parent_id;
-        //let new_search_rank = C.ranks[C.ranks.indexOf(taxitem.rank)-1]
-        //logger.info(new_search_id,new_search_rank)
-        while (new_search_id !== 0) {
-          let new_search_item =
-            C.homd_taxonomy.taxa_tree_dict_map_by_id[new_search_id];
-
-          lineage.unshift(new_search_item.taxon); // adds to front of lineage array -prepends
-          new_search_id = new_search_item.parent_id;
-        }
-        let return_obj = {};
-        return_obj.item_rank = rank;
-
-        if (rank === "species" || rank === "subspecies") {
-          //logger.info('rank '+rank+' = '+taxitem.otid)
-          return_obj.otid = taxitem.otid;
-          // logger.info('species')
-          //          // here we 'fix' the species to exclude the genus so that
-          //          // the whole lineage can be used as an index for the counts
-          //          genus = lineage[lineage.length - 2]
-          //          species = lineage[lineage.length - 1]
-          //          new_sp = species.replace(genus,'')
-          //          lineage[lineage.length - 1] = new_sp.trim()
-        }
-        return_obj.item_taxon = lineage[lineage.length - 1];
-        return_obj.parent_rank = C.ranks[C.ranks.indexOf(rank) - 1];
-        return_obj.parent_taxon = lineage[lineage.length - 2];
-        //logger.info(rank,lineage)
-        if (lineage.length === C.ranks.indexOf(rank) + 1) {
-          let lineage_str = lineage.join(";");
-          //logger.info(lineage_str)
-          if (Object.hasOwn(taxdata, lineage_str)) {
-            //logger.info(lineage_str)
-            //                 logger.info(taxdata[lineage_str].taxcnt)
-            //                 logger.info(taxdata[lineage_str].gcnt)
-            //                 logger.info(taxdata[lineage_str].refcnt)
-            if (count_type === "wdropped") {
-              return_obj.tax_count =
-                taxdata[lineage_str].taxcnt +
-                taxdata[lineage_str].taxcnt_wdropped;
-              return_obj.gne_count =
-                taxdata[lineage_str].gcnt + taxdata[lineage_str].gcnt_wdropped;
-              return_obj.rrna_count =
-                taxdata[lineage_str].refcnt +
-                taxdata[lineage_str].refcnt_wdropped;
-            } else {
-              return_obj.tax_count = taxdata[lineage_str].taxcnt;
-              return_obj.gne_count = taxdata[lineage_str].gcnt;
-              return_obj.rrna_count = taxdata[lineage_str].refcnt;
+    const tax_resp = [];
+    fs.readFile(
+        path.join(ENV.PATH_TO_DATA, C.taxcounts_fn),
+        "utf8",
+        function readTaxCountsFile(err, data) {
+            if (err) {
+                console.error(err);
+                return;
             }
-            //logger.info('return_obj',return_obj)
-          } else {
-            return_obj.tax_count = 0;
-            return_obj.gne_count = 0;
-            return_obj.rrna_count = 0;
-            return_obj.lineage = "";
-          }
-        } else {
-          return_obj.tax_count = 0;
-          return_obj.gne_count = 0;
-          return_obj.rrna_count = 0;
-          return_obj.lineage = "";
-        }
-        tax_resp.push(return_obj);
-        return return_obj;
-      });
-      if (rank === "domain") {
-        //sort by domain only
-        tax_resp.sort((a, b) => {
-          return helpers.compareStrings_alpha(a.item_taxon, b.item_taxon);
-        });
-      } else {
-        // sort by parent then item
-        tax_resp.sort((a, b) => {
-          return helpers.compareByTwoStrings_alpha(
-            a,
-            b,
-            "parent_taxon",
-            "item_taxon",
-          );
-        });
-      }
 
-      //logger.info(tax_resp)
+            let taxdata = JSON.parse(data);
+            //logger.info('taxdata ',taxdata)
+            C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank].map((taxitem) => {
+                // get lineage of taxitem
 
-      //res.send(JSON.stringify(tax_resp));
-      res.send(JSON.stringify([count_type, tax_resp]));
-    },
-  );
+                let lineage = [taxitem.taxon];
+
+                let new_search_id = taxitem.parent_id;
+                //let new_search_rank = C.ranks[C.ranks.indexOf(taxitem.rank)-1]
+                //logger.info(new_search_id,new_search_rank)
+                while (new_search_id !== 0) {
+                    let new_search_item =
+                        C.homd_taxonomy.taxa_tree_dict_map_by_id[new_search_id];
+
+                    lineage.unshift(new_search_item.taxon); // adds to front of lineage array -prepends
+                    new_search_id = new_search_item.parent_id;
+                }
+                let return_obj = {};
+                return_obj.item_rank = rank;
+
+                if (rank === "species" || rank === "subspecies") {
+                    //logger.info('rank '+rank+' = '+taxitem.otid)
+                    return_obj.otid = taxitem.otid;
+                    // logger.info('species')
+                    //          // here we 'fix' the species to exclude the genus so that
+                    //          // the whole lineage can be used as an index for the counts
+                    //          genus = lineage[lineage.length - 2]
+                    //          species = lineage[lineage.length - 1]
+                    //          new_sp = species.replace(genus,'')
+                    //          lineage[lineage.length - 1] = new_sp.trim()
+                }
+                return_obj.item_taxon = lineage[lineage.length - 1];
+                return_obj.parent_rank = C.ranks[C.ranks.indexOf(rank) - 1];
+                return_obj.parent_taxon = lineage[lineage.length - 2];
+                //logger.info(rank,lineage)
+                if (lineage.length === C.ranks.indexOf(rank) + 1) {
+                    let lineage_str = lineage.join(";");
+                    //logger.info(lineage_str)
+                    if (Object.hasOwn(taxdata, lineage_str)) {
+                        //logger.info(lineage_str)
+                        //                 logger.info(taxdata[lineage_str].taxcnt)
+                        //                 logger.info(taxdata[lineage_str].gcnt)
+                        //                 logger.info(taxdata[lineage_str].refcnt)
+                        if (count_type === "wdropped") {
+                            return_obj.tax_count =
+                                taxdata[lineage_str].taxcnt +
+                                taxdata[lineage_str].taxcnt_wdropped;
+                            return_obj.gne_count =
+                                taxdata[lineage_str].gcnt +
+                                taxdata[lineage_str].gcnt_wdropped;
+                            return_obj.rrna_count =
+                                taxdata[lineage_str].refcnt +
+                                taxdata[lineage_str].refcnt_wdropped;
+                        } else {
+                            return_obj.tax_count = taxdata[lineage_str].taxcnt;
+                            return_obj.gne_count = taxdata[lineage_str].gcnt;
+                            return_obj.rrna_count = taxdata[lineage_str].refcnt;
+                        }
+                        //logger.info('return_obj',return_obj)
+                    } else {
+                        return_obj.tax_count = 0;
+                        return_obj.gne_count = 0;
+                        return_obj.rrna_count = 0;
+                        return_obj.lineage = "";
+                    }
+                } else {
+                    return_obj.tax_count = 0;
+                    return_obj.gne_count = 0;
+                    return_obj.rrna_count = 0;
+                    return_obj.lineage = "";
+                }
+                tax_resp.push(return_obj);
+                return return_obj;
+            });
+            if (rank === "domain") {
+                //sort by domain only
+                tax_resp.sort((a, b) => {
+                    return helpers.compareStrings_alpha(
+                        a.item_taxon,
+                        b.item_taxon,
+                    );
+                });
+            } else {
+                // sort by parent then item
+                tax_resp.sort((a, b) => {
+                    return helpers.compareByTwoStrings_alpha(
+                        a,
+                        b,
+                        "parent_taxon",
+                        "item_taxon",
+                    );
+                });
+            }
+
+            //logger.info(tax_resp)
+
+            //res.send(JSON.stringify(tax_resp));
+            res.send(JSON.stringify([count_type, tax_resp]));
+        },
+    );
 });
 //
 router.post("/oral_counts_toggle", function oral_counts_toggle(req, res) {
-  // NO USED!!!
-  let oral = req.body.oral;
+    // NO USED!!!
+    let oral = req.body.oral;
 
-  logger.info(`oral ${oral}`);
+    logger.info(`oral ${oral}`);
 
-  res.send({ ok: "ok" });
+    res.send({ ok: "ok" });
 });
 
 /////////////////////////////////
 function renderTaxonDescription(req, res, args) {
-  //logger.info('args',args)
-  res.render("pages/taxa/taxdesc", {
-    title: "HOMD :: Taxon Info",
-    pgname: "taxon/description", // for AbountThisPage
-    config: JSON.stringify(ENV),
-    ver_info: JSON.stringify(C.version_information),
+    //logger.info('args',args)
+    res.render("pages/taxa/taxdesc", {
+        title: "HOMD :: Taxon Info",
+        pgname: "taxon/description", // for AbountThisPage
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
 
-    otid: args.otid,
-    image_array: JSON.stringify(args.image_array),
-    data1: JSON.stringify(args.data1),
-    msg: args.msg,
-    text_file: args.text_file, // only 666 so far
-    tinfo: JSON.stringify(args.tinfo), // description
-    lin: JSON.stringify(args.lin), // lineage domain=>subspecies
-    data4: JSON.stringify(args.data4), // publications
-    refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
-    links: JSON.stringify(args.links),
-    sites: JSON.stringify(args.sites),
-    sites2: JSON.stringify(args.sites2),
-    gtdb: JSON.stringify(args.gtdbtax),
-    strains: JSON.stringify(args.gstrains),
-    otid_has_abundance: args.otid_has_abundance,
-    //lineage: args.lineage_string,
-  });
+        otid: args.otid,
+        image_array: JSON.stringify(args.image_array),
+        data1: JSON.stringify(args.data1),
+        msg: args.msg,
+        text_file: args.text_file, // only 666 so far
+        tinfo: JSON.stringify(args.tinfo), // description
+        lin: JSON.stringify(args.lin), // lineage domain=>subspecies
+        data4: JSON.stringify(args.data4), // publications
+        refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
+        links: JSON.stringify(args.links),
+        sites: JSON.stringify(args.sites),
+        sites2: JSON.stringify(args.sites2),
+        gtdb: JSON.stringify(args.gtdbtax),
+        strains: JSON.stringify(args.gstrains),
+        otid_has_abundance: args.otid_has_abundance,
+        //lineage: args.lineage_string,
+    });
 }
 function renderTaxonDescriptionTEMP(req, res, args) {
-  logger.info("IN TEMP");
-  res.render("pages/taxa/taxdescWORKING", {
-    title: "HOMD :: Taxon Info",
-    pgname: "taxon/description", // for AbountThisPage
-    config: JSON.stringify(ENV),
-    ver_info: JSON.stringify(C.version_information),
+    logger.info("IN TEMP");
+    res.render("pages/taxa/taxdescWORKING", {
+        title: "HOMD :: Taxon Info",
+        pgname: "taxon/description", // for AbountThisPage
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
 
-    otid: args.otid,
-    image_array: JSON.stringify(args.image_array),
-    data1: JSON.stringify(args.data1),
-    msg: args.msg,
-    text_file: args.text_file, // only 666 so far
-    tinfo: JSON.stringify(args.tinfo), // description
-    lin: JSON.stringify(args.lin), // lineage domain=>subspecies
-    data4: JSON.stringify(args.data4), // publications
-    refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
-    links: JSON.stringify(args.links),
-    sites: JSON.stringify(args.sites),
-    sites2: JSON.stringify(args.sites2),
-    gtdb: JSON.stringify(args.gtdbtax),
-    strains: JSON.stringify(args.gstrains),
-    otid_has_abundance: args.otid_has_abundance,
-    //lineage: args.lineage_string,
-  });
+        otid: args.otid,
+        image_array: JSON.stringify(args.image_array),
+        data1: JSON.stringify(args.data1),
+        msg: args.msg,
+        text_file: args.text_file, // only 666 so far
+        tinfo: JSON.stringify(args.tinfo), // description
+        lin: JSON.stringify(args.lin), // lineage domain=>subspecies
+        data4: JSON.stringify(args.data4), // publications
+        refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
+        links: JSON.stringify(args.links),
+        sites: JSON.stringify(args.sites),
+        sites2: JSON.stringify(args.sites2),
+        gtdb: JSON.stringify(args.gtdbtax),
+        strains: JSON.stringify(args.gstrains),
+        otid_has_abundance: args.otid_has_abundance,
+        //lineage: args.lineage_string,
+    });
 }
 ///
 router.get("/tax_description", async function TaxDescription(req, res) {
-  logger.warn(req.query);
+    logger.warn(req.query);
 
-  let otid;
-  if (!req.query.otid) {
-    otid = "389";
-  } else {
-    otid = req.query.otid.replace(/^0+/, ""); // remove leading zeros
-  }
-  //logger.info('otid',otid)
-  //defaults
-  let lookup_data,
-    data4,
-    links = {},
-    sites = "";
-  let refseq, info, pangenomes, gtdbtax;
+    let otid;
+    if (!req.query.otid) {
+        otid = "389";
+    } else {
+        otid = req.query.otid.replace(/^0+/, ""); // remove leading zeros
+    }
+    //logger.info('otid',otid)
+    //defaults
+    let lookup_data,
+        data4,
+        links = {},
+        sites = "";
+    let refseq, info, pangenomes, gtdbtax;
 
-  if (otid && req.session.ttable_filter) {
-    req.session.ttable_filter.otid = otid;
-  }
-  if (req.query.gid && req.session.gtable_filter) {
-    req.session.gtable_filter.gid = req.query.gid;
-  }
+    if (otid && req.session.ttable_filter) {
+        req.session.ttable_filter.otid = otid;
+    }
+    if (req.query.gid && req.session.gtable_filter) {
+        req.session.gtable_filter.gid = req.query.gid;
+    }
 
-  /*
+    /*
   This busy page needs:
   1  otid     type:string
   2  status
@@ -840,7 +872,7 @@ router.get("/tax_description", async function TaxDescription(req, res) {
   12 Genome Sequence  - needs genome count and otid
   13 Ref Data: General,Citations,Pheno,Cultivability,Pevalence...
   */
-  /*
+    /*
   Link Exceptions
   105   Peptostreptococcaceae [XI][G-1] [Eubacterium] infirmum  
   467   Peptostreptococcaceae [XI][G-1] [Eubacterium] sulci 
@@ -854,1668 +886,1747 @@ router.get("/tax_description", async function TaxDescription(req, res) {
 
   
   */
-  let lineage;
+    let lineage;
 
-  let text_file = get_rank_text("species", "", otid);
-  if (C.dropped_taxids.indexOf(otid) !== -1) {
-    lookup_data = C.taxon_lookup[otid];
-    let hmt = helpers.make_otid_display_name(otid);
-    let message =
-      "This TaxonID (" +
-      hmt +
-      ") has been Dropped.<br>Reason: " +
-      lookup_data.notes;
-    //let dropped_notes = "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
-    //data1.notes= "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
-    //data3 = get_special_lineage_from_db(otid)
-    let q = queries.get_lineage_query(otid); //
+    let text_file = get_rank_text("species", "", otid);
+    if (C.dropped_taxids.indexOf(otid) !== -1) {
+        lookup_data = C.taxon_lookup[otid];
+        let hmt = helpers.make_otid_display_name(otid);
+        let message =
+            "This TaxonID (" +
+            hmt +
+            ") has been Dropped.<br>Reason: " +
+            lookup_data.notes;
+        //let dropped_notes = "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
+        //data1.notes= "This taxon has been dropped from HOMD<br>Reason: "+data1.notes
+        //data3 = get_special_lineage_from_db(otid)
+        let q = queries.get_lineage_query(otid); //
 
-    const rows = await queries.run_query(q, req, res);
+        const rows = await queries.run_query(q, req, res);
 
-    lineage = rows[0]; // NEED because dropped are not in C.taxon_lineage_lookup
+        lineage = rows[0]; // NEED because dropped are not in C.taxon_lineage_lookup
 
-    links["lpsnlink"] = helpers_taxa.get_lpsn_outlink1(lookup_data, lineage);
-    //logger.info(links)
+        links["lpsnlink"] = helpers_taxa.get_lpsn_outlink1(
+            lookup_data,
+            lineage,
+        );
+        //logger.info(links)
 
-    sites = "";
-    if (otid in C.site_lookup && "major_body_site" in C.site_lookup[otid]) {
-      sites =
-        "Primary: " +
-        C.site_lookup[otid].major_body_site +
-        " (Abundance: " +
-        C.site_lookup[otid].major_site_abundance +
-        ")";
-      if (C.site_lookup[otid].secondary_sites != "none assigned") {
-        sites +=
-          "<br>Secondary: " +
-          C.site_lookup[otid].secondary_sites +
-          " (Abundance: " +
-          C.site_lookup[otid].secondary_site_abundance +
-          ")";
-      }
-      if (C.site_lookup[otid].subsite_of_primary) {
-        sites +=
-          "<br><small>Note: " +
-          C.site_lookup[otid].subsite_of_primary +
-          "</small>";
-      }
+        sites = "";
+        if (otid in C.site_lookup && "major_body_site" in C.site_lookup[otid]) {
+            sites =
+                "Primary: " +
+                C.site_lookup[otid].major_body_site +
+                " (Abundance: " +
+                C.site_lookup[otid].major_site_abundance +
+                ")";
+            if (C.site_lookup[otid].secondary_sites != "none assigned") {
+                sites +=
+                    "<br>Secondary: " +
+                    C.site_lookup[otid].secondary_sites +
+                    " (Abundance: " +
+                    C.site_lookup[otid].secondary_site_abundance +
+                    ")";
+            }
+            if (C.site_lookup[otid].subsite_of_primary) {
+                sites +=
+                    "<br><small>Note: " +
+                    C.site_lookup[otid].subsite_of_primary +
+                    "</small>";
+            }
+        }
+
+        //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+        //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+        //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+        //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
+        //args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
+        let args = { otid: otid };
+        args.image_array = [];
+        args.data1 = lookup_data;
+        args.data1.pangenomes = [];
+        args.msg = message;
+        args.text_file = text_file[0];
+        args.tinfo = {};
+        args.gtdbtax = {};
+        args.lin = lineage;
+        args.data4 = {};
+        args.refseq_info = {};
+        args.links = links;
+        args.sites = sites;
+        args.otid_has_abundance = false;
+        args.gstrains = {};
+        //args.lineage = lineage_string
+        renderTaxonDescription(req, res, args);
+        return;
+    } // END DROPPED
+
+    lineage = C.taxon_lineage_lookup[otid]; // dropped not in lineage lookup use hierarchy
+    logger.info(`lineage: ${lineage}`);
+    if (C.taxon_lookup[otid] === undefined) {
+        res.send(
+            "That Taxon ID: (" +
+                otid +
+                ") was not found1 - Use the Back Arrow and select another",
+        );
+        return;
     }
 
-    //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-    //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-    //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-    //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
-    //args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
+    // TODO use query here instead of data1,data2....
+    //
+    lookup_data = C.taxon_lookup[otid];
+
+    if (otid in C.link_exceptions) {
+        links = C.link_exceptions[otid];
+    } else {
+        links = {
+            ncbilink: lookup_data.genus + "-" + lookup_data.species,
+            gcmlink: lookup_data.genus + "%20" + lookup_data.species,
+        };
+        links["lpsnlink"] = helpers_taxa.get_lpsn_outlink1(
+            lookup_data,
+            lineage,
+        );
+    }
+    //links.anviserver_link       = ENV.ANVIO_URL  //https://anvio.homd.org/anvio?pg=Mitis_Group
+    links.anviserver_link = ENV.ANVIO_URL; //https://vamps.mbl.edu/anviserver/pangenomes/Mitis_Group
+    let otid_has_abundance = false;
+    if (C.otids_w_abundance.indexOf(otid) !== -1) {
+        otid_has_abundance = true;
+    }
+    //logger.info('389')
+    //logger.info(C.taxon_references_lookup['389'])
+    if (C.taxon_references_lookup[otid]) {
+        data4 = C.taxon_references_lookup[otid];
+    } else {
+        console.warn(
+            "No taxon_references for HMT:",
+            otid,
+            "in C.taxon_references_lookup",
+        );
+        data4 = {};
+    }
+    let image_array = find_otid_images("species", otid);
+    //refseq = {}
+    //info = {'general':'','cultavability':'','prevalence':'','disease_associations':'','phenotypic':''}  // unique per otid
+    //counts =
+
+    //const q_refseq_metadata,q_info,q_pangenome,q_gtdb_tax
+    const q_refseq_metadata = queries.get_refseq_metadata_query(otid); // dont need query
+    const q_info = queries.get_taxon_info_query(otid);
+    const q_pangenome = queries.get_pangenomes_query(otid);
+    const q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes);
+
+    refseq = await queries.run_query(q_refseq_metadata, req, res);
+    info = await queries.run_query(q_info, req, res);
+    pangenomes = await queries.run_query(q_pangenome, req, res);
+    gtdbtax = await queries.run_query(q_gtdb_tax, req, res);
+
+    if (otid in C.site_lookup && "major_body_site" in C.site_lookup[otid]) {
+        sites =
+            "Primary: " +
+            C.site_lookup[otid].major_body_site +
+            " (Abundance: " +
+            C.site_lookup[otid].major_site_abundance +
+            ")";
+        // = Object.values(C.site_lookup[otid]).join('<br>')
+        if (
+            C.site_lookup[otid].secondary_sites &&
+            C.site_lookup[otid].secondary_sites !== "none assigned"
+        ) {
+            sites +=
+                "<br>Secondary: " +
+                C.site_lookup[otid].secondary_sites +
+                " (Abundance: " +
+                C.site_lookup[otid].secondary_site_abundance +
+                ")";
+        }
+        if (C.site_lookup[otid]["ref_link"]) {
+            let ref_link_lst = C.site_lookup[otid]["ref_link"].split(";"); //.split(/\s+/)
+            sites += "<br><small>Reference(s):";
+            for (let i in ref_link_lst) {
+                sites +=
+                    "<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href='" +
+                    ref_link_lst[i].trim() +
+                    "' target='_blank'>" +
+                    ref_link_lst[i].trim() +
+                    "</a>";
+            }
+            sites += "</small>";
+        }
+        if (C.site_lookup[otid].subsite_of_primary) {
+            sites +=
+                "<br><small>Note: " +
+                C.site_lookup[otid].subsite_of_primary +
+                "</small>";
+        }
+    }
+    let gstrains = {};
+    for (let n in lookup_data.genomes) {
+        gstrains[lookup_data.genomes[n]] =
+            C.genome_lookup[lookup_data.genomes[n]].strain;
+    }
+
+    let sites2 = C.site_lookup[otid];
     let args = { otid: otid };
-    args.image_array = [];
+    args.image_array = image_array;
     args.data1 = lookup_data;
-    args.data1.pangenomes = [];
-    args.msg = message;
+    // add pangenomes
+    //logger.info('refseq',refseq)
+    args.data1.pangenomes = pangenomes; // always a list??
+    logger.info(pangenomes);
+    logger.info(`lookup_data ${args.data1}`);
+    args.msg = lookup_data.notes;
     args.text_file = text_file[0];
-    args.tinfo = {};
-    args.gtdbtax = {};
-    args.lin = lineage;
-    args.data4 = {};
-    args.refseq_info = {};
+    args.tinfo = info;
+    args.gtdbtax = gtdbtax;
+    args.data4 = data4;
+    args.refseq_info = refseq;
     args.links = links;
     args.sites = sites;
-    args.otid_has_abundance = false;
-    args.gstrains = {};
+    args.sites2 = sites2;
+    args.otid_has_abundance = otid_has_abundance;
+    args.gstrains = gstrains;
+
     //args.lineage = lineage_string
-    renderTaxonDescription(req, res, args);
-    return;
-  } // END DROPPED
+    args.lin = lineage;
 
-  lineage = C.taxon_lineage_lookup[otid]; // dropped not in lineage lookup use hierarchy
-  logger.info(`lineage: ${lineage}`);
-  if (C.taxon_lookup[otid] === undefined) {
-    res.send(
-      "That Taxon ID: (" +
-        otid +
-        ") was not found1 - Use the Back Arrow and select another",
-    );
-    return;
-  }
-
-  // TODO use query here instead of data1,data2....
-  //
-  lookup_data = C.taxon_lookup[otid];
-
-  if (otid in C.link_exceptions) {
-    links = C.link_exceptions[otid];
-  } else {
-    links = {
-      ncbilink: lookup_data.genus + "-" + lookup_data.species,
-      gcmlink: lookup_data.genus + "%20" + lookup_data.species,
-    };
-    links["lpsnlink"] = helpers_taxa.get_lpsn_outlink1(lookup_data, lineage);
-  }
-  //links.anviserver_link       = ENV.ANVIO_URL  //https://anvio.homd.org/anvio?pg=Mitis_Group
-  links.anviserver_link = ENV.ANVIO_URL; //https://vamps.mbl.edu/anviserver/pangenomes/Mitis_Group
-  let otid_has_abundance = false;
-  if (C.otids_w_abundance.indexOf(otid) !== -1) {
-    otid_has_abundance = true;
-  }
-  //logger.info('389')
-  //logger.info(C.taxon_references_lookup['389'])
-  if (C.taxon_references_lookup[otid]) {
-    data4 = C.taxon_references_lookup[otid];
-  } else {
-    console.warn(
-      "No taxon_references for HMT:",
-      otid,
-      "in C.taxon_references_lookup",
-    );
-    data4 = {};
-  }
-  let image_array = find_otid_images("species", otid);
-  //refseq = {}
-  //info = {'general':'','cultavability':'','prevalence':'','disease_associations':'','phenotypic':''}  // unique per otid
-  //counts =
-
-  //const q_refseq_metadata,q_info,q_pangenome,q_gtdb_tax
-  const q_refseq_metadata = queries.get_refseq_metadata_query(otid); // dont need query
-  const q_info = queries.get_taxon_info_query(otid);
-  const q_pangenome = queries.get_pangenomes_query(otid);
-  const q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes);
-  // let q_list = [
-  //         queries.get_refseq_metadata_query(otid),
-  //         queries.get_taxon_info_query(otid),
-  //         queries.get_pangenomes_query(otid),
-  //         queries.get_gtdb_tax(lookup_data.genomes)
-  //     ]
-  //     logger.info('ql',q_list)
-  // const [refseqP,infoP,pangenomesP,gtdbtaxP] = [
-  //       pool.query(queries.get_refseq_metadata_query(otid)),
-  //       pool.query(queries.get_taxon_info_query(otid)),
-  //       pool.query(queries.get_pangenomes_query(otid)),
-  //       pool.query(queries.get_gtdb_tax(lookup_data.genomes))
-  //     ];
-  // [[refseq], [info],[pangenomes],[gtdbtax]] = await Promise.all([refseqP,infoP,pangenomesP,gtdbtaxP]);
-  //[refseq, info, pangenomes, gtdbtax] = queries.run_parallel_queries(q_list, req, res)
-
-  refseq = await queries.run_query(q_refseq_metadata, req, res);
-  info = await queries.run_query(q_info, req, res);
-  pangenomes = await queries.run_query(q_pangenome, req, res);
-  gtdbtax = await queries.run_query(q_gtdb_tax, req, res);
-
-  if (otid in C.site_lookup && "major_body_site" in C.site_lookup[otid]) {
-    sites =
-      "Primary: " +
-      C.site_lookup[otid].major_body_site +
-      " (Abundance: " +
-      C.site_lookup[otid].major_site_abundance +
-      ")";
-    // = Object.values(C.site_lookup[otid]).join('<br>')
-    if (
-      C.site_lookup[otid].secondary_sites &&
-      C.site_lookup[otid].secondary_sites !== "none assigned"
-    ) {
-      sites +=
-        "<br>Secondary: " +
-        C.site_lookup[otid].secondary_sites +
-        " (Abundance: " +
-        C.site_lookup[otid].secondary_site_abundance +
-        ")";
+    if (req.query.TMP == "1") {
+        renderTaxonDescriptionTEMP(req, res, args);
+    } else {
+        renderTaxonDescription(req, res, args);
     }
-    if (C.site_lookup[otid]["ref_link"]) {
-      let ref_link_lst = C.site_lookup[otid]["ref_link"].split(";"); //.split(/\s+/)
-      sites += "<br><small>Reference(s):";
-      for (let i in ref_link_lst) {
-        sites +=
-          "<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href='" +
-          ref_link_lst[i].trim() +
-          "' target='_blank'>" +
-          ref_link_lst[i].trim() +
-          "</a>";
-      }
-      sites += "</small>";
-    }
-    if (C.site_lookup[otid].subsite_of_primary) {
-      sites +=
-        "<br><small>Note: " +
-        C.site_lookup[otid].subsite_of_primary +
-        "</small>";
-    }
-  }
-  let gstrains = {};
-  for (let n in lookup_data.genomes) {
-    gstrains[lookup_data.genomes[n]] =
-      C.genome_lookup[lookup_data.genomes[n]].strain;
-  }
-
-  let sites2 = C.site_lookup[otid];
-  let args = { otid: otid };
-  args.image_array = image_array;
-  args.data1 = lookup_data;
-  // add pangenomes
-  //logger.info('refseq',refseq)
-  args.data1.pangenomes = pangenomes; // always a list??
-  logger.info(pangenomes);
-  logger.info(`lookup_data ${args.data1}`);
-  args.msg = lookup_data.notes;
-  args.text_file = text_file[0];
-  args.tinfo = info;
-  args.gtdbtax = gtdbtax;
-  args.data4 = data4;
-  args.refseq_info = refseq;
-  args.links = links;
-  args.sites = sites;
-  args.sites2 = sites2;
-  args.otid_has_abundance = otid_has_abundance;
-  args.gstrains = gstrains;
-
-  //args.lineage = lineage_string
-  args.lin = lineage;
-
-  if (req.query.TMP == "1") {
-    renderTaxonDescriptionTEMP(req, res, args);
-  } else {
-    renderTaxonDescription(req, res, args);
-  }
 });
 
 router.post("/get_refseq", async function get_refseq(req, res) {
-  logger.info(req.body);
-  let refseq_id = req.body.refseqid;
-  let html;
+    logger.info(req.body);
+    let refseq_id = req.body.refseqid;
+    let html;
 
-  //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
-  let q = queries.get_refseq_query(refseq_id);
+    //The 16S sequence pulled from the taxon page should be seq_trim9, which is longest.
+    let q = queries.get_refseq_query(refseq_id);
 
-  const rows = await queries.run_query(q, req, res);
-  if (!rows || rows.length === 0) {
-    html = "No Seq Found";
-  } else {
-    let seqstr = rows[0].seq.toString();
-    let arr = helpers.chunkSubstr(seqstr, 80);
-    html = arr.join("<br>");
-  }
-  res.send(html);
+    const rows = await queries.run_query(q, req, res);
+    if (!rows || rows.length === 0) {
+        html = "No Seq Found";
+    } else {
+        let seqstr = rows[0].seq.toString();
+        let arr = helpers.chunkSubstr(seqstr, 80);
+        html = arr.join("<br>");
+    }
+    res.send(html);
 });
 
 router.get("/life", function life(req, res) {
-  //logger.info('in LIFE')
-  // let myurl = url.parse(req.url, true);
-  let tax_name = req.query.name;
-  //logger.info('tax_name1',tax_name)
-  if (tax_name) {
-    tax_name = helpers.ltrim(helpers.rtrim(tax_name, '"'), '"');
-  }
-  //logger.info('tax_name1a',tax_name)
-  let rank = req.query.rank;
-  //logger.info('rank',rank)
-  let lin, lineage_string, otid;
-  if (req.query.otid && req.session.ttable_filter) {
-    //logger.info('got otid for ttable')
-    req.session.ttable_filter.otid = req.query.otid.replace(/^0+/, "");
-  }
-  if (req.query.gid && req.session.gtable_filter) {
-    //logger.info('got otid for ttable')
-    req.session.gtable_filter.gid = req.query.gid;
-  }
-  //logger.info('rank:',rank)
-  //logger.info('tax_name',tax_name)
-  if (tax_name) {
-    //tax_name = req.query.name.replace(/"/g,'')
-  }
-  let image_array = [],
-    text = "";
-  if (rank) {
-    image_array = find_life_images(rank, tax_name);
-    text = get_rank_text(rank, tax_name);
-  }
-
-  //logger.info('TEXT',text)
-  let taxa_list = [];
-  let next_rank,
-    title,
-    show_ranks,
-    rank_id,
-    last_rank,
-    space,
-    childern_ids,
-    html,
-    taxon,
-    rank_display;
-  let lineage_list = [""];
-
-  //next_rank = C.ranks[C.ranks.indexOf(rank) +1]
-
-  html = "";
-  let cts;
-  if (!rank) {
-    // Cellular_Organisims
-    //taxa_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain'].map(a => a.taxon)
-
-    html +=
-      "<tr><td class='life-taxa-name'>&nbsp;Domains</td><td class='life-taxa'>";
-
-    title = "Domain: Archaea";
-    cts = C.taxon_counts_lookup["Archaea"].taxcnt.toString();
-    html +=
-      "<a title='" +
-      title +
-      "' href='life?rank=domain&name=\"Archaea\"'>Archaea</a> <small>(" +
-      cts +
-      ")</small>";
-    html += "<span class='vist-taxon-page'>"; //[<a href='https://lpsn.dsmz.de/domain/Archaea' target='_blank'>LPSN.dsmz.de</a>]"
-
-    html +=
-      "<a href='ecology?rank=domain&name=Archaea'>abundance</a></span><br>";
-    title = "Domain: Bacteria";
-    cts = C.taxon_counts_lookup["Bacteria"].taxcnt.toString();
-    html +=
-      "<a title='" +
-      title +
-      "' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a> <small>(" +
-      cts +
-      ")</small>";
-    html += "<span class='vist-taxon-page'>"; //[<a href='https://lpsn.dsmz.de/domain/Bacteria' target='_blank'>LPSN.dsmz.de</a>]"
-
-    html +=
-      "<a href='ecology?rank=domain&name=Bacteria'>abundance</a></span><br>";
-
-    html += "</td></tr>";
-    image_array = [{ name: "cellular_organisms.png", text: "" }];
-  } else {
-    //logger.info('tax_name2', tax_name + '_' + rank)
-    let node =
-      C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name + "_" + rank];
-    if (!node) {
-      console.error("taxnode error:", tax_name + "_" + rank);
+    //logger.info('in LIFE')
+    // let myurl = url.parse(req.url, true);
+    let tax_name = req.query.name;
+    //logger.info('tax_name1',tax_name)
+    if (tax_name) {
+        tax_name = helpers.ltrim(helpers.rtrim(tax_name, '"'), '"');
     }
-    lineage_list = helpers_taxa.make_lineage(node); // [str obj]
+    //logger.info('tax_name1a',tax_name)
+    let rank = req.query.rank;
+    //logger.info('rank',rank)
+    let lin, lineage_string, otid;
+    if (req.query.otid && req.session.ttable_filter) {
+        //logger.info('got otid for ttable')
+        req.session.ttable_filter.otid = req.query.otid.replace(/^0+/, "");
+    }
+    if (req.query.gid && req.session.gtable_filter) {
+        //logger.info('got otid for ttable')
+        req.session.gtable_filter.gid = req.query.gid;
+    }
+    //logger.info('rank:',rank)
+    //logger.info('tax_name',tax_name)
+    if (tax_name) {
+        //tax_name = req.query.name.replace(/"/g,'')
+    }
+    let image_array = [],
+        text = "";
+    if (rank) {
+        image_array = find_life_images(rank, tax_name);
+        text = get_rank_text(rank, tax_name);
+    }
 
-    rank_id = C.ranks.indexOf(rank) + 2;
-    show_ranks = C.ranks.slice(0, rank_id);
-    logger.info(`node ${node}`);
-    //logger.info('show_ranks', show_ranks)
-    last_rank = show_ranks[show_ranks.length - 1];
-    ///logger.info('lineage_list', lineage_list)
-    space = "&nbsp;";
-    for (let i in show_ranks) {
-      rank_display = get_rank_display(show_ranks[i], false);
+    //logger.info('TEXT',text)
+    let taxa_list = [];
+    let next_rank,
+        title,
+        show_ranks,
+        rank_id,
+        last_rank,
+        space,
+        childern_ids,
+        html,
+        taxon,
+        rank_display;
+    let lineage_list = [""];
 
-      if (show_ranks[i] !== last_rank) {
-        // Last row of many items
-        //logger.info('show_ranks[i]]  show_ranks[i]',lineage_list[1][show_ranks[i]], show_ranks[i])
-        node =
-          C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
-            lineage_list[1][show_ranks[i]] + "_" + show_ranks[i]
-          ];
-        lin = helpers_taxa.make_lineage(node);
-        //logger.info('lin',lin)
-        cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString();
+    //next_rank = C.ranks[C.ranks.indexOf(rank) +1]
 
-        title = rank_display + ": " + lineage_list[1][show_ranks[i]];
-        //logger.info('show_ranks[i]', show_ranks[i])
-        if (rank === show_ranks[i]) {
-          html +=
-            "<tr><td class='life-taxa-name selected'>" +
-            space +
-            rank_display +
-            "</td><td class='life-taxa'>";
-        } else {
-          html +=
-            "<tr><td class='life-taxa-name'>" +
-            space +
-            rank_display +
-            "</td><td class='life-taxa'>";
-        }
-        if (show_ranks[i] === "species") {
-          html +=
-            "<a title='" +
-            title +
-            "' href='life?rank=" +
-            show_ranks[i] +
-            '&name="' +
-            lineage_list[1][show_ranks[i]] +
-            "\"'><em>" +
-            lineage_list[1][show_ranks[i]] +
-            "</em></a> (" +
-            cts +
-            ")";
-        } else {
-          html +=
-            "<a title='" +
-            title +
-            "' href='life?rank=" +
-            show_ranks[i] +
-            '&name="' +
-            lineage_list[1][show_ranks[i]] +
-            "\"'>" +
-            lineage_list[1][show_ranks[i]] +
-            "</a> (" +
-            cts +
-            ")";
-        }
-
-        html += "<span class='vist-taxon-page'>"; //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
-        //logger.info('rank',show_ranks[i],'name',lineage_list[1][show_ranks[i]])
-        if (
-          C.has_abundance_data[show_ranks[i]][lineage_list[1][show_ranks[i]]]
-        ) {
-          html +=
-            "<a href='ecology?rank=" +
-            show_ranks[i] +
-            "&name=" +
-            lineage_list[1][show_ranks[i]] +
-            "'>abundance</a></span>";
-        } else {
-          html += "";
-        }
-        html += "</td></tr>";
-      } else {
-        // Gather rows before the last row
-
-        next_rank = C.ranks[C.ranks.indexOf(rank) + 1];
-        childern_ids =
-          C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
-            tax_name + "_" + rank
-          ].children_ids;
-
-        for (let n in childern_ids) {
-          taxon =
-            C.homd_taxonomy.taxa_tree_dict_map_by_id[childern_ids[n]].taxon;
-          taxa_list.push(taxon);
-        }
-        let use_plural = false;
-        if (taxa_list.length > 1) {
-          use_plural = true;
-        }
-        rank_display = get_rank_display(show_ranks[i], use_plural);
-        //logger.info('rank_displayx',rank_display)
+    html = "";
+    let cts;
+    if (!rank) {
+        // Cellular_Organisims
+        //taxa_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank['domain'].map(a => a.taxon)
 
         html +=
-          "<tr><td class='life-taxa-name'>" +
-          space +
-          rank_display +
-          "</td><td class='life-taxa blue'>";
-        taxa_list.sort((a, b) => {
-          return helpers.compareStrings_alpha(a, b);
-        });
-        for (let n in taxa_list) {
-          //logger.info('SHOW RANKS',show_ranks.length)
-          title = rank_display + ": " + taxa_list[n];
-          html += "<li>";
-          if (rank === "genus") {
-            childern_ids =
-              C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
-                taxa_list[n] + "_" + "species"
-              ].children_ids;
-            if (childern_ids.length > 0) {
-              // only if subspecies
-              //Bacteria;Firmicutes;Bacilli;Lactobacillales;Streptococcaceae;Streptococcus;Streptococcus oralis;
-              //logger.info('childern_ids-2')
-              html +=
-                "<span class=''>" +
-                space +
-                "<a title='" +
-                title +
-                "' href='life?rank=" +
-                next_rank +
-                '&name="' +
-                taxa_list[n] +
-                "\"'>" +
-                taxa_list[n] +
-                "</a><br>";
-              html += "</span>";
-            } else {
-              otid =
-                C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
-                  taxa_list[n] + "_" + "species"
-                ].otid;
-              //logger.info('otid',otid)
-              html +=
-                "<span class=''>" +
-                space +
-                "<em>" +
-                taxa_list[n] +
-                "</em> (<a title='" +
-                title +
-                "' href='tax_description?otid=" +
-                otid +
-                "'>" +
-                helpers.make_otid_display_name(otid) +
-                "</a>)";
-              html += "</span>";
+            "<tr><td class='life-taxa-name'>&nbsp;Domains</td><td class='life-taxa'>";
 
-              html += " <span class='vist-taxon-page'>"; //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
-              if (C.has_abundance_data[show_ranks[i]][taxa_list[n]]) {
-                html +=
-                  "<a href='ecology?rank=" +
-                  show_ranks[i] +
-                  "&name=" +
-                  taxa_list[n] +
-                  "'>abundance</a></span><br>";
-              } else {
-                html += "";
-              }
-            }
-          } else {
-            if (rank === "species") {
-              //display will be subspecies
-              //logger.info('taxa_list[n]',taxa_list[n])
-              //logger.info('taxa_list[n]2',C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'subspecies'])
-              otid =
-                C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
-                  taxa_list[n] + "_" + "subspecies"
-                ].otid;
+        title = "Domain: Archaea";
+        cts = C.taxon_counts_lookup["Archaea"].taxcnt.toString();
+        html +=
+            "<a title='" +
+            title +
+            "' href='life?rank=domain&name=\"Archaea\"'>Archaea</a> <small>(" +
+            cts +
+            ")</small>";
+        html += "<span class='vist-taxon-page'>"; //[<a href='https://lpsn.dsmz.de/domain/Archaea' target='_blank'>LPSN.dsmz.de</a>]"
 
-              html +=
-                "<span class=''>" +
-                space +
-                taxa_list[n] +
-                "  </span>(<a title='" +
-                title +
-                "' href='tax_description?otid=" +
-                otid +
-                "'>" +
-                helpers.make_otid_display_name(otid) +
-                "</a>)<br>";
-            } else {
-              // list of not genus or species
-              node =
-                C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
-                  taxa_list[n] + "_" + next_rank
-                ];
-              lin = helpers_taxa.make_lineage(node);
-              cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString();
-              html +=
-                "<span class=''>" +
-                space +
-                "<a title='" +
-                title +
-                "' href='life?rank=" +
-                next_rank +
-                '&name="' +
-                taxa_list[n] +
-                "\"'>" +
-                taxa_list[n] +
-                "</a> <small>(" +
-                cts +
-                ")</small>";
-              html += "</span>";
-              // let lpsn_rank = show_ranks[i]
-              //              if(show_ranks[i] == 'klass'){
-              //                lpsn_rank = 'class'
-              //              }
-              //logger.info('show_ranks[i]',lin[1])
+        html +=
+            "<a href='ecology?rank=domain&name=Archaea'>abundance</a></span><br>";
+        title = "Domain: Bacteria";
+        cts = C.taxon_counts_lookup["Bacteria"].taxcnt.toString();
+        html +=
+            "<a title='" +
+            title +
+            "' href='life?rank=domain&name=\"Bacteria\"'>Bacteria</a> <small>(" +
+            cts +
+            ")</small>";
+        html += "<span class='vist-taxon-page'>"; //[<a href='https://lpsn.dsmz.de/domain/Bacteria' target='_blank'>LPSN.dsmz.de</a>]"
 
-              //let lpsn_link = helpers.get_lpsn_outlink2(show_ranks[i],lineage_list[1],taxa_list[n])
-              //let lpsn_link = 'zz'
-              //logger.info('zz link ',lpsn_link)
-              html += "<span class='vist-taxon-page'>"; //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
-              if (C.has_abundance_data[show_ranks[i]][taxa_list[n]]) {
-                html +=
-                  "<a href='ecology?rank=" +
-                  show_ranks[i] +
-                  "&name=" +
-                  taxa_list[n] +
-                  "'>abundance</a></span><br>";
-              } else {
-                html += "";
-              }
-            }
-          }
-          html += "</li>";
-        }
+        html +=
+            "<a href='ecology?rank=domain&name=Bacteria'>abundance</a></span><br>";
+
         html += "</td></tr>";
-      }
-      space += "&nbsp;";
+        image_array = [{ name: "cellular_organisms.png", text: "" }];
+    } else {
+        //logger.info('tax_name2', tax_name + '_' + rank)
+        let node =
+            C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
+                tax_name + "_" + rank
+            ];
+        if (!node) {
+            console.error("taxnode error:", tax_name + "_" + rank);
+        }
+        lineage_list = helpers_taxa.make_lineage(node); // [str obj]
+
+        rank_id = C.ranks.indexOf(rank) + 2;
+        show_ranks = C.ranks.slice(0, rank_id);
+        logger.info(`node ${node}`);
+        //logger.info('show_ranks', show_ranks)
+        last_rank = show_ranks[show_ranks.length - 1];
+        ///logger.info('lineage_list', lineage_list)
+        space = "&nbsp;";
+        for (let i in show_ranks) {
+            rank_display = get_rank_display(show_ranks[i], false);
+
+            if (show_ranks[i] !== last_rank) {
+                // Last row of many items
+                //logger.info('show_ranks[i]]  show_ranks[i]',lineage_list[1][show_ranks[i]], show_ranks[i])
+                node =
+                    C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
+                        lineage_list[1][show_ranks[i]] + "_" + show_ranks[i]
+                    ];
+                lin = helpers_taxa.make_lineage(node);
+                //logger.info('lin',lin)
+                cts = C.taxon_counts_lookup[lin[0]].taxcnt.toString();
+
+                title = rank_display + ": " + lineage_list[1][show_ranks[i]];
+                //logger.info('show_ranks[i]', show_ranks[i])
+                if (rank === show_ranks[i]) {
+                    html +=
+                        "<tr><td class='life-taxa-name selected'>" +
+                        space +
+                        rank_display +
+                        "</td><td class='life-taxa'>";
+                } else {
+                    html +=
+                        "<tr><td class='life-taxa-name'>" +
+                        space +
+                        rank_display +
+                        "</td><td class='life-taxa'>";
+                }
+                if (show_ranks[i] === "species") {
+                    html +=
+                        "<a title='" +
+                        title +
+                        "' href='life?rank=" +
+                        show_ranks[i] +
+                        '&name="' +
+                        lineage_list[1][show_ranks[i]] +
+                        "\"'><em>" +
+                        lineage_list[1][show_ranks[i]] +
+                        "</em></a> (" +
+                        cts +
+                        ")";
+                } else {
+                    html +=
+                        "<a title='" +
+                        title +
+                        "' href='life?rank=" +
+                        show_ranks[i] +
+                        '&name="' +
+                        lineage_list[1][show_ranks[i]] +
+                        "\"'>" +
+                        lineage_list[1][show_ranks[i]] +
+                        "</a> (" +
+                        cts +
+                        ")";
+                }
+
+                html += "<span class='vist-taxon-page'>"; //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
+                //logger.info('rank',show_ranks[i],'name',lineage_list[1][show_ranks[i]])
+                if (
+                    C.has_abundance_data[show_ranks[i]][
+                        lineage_list[1][show_ranks[i]]
+                    ]
+                ) {
+                    html +=
+                        "<a href='ecology?rank=" +
+                        show_ranks[i] +
+                        "&name=" +
+                        lineage_list[1][show_ranks[i]] +
+                        "'>abundance</a></span>";
+                } else {
+                    html += "";
+                }
+                html += "</td></tr>";
+            } else {
+                // Gather rows before the last row
+
+                next_rank = C.ranks[C.ranks.indexOf(rank) + 1];
+                childern_ids =
+                    C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
+                        tax_name + "_" + rank
+                    ].children_ids;
+
+                for (let n in childern_ids) {
+                    taxon =
+                        C.homd_taxonomy.taxa_tree_dict_map_by_id[
+                            childern_ids[n]
+                        ].taxon;
+                    taxa_list.push(taxon);
+                }
+                let use_plural = false;
+                if (taxa_list.length > 1) {
+                    use_plural = true;
+                }
+                rank_display = get_rank_display(show_ranks[i], use_plural);
+                //logger.info('rank_displayx',rank_display)
+
+                html +=
+                    "<tr><td class='life-taxa-name'>" +
+                    space +
+                    rank_display +
+                    "</td><td class='life-taxa blue'>";
+                taxa_list.sort((a, b) => {
+                    return helpers.compareStrings_alpha(a, b);
+                });
+                for (let n in taxa_list) {
+                    //logger.info('SHOW RANKS',show_ranks.length)
+                    title = rank_display + ": " + taxa_list[n];
+                    html += "<li>";
+                    if (rank === "genus") {
+                        childern_ids =
+                            C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
+                                taxa_list[n] + "_" + "species"
+                            ].children_ids;
+                        if (childern_ids.length > 0) {
+                            // only if subspecies
+                            //Bacteria;Firmicutes;Bacilli;Lactobacillales;Streptococcaceae;Streptococcus;Streptococcus oralis;
+                            //logger.info('childern_ids-2')
+                            html +=
+                                "<span class=''>" +
+                                space +
+                                "<a title='" +
+                                title +
+                                "' href='life?rank=" +
+                                next_rank +
+                                '&name="' +
+                                taxa_list[n] +
+                                "\"'>" +
+                                taxa_list[n] +
+                                "</a><br>";
+                            html += "</span>";
+                        } else {
+                            otid =
+                                C.homd_taxonomy
+                                    .taxa_tree_dict_map_by_name_n_rank[
+                                    taxa_list[n] + "_" + "species"
+                                ].otid;
+                            //logger.info('otid',otid)
+                            html +=
+                                "<span class=''>" +
+                                space +
+                                "<em>" +
+                                taxa_list[n] +
+                                "</em> (<a title='" +
+                                title +
+                                "' href='tax_description?otid=" +
+                                otid +
+                                "'>" +
+                                helpers.make_otid_display_name(otid) +
+                                "</a>)";
+                            html += "</span>";
+
+                            html += " <span class='vist-taxon-page'>"; //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
+                            if (
+                                C.has_abundance_data[show_ranks[i]][
+                                    taxa_list[n]
+                                ]
+                            ) {
+                                html +=
+                                    "<a href='ecology?rank=" +
+                                    show_ranks[i] +
+                                    "&name=" +
+                                    taxa_list[n] +
+                                    "'>abundance</a></span><br>";
+                            } else {
+                                html += "";
+                            }
+                        }
+                    } else {
+                        if (rank === "species") {
+                            //display will be subspecies
+                            //logger.info('taxa_list[n]',taxa_list[n])
+                            //logger.info('taxa_list[n]2',C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[taxa_list[n]+'_'+'subspecies'])
+                            otid =
+                                C.homd_taxonomy
+                                    .taxa_tree_dict_map_by_name_n_rank[
+                                    taxa_list[n] + "_" + "subspecies"
+                                ].otid;
+
+                            html +=
+                                "<span class=''>" +
+                                space +
+                                taxa_list[n] +
+                                "  </span>(<a title='" +
+                                title +
+                                "' href='tax_description?otid=" +
+                                otid +
+                                "'>" +
+                                helpers.make_otid_display_name(otid) +
+                                "</a>)<br>";
+                        } else {
+                            // list of not genus or species
+                            node =
+                                C.homd_taxonomy
+                                    .taxa_tree_dict_map_by_name_n_rank[
+                                    taxa_list[n] + "_" + next_rank
+                                ];
+                            lin = helpers_taxa.make_lineage(node);
+                            cts =
+                                C.taxon_counts_lookup[lin[0]].taxcnt.toString();
+                            html +=
+                                "<span class=''>" +
+                                space +
+                                "<a title='" +
+                                title +
+                                "' href='life?rank=" +
+                                next_rank +
+                                '&name="' +
+                                taxa_list[n] +
+                                "\"'>" +
+                                taxa_list[n] +
+                                "</a> <small>(" +
+                                cts +
+                                ")</small>";
+                            html += "</span>";
+                            // let lpsn_rank = show_ranks[i]
+                            //              if(show_ranks[i] == 'klass'){
+                            //                lpsn_rank = 'class'
+                            //              }
+                            //logger.info('show_ranks[i]',lin[1])
+
+                            //let lpsn_link = helpers.get_lpsn_outlink2(show_ranks[i],lineage_list[1],taxa_list[n])
+                            //let lpsn_link = 'zz'
+                            //logger.info('zz link ',lpsn_link)
+                            html += "<span class='vist-taxon-page'>"; //[<a href='https://lpsn.dsmz.de/"+lpsn_link+"' target='_blank'>LPSN.dsmz.de</a>]"
+                            if (
+                                C.has_abundance_data[show_ranks[i]][
+                                    taxa_list[n]
+                                ]
+                            ) {
+                                html +=
+                                    "<a href='ecology?rank=" +
+                                    show_ranks[i] +
+                                    "&name=" +
+                                    taxa_list[n] +
+                                    "'>abundance</a></span><br>";
+                            } else {
+                                html += "";
+                            }
+                        }
+                    }
+                    html += "</li>";
+                }
+                html += "</td></tr>";
+            }
+            space += "&nbsp;";
+        }
     }
-  }
 
-  //logger.info('regex1',lineage_list[0].replace(/.*(;)/,'<em>'))+'</em>'
-  //logger.info('regex2',lineage_list[0].split(';').pop())
-  //logger.info('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
-  let page_title = "Life Pages";
-  if (rank) page_title = "Life:" + helpers.capitalizeFirst(rank);
+    //logger.info('regex1',lineage_list[0].replace(/.*(;)/,'<em>'))+'</em>'
+    //logger.info('regex2',lineage_list[0].split(';').pop())
+    //logger.info('regex3',lineage_list[0].split(';').slice(0,-1).join('; ') +'; <em>'+lineage_list[0].split(';').pop()+'</em>')
+    let page_title = "Life Pages";
+    if (rank) page_title = "Life:" + helpers.capitalizeFirst(rank);
 
-  lineage_string = lineage_list[0];
+    lineage_string = lineage_list[0];
 
-  res.render("pages/taxa/life", {
-    title: "HOMD :: " + page_title,
-    pgname: "taxon/life", // for AbountThisPage
-    config: JSON.stringify(ENV),
-    data: {},
-    tax_name: tax_name,
-    //headline: 'Life: Cellular Organisms',
-    rank: rank,
-    taxa_list: JSON.stringify(taxa_list),
-    image_array: JSON.stringify(image_array),
-    text_file: text[0],
-    text_format: text[1],
-    html: html,
-    lineage: lineage_string,
-    ver_info: JSON.stringify(C.version_information),
-  });
+    res.render("pages/taxa/life", {
+        title: "HOMD :: " + page_title,
+        pgname: "taxon/life", // for AbountThisPage
+        config: JSON.stringify(ENV),
+        data: {},
+        tax_name: tax_name,
+        //headline: 'Life: Cellular Organisms',
+        rank: rank,
+        taxa_list: JSON.stringify(taxa_list),
+        image_array: JSON.stringify(image_array),
+        text_file: text[0],
+        text_format: text[1],
+        html: html,
+        lineage: lineage_string,
+        ver_info: JSON.stringify(C.version_information),
+    });
 });
 //
 router.get("/ecology_home", function ecology_home(req, res) {
-  //logger.info('in ecology index')
-  let bar_graph_data = [];
-  let lineage_list;
+    //logger.info('in ecology index')
+    let bar_graph_data = [];
+    let lineage_list;
 
-  let site_species = {},
-    sp_per_site = {}; // {site,sp,abund} ordered by sp
-  // let graph_site_order = C.base_abundance_order
-  //     graph_site_order.push('NS')
-  //     logger.info('PUSH',C.base_abundance_order,graph_site_order)
-  let abundance_graph_order = C.base_abundance_order;
+    let site_species = {},
+        sp_per_site = {}; // {site,sp,abund} ordered by sp
+    // let graph_site_order = C.base_abundance_order
+    //     graph_site_order.push('NS')
+    //     logger.info('PUSH',C.base_abundance_order,graph_site_order)
+    let abundance_graph_order = C.base_abundance_order;
 
-  let archlin = helpers_taxa.make_lineage(
-    C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank["815_species"],
-  );
+    let archlin = helpers_taxa.make_lineage(
+        C.homd_taxonomy.taxa_tree_dict_map_by_otid_n_rank["815_species"],
+    );
 
-  let sole_arch = archlin[1];
-  let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank["phylum"];
-  let class_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank["klass"];
-  let order_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank["order"];
-  let family_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank["family"];
-  let genus_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank["genus"];
-  // let species_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['species']
-  let group_collector = {};
-  //let species_for_plot = C.plot_species_colors.map(el => el.name)
-  //let otids_for_plot = C.plot_species_colors.map(el => el.otid)
-  let otids_for_plot = Object.keys(C.plot_species_colors);
+    let sole_arch = archlin[1];
+    let phyla_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank["phylum"];
+    let class_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank["klass"];
+    let order_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank["order"];
+    let family_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank["family"];
+    let genus_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank["genus"];
+    // let species_obj = C.homd_taxonomy.taxa_tree_dict_map_by_rank['species']
+    let group_collector = {};
+    //let species_for_plot = C.plot_species_colors.map(el => el.name)
+    //let otids_for_plot = C.plot_species_colors.map(el => el.otid)
+    let otids_for_plot = Object.keys(C.plot_species_colors);
 
-  let species_for_plot = []; // list of species (and ssp)
-  for (let n in otids_for_plot) {
-    //logger.info(otids_for_plot[n])
-    let sp = C.taxon_lineage_lookup[parseInt(otids_for_plot[n])].species;
-    if (C.taxon_lineage_lookup[otids_for_plot[n]].subspecies) {
-      sp += " " + C.taxon_lineage_lookup[otids_for_plot[n]].subspecies;
+    let species_for_plot = []; // list of species (and ssp)
+    for (let n in otids_for_plot) {
+        //logger.info(otids_for_plot[n])
+        let sp = C.taxon_lineage_lookup[parseInt(otids_for_plot[n])].species;
+        if (C.taxon_lineage_lookup[otids_for_plot[n]].subspecies) {
+            sp += " " + C.taxon_lineage_lookup[otids_for_plot[n]].subspecies;
+        }
+        species_for_plot.push(sp);
     }
-    species_for_plot.push(sp);
-  }
 
-  species_for_plot.push("other");
-  //logger.info('species_for_plot',species_for_plot)
-  //let colors_for_plot = C.plot_species_colors //.map(el => {el.color, el.species})
-  let colors_for_plot = Object.values(C.plot_species_colors); // [{}]
-  //let colors_for_plot_lookup = {}
+    species_for_plot.push("other");
+    //logger.info('species_for_plot',species_for_plot)
+    //let colors_for_plot = C.plot_species_colors //.map(el => {el.color, el.species})
+    let colors_for_plot = Object.values(C.plot_species_colors); // [{}]
+    //let colors_for_plot_lookup = {}
 
-  //logger.info('colors_for_plot',colors_for_plot)
-  colors_for_plot.push("grey");
-  //logger.info('colors_for_plot',colors_for_plot)
-  //let spcount = 0
-  let abund_obj;
+    //logger.info('colors_for_plot',colors_for_plot)
+    colors_for_plot.push("grey");
+    //logger.info('colors_for_plot',colors_for_plot)
+    //let spcount = 0
+    let abund_obj;
 
-  let site_sums = {};
-  for (let y in abundance_graph_order) {
-    site_sums[abundance_graph_order[y]] = 0.0;
-  }
-  //logger.info(site_sums)
-  for (let i in species_for_plot) {
-    //logger.info('species_for_plot[i]',species_for_plot[i])
-    let node =
-      C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
-        species_for_plot[i] + "_species"
-      ];
-    lineage_list = helpers_taxa.make_lineage(node);
-    if (!lineage_list[0]) {
-      // must be ssp
-      let pts = species_for_plot[i].split(/\s/);
-      node =
-        C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
-          pts[pts.length - 1] + "_subspecies"
-        ];
-      lineage_list = helpers_taxa.make_lineage(node);
+    let site_sums = {};
+    for (let y in abundance_graph_order) {
+        site_sums[abundance_graph_order[y]] = 0.0;
     }
-    //logger.info('lineage_list[0]',lineage_list)
-    if (lineage_list[0]) {
-      abund_obj = get_site_avgs(C.abundance_lookup[lineage_list[0]]);
+    //logger.info(site_sums)
+    for (let i in species_for_plot) {
+        //logger.info('species_for_plot[i]',species_for_plot[i])
+        let node =
+            C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
+                species_for_plot[i] + "_species"
+            ];
+        lineage_list = helpers_taxa.make_lineage(node);
+        if (!lineage_list[0]) {
+            // must be ssp
+            let pts = species_for_plot[i].split(/\s/);
+            node =
+                C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
+                    pts[pts.length - 1] + "_subspecies"
+                ];
+            lineage_list = helpers_taxa.make_lineage(node);
+        }
+        //logger.info('lineage_list[0]',lineage_list)
+        if (lineage_list[0]) {
+            abund_obj = get_site_avgs(C.abundance_lookup[lineage_list[0]]);
 
-      //logger.info('abund_obj',species_for_plot[i],abund_obj)
-      for (let site in abund_obj) {
-        //logger.info('n',sp,site,abund_obj[site])
-        site_sums[site] += parseFloat(abund_obj[site]);
-      }
-      group_collector[lineage_list[0]] = {};
-      group_collector[lineage_list[0]] = abund_obj;
-    } else {
-      //logger.info('NONO',species_for_plot[i])
+            //logger.info('abund_obj',species_for_plot[i],abund_obj)
+            for (let site in abund_obj) {
+                //logger.info('n',sp,site,abund_obj[site])
+                site_sums[site] += parseFloat(abund_obj[site]);
+            }
+            group_collector[lineage_list[0]] = {};
+            group_collector[lineage_list[0]] = abund_obj;
+        } else {
+            //logger.info('NONO',species_for_plot[i])
+        }
     }
-  }
 
-  group_collector["other"] = {};
-  for (let y in abundance_graph_order) {
-    //logger.info(graph_site_order[y],site_sums)
-    group_collector["other"][abundance_graph_order[y]] = (
-      100 - site_sums[abundance_graph_order[y]]
-    ).toFixed(3);
-    site_species[abundance_graph_order[y]] = [];
-  }
-
-  //https://observablehq.com/@d3/stacked-normalized-horizontal-bar
-
-  //logger.info('site_order',site_order)
-  let tmp, sp;
-  for (let n in abundance_graph_order) {
-    //Object.keys(C.abundance_names)){
-    let site = abundance_graph_order[n];
-    //logger.info('site',site)
-    tmp = {};
-    tmp["site"] = site;
-    sp_per_site[site] = {};
-    for (let species in group_collector) {
-      //logger.info('sp',species,group_collector[species])
-      let sp_pts = species.split(";");
-      if (sp_pts.length === 8) {
-        // subsp
-        sp = sp_pts[sp_pts.length - 2] + " " + sp_pts[sp_pts.length - 1];
-      } else {
-        sp = sp_pts[sp_pts.length - 1];
-      }
-
-      //let abund = parseFloat(group_collector[species][site])
-      //let c = group_collector[species].color
-      // let obj = C.plot_species_colors.find(o => o.name === sp);
-      //             if(!obj){
-      //                color = 'grey'
-      //             }else{
-      //                 color = obj.color
-      //             }
-      //tmp[sp] = {abundance:abund,color:colors_for_plot[species_for_plot.indexOf(sp)]}
-      tmp[sp] = parseFloat(group_collector[species][site]);
-      //tmp[sp] = {abundance:abund,color:color}
-      //logger.info('sp',sp)
-      //xlogger.info('val',val)
-      //sp_per_site[site][sp] = abund  // {site,sp,sp,sp,sp,sp....}
-
-      //logger.info('sp',sp,'color',colors_for_plot[species_for_plot.indexOf(sp)])
-
-      //site_species[site].push({site:site, species:sp, abundance:abund, color:colors_for_plot[species_for_plot.indexOf(sp)]})
-      //site_species[site][sp] =
+    group_collector["other"] = {};
+    for (let y in abundance_graph_order) {
+        //logger.info(graph_site_order[y],site_sums)
+        group_collector["other"][abundance_graph_order[y]] = (
+            100 - site_sums[abundance_graph_order[y]]
+        ).toFixed(3);
+        site_species[abundance_graph_order[y]] = [];
     }
-    //logger.info('tmp',tmp)
-    bar_graph_data.push(tmp);
-  }
 
-  //logger.info('bar_graph_data',bar_graph_data)
+    //https://observablehq.com/@d3/stacked-normalized-horizontal-bar
 
-  //LINKS
-  let bac_phyla_only = phyla_obj.filter((x) => {
-    if (
-      C.homd_taxonomy.taxa_tree_dict_map_by_id[x.parent_id].taxon === "Bacteria"
-    ) {
-      return x;
+    //logger.info('site_order',site_order)
+    let tmp, sp;
+    for (let n in abundance_graph_order) {
+        //Object.keys(C.abundance_names)){
+        let site = abundance_graph_order[n];
+        //logger.info('site',site)
+        tmp = {};
+        tmp["site"] = site;
+        sp_per_site[site] = {};
+        for (let species in group_collector) {
+            //logger.info('sp',species,group_collector[species])
+            let sp_pts = species.split(";");
+            if (sp_pts.length === 8) {
+                // subsp
+                sp =
+                    sp_pts[sp_pts.length - 2] + " " + sp_pts[sp_pts.length - 1];
+            } else {
+                sp = sp_pts[sp_pts.length - 1];
+            }
+
+            //let abund = parseFloat(group_collector[species][site])
+            //let c = group_collector[species].color
+            // let obj = C.plot_species_colors.find(o => o.name === sp);
+            //             if(!obj){
+            //                color = 'grey'
+            //             }else{
+            //                 color = obj.color
+            //             }
+            //tmp[sp] = {abundance:abund,color:colors_for_plot[species_for_plot.indexOf(sp)]}
+            tmp[sp] = parseFloat(group_collector[species][site]);
+            //tmp[sp] = {abundance:abund,color:color}
+            //logger.info('sp',sp)
+            //xlogger.info('val',val)
+            //sp_per_site[site][sp] = abund  // {site,sp,sp,sp,sp,sp....}
+
+            //logger.info('sp',sp,'color',colors_for_plot[species_for_plot.indexOf(sp)])
+
+            //site_species[site].push({site:site, species:sp, abundance:abund, color:colors_for_plot[species_for_plot.indexOf(sp)]})
+            //site_species[site][sp] =
+        }
+        //logger.info('tmp',tmp)
+        bar_graph_data.push(tmp);
     }
-  });
-  let bac_classes_only = class_obj.filter((x) => {
-    if (x.taxon !== sole_arch["klass"]) {
-      return x;
-    }
-  });
-  let bac_orders_only = order_obj.filter((x) => {
-    if (x.taxon !== sole_arch["order"]) {
-      return x;
-    }
-  });
-  let bac_families_only = family_obj.filter((x) => {
-    if (x.taxon !== sole_arch["family"]) {
-      return x;
-    }
-  });
-  let bac_genera_only = genus_obj.filter((x) => {
-    if (x.taxon !== sole_arch["genus"]) {
-      return x;
-    }
-  });
-  let phyla = bac_phyla_only.map((x) => x.taxon);
-  let klasses = bac_classes_only.map((x) => x.taxon);
-  let orders = bac_orders_only.map((x) => x.taxon);
-  let families = bac_families_only.map((x) => x.taxon);
-  let genera = bac_genera_only.map((x) => x.taxon);
 
-  phyla.sort();
-  klasses.sort();
-  orders.sort();
-  families.sort();
-  genera.sort();
-  //'Bacteria;Pseudomonadota;Gammaproteobacteria;Enterobacterales;Yersiniaceae;Yersinia;Yersinia pestis'
+    //logger.info('bar_graph_data',bar_graph_data)
 
-  res.render("pages/taxa/ecology_home", {
-    title: "HOMD :: Ecology",
-    pgname: "taxon/ecology", // for AbountThisPage
-    config: JSON.stringify(ENV),
-    ver_info: JSON.stringify(C.version_information),
+    //LINKS
+    let bac_phyla_only = phyla_obj.filter((x) => {
+        if (
+            C.homd_taxonomy.taxa_tree_dict_map_by_id[x.parent_id].taxon ===
+            "Bacteria"
+        ) {
+            return x;
+        }
+    });
+    let bac_classes_only = class_obj.filter((x) => {
+        if (x.taxon !== sole_arch["klass"]) {
+            return x;
+        }
+    });
+    let bac_orders_only = order_obj.filter((x) => {
+        if (x.taxon !== sole_arch["order"]) {
+            return x;
+        }
+    });
+    let bac_families_only = family_obj.filter((x) => {
+        if (x.taxon !== sole_arch["family"]) {
+            return x;
+        }
+    });
+    let bac_genera_only = genus_obj.filter((x) => {
+        if (x.taxon !== sole_arch["genus"]) {
+            return x;
+        }
+    });
+    let phyla = bac_phyla_only.map((x) => x.taxon);
+    let klasses = bac_classes_only.map((x) => x.taxon);
+    let orders = bac_orders_only.map((x) => x.taxon);
+    let families = bac_families_only.map((x) => x.taxon);
+    let genera = bac_genera_only.map((x) => x.taxon);
 
-    // LINK Data
-    sole_arch: JSON.stringify(sole_arch),
-    phyla: JSON.stringify(phyla),
-    klasses: JSON.stringify(klasses),
-    orders: JSON.stringify(orders),
-    families: JSON.stringify(families),
-    genera: JSON.stringify(genera),
-    has_data: JSON.stringify(C.has_abundance_data),
+    phyla.sort();
+    klasses.sort();
+    orders.sort();
+    families.sort();
+    genera.sort();
+    //'Bacteria;Pseudomonadota;Gammaproteobacteria;Enterobacterales;Yersiniaceae;Yersinia;Yersinia pestis'
 
-    // GRAPH DATA
-    colors_ordered_list: JSON.stringify(colors_for_plot),
-    species_ordered_list: JSON.stringify(species_for_plot),
-    bar_data2: JSON.stringify(bar_graph_data),
-    site_order: JSON.stringify(abundance_graph_order),
-    ab_names: JSON.stringify(C.abundance_names),
-  });
+    res.render("pages/taxa/ecology_home", {
+        title: "HOMD :: Ecology",
+        pgname: "taxon/ecology", // for AbountThisPage
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
+
+        // LINK Data
+        sole_arch: JSON.stringify(sole_arch),
+        phyla: JSON.stringify(phyla),
+        klasses: JSON.stringify(klasses),
+        orders: JSON.stringify(orders),
+        families: JSON.stringify(families),
+        genera: JSON.stringify(genera),
+        has_data: JSON.stringify(C.has_abundance_data),
+
+        // GRAPH DATA
+        colors_ordered_list: JSON.stringify(colors_for_plot),
+        species_ordered_list: JSON.stringify(species_for_plot),
+        bar_data2: JSON.stringify(bar_graph_data),
+        site_order: JSON.stringify(abundance_graph_order),
+        ab_names: JSON.stringify(C.abundance_names),
+    });
 });
 //
 router.get("/body_sites", function body_sites(req, res) {
-  //logger.info('in body sites')
+    //logger.info('in body sites')
 
-  let send_list = [],
-    obj,
-    selected_otid = "";
-  if (req.query && req.query.otid) {
-    selected_otid = req.query.otid.replace(/^0+/, "");
-  }
-
-  //for(let otid in C.site_lookup){
-  let subs = {};
-  for (let otid in C.taxon_lookup) {
-    obj = {};
-    //logger.info(C.taxon_lookup[otid])
-    //logger.info(otid)
-    obj.otid = otid;
-
-    if (C.dropped_taxids.indexOf(otid) !== -1) {
-      obj.gen_habitat = "Unassigned";
-      obj.major_body_site = "Unassigned";
-      obj.secondary = "";
-
-      obj.subsite = "";
-      obj.gsp =
-        C.taxon_lookup[otid].genus +
-        " " +
-        C.taxon_lookup[otid].species +
-        " (<b>DROPPED</b>)";
-    } else if (otid in C.site_lookup) {
-      obj.gen_habitat = C.site_lookup[otid].general_habitat;
-      obj.major_body_site =
-        C.site_lookup[otid].major_body_site +
-        " (Abundance: " +
-        C.site_lookup[otid].major_site_abundance +
-        ")";
-      if (C.site_lookup[otid].secondary_sites === "none assigned") {
-        obj.secondary = "";
-      } else {
-        obj.secondary = C.site_lookup[otid].secondary_sites;
-        if (C.site_lookup[otid].secondary_site_abundance !== "NA") {
-          obj.secondary +=
-            " (Abundance: " +
-            C.site_lookup[otid].secondary_site_abundance +
-            ")";
-        }
-      }
-
-      obj.subsite = C.site_lookup[otid].subsite_of_primary;
-      obj.gsp = C.taxon_lookup[otid].genus + " " + C.taxon_lookup[otid].species;
-
-      if (C.taxa_with_subspecies.indexOf(otid) != -1) {
-        subs[otid] = C.taxon_lineage_lookup[otid].subspecies;
-      }
-    } else {
-      obj.gen_habitat = "Unassigned";
-      obj.major_body_site = "Unassigned";
-      obj.s2 = "";
-
-      obj.subsite = "Missing From Database (C.site_lookup)";
-      obj.gsp = C.taxon_lookup[otid].genus + " " + C.taxon_lookup[otid].species;
-      if (C.taxa_with_subspecies.indexOf(otid) != -1) {
-        subs[otid] = C.taxon_lineage_lookup[otid].subspecies;
-      }
+    let send_list = [],
+        obj,
+        selected_otid = "";
+    if (req.query && req.query.otid) {
+        selected_otid = req.query.otid.replace(/^0+/, "");
     }
-    obj.naming_status = C.taxon_lookup[otid].naming_status;
-    obj.cultivation_status = C.taxon_lookup[otid].cultivation_status;
 
-    send_list.push(obj);
-  }
-  //logger.info(send_list )
-  send_list.sort((b, a) => {
-    return helpers.compareStrings_alpha(b.gsp, a.gsp);
-  });
-  res.render("pages/taxa/body_sites", {
-    title: "HOMD :: Body Sites",
-    pgname: "", // for AbountThisPage
-    config: JSON.stringify(ENV),
-    ver_info: JSON.stringify(C.version_information),
-    has_data: JSON.stringify(C.has_abundance_data),
-    sites: JSON.stringify(send_list),
-    selected: selected_otid,
-    subs: JSON.stringify(subs),
-  });
+    //for(let otid in C.site_lookup){
+    let subs = {};
+    for (let otid in C.taxon_lookup) {
+        obj = {};
+        //logger.info(C.taxon_lookup[otid])
+        //logger.info(otid)
+        obj.otid = otid;
+
+        if (C.dropped_taxids.indexOf(otid) !== -1) {
+            obj.gen_habitat = "Unassigned";
+            obj.major_body_site = "Unassigned";
+            obj.secondary = "";
+
+            obj.subsite = "";
+            obj.gsp =
+                C.taxon_lookup[otid].genus +
+                " " +
+                C.taxon_lookup[otid].species +
+                " (<b>DROPPED</b>)";
+        } else if (otid in C.site_lookup) {
+            obj.gen_habitat = C.site_lookup[otid].general_habitat;
+            obj.major_body_site =
+                C.site_lookup[otid].major_body_site +
+                " (Abundance: " +
+                C.site_lookup[otid].major_site_abundance +
+                ")";
+            if (C.site_lookup[otid].secondary_sites === "none assigned") {
+                obj.secondary = "";
+            } else {
+                obj.secondary = C.site_lookup[otid].secondary_sites;
+                if (C.site_lookup[otid].secondary_site_abundance !== "NA") {
+                    obj.secondary +=
+                        " (Abundance: " +
+                        C.site_lookup[otid].secondary_site_abundance +
+                        ")";
+                }
+            }
+
+            obj.subsite = C.site_lookup[otid].subsite_of_primary;
+            obj.gsp =
+                C.taxon_lookup[otid].genus + " " + C.taxon_lookup[otid].species;
+
+            if (C.taxa_with_subspecies.indexOf(otid) != -1) {
+                subs[otid] = C.taxon_lineage_lookup[otid].subspecies;
+            }
+        } else {
+            obj.gen_habitat = "Unassigned";
+            obj.major_body_site = "Unassigned";
+            obj.s2 = "";
+
+            obj.subsite = "Missing From Database (C.site_lookup)";
+            obj.gsp =
+                C.taxon_lookup[otid].genus + " " + C.taxon_lookup[otid].species;
+            if (C.taxa_with_subspecies.indexOf(otid) != -1) {
+                subs[otid] = C.taxon_lineage_lookup[otid].subspecies;
+            }
+        }
+        obj.naming_status = C.taxon_lookup[otid].naming_status;
+        obj.cultivation_status = C.taxon_lookup[otid].cultivation_status;
+
+        send_list.push(obj);
+    }
+    //logger.info(send_list )
+    send_list.sort((b, a) => {
+        return helpers.compareStrings_alpha(b.gsp, a.gsp);
+    });
+    res.render("pages/taxa/body_sites", {
+        title: "HOMD :: Body Sites",
+        pgname: "", // for AbountThisPage
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
+        has_data: JSON.stringify(C.has_abundance_data),
+        sites: JSON.stringify(send_list),
+        selected: selected_otid,
+        subs: JSON.stringify(subs),
+    });
 });
 //router.get('/ecology/:level/:taxname', function ecology(req, res) {
 router.get("/ecology", function ecology(req, res) {
-  logger.info("in ecology new");
-  helpers.accesslog(req, res);
-  let rank = req.query.rank;
-  let tax_name = req.query.name;
-  //let target = 'ecology_lollipop'
-  let page = "lollipop";
+    logger.info("in ecology new");
+    helpers.accesslog(req, res);
+    let rank = req.query.rank;
+    let tax_name = req.query.name;
+    //let target = 'ecology_lollipop'
+    let page = "lollipop";
 
-  //logger.info('target',target,req.query.page)
-  if (req.query.otid && req.session.ttable_filter) {
-    //logger.info('got otid for ttable')
-    req.session.ttable_filter.otid = req.query.otid.replace(/^0+/, "");
-  }
-  //let tax_name = req.params.name
-  //logger.info('req.params',req)
-  //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
-  //logger.info('rank',rank,'tax',tax_name)
-  if (rank !== "subspecies") {
-    tax_name = tax_name[0].toUpperCase() + tax_name.substring(1); // string[0].toUpperCase() + string.substring(1)
-  }
-  //let segata_text = '',dewhirst_text='',erenv1v3_text='';
-  //logger.info('rank',rank,'tax',tax_name)
-  let hmp_mapping_notes = "",
-    dewhirst_notes = "",
-    erenv1v3_notes = "",
-    erenv3v5_notes = "",
-    hmp_metaphlan_notes = "",
-    hmp_refseqv1v3_notes = "",
-    hmp_refseqv3v5_notes = "";
-  //let max = 0;
-  let otid = "0";
-  //let max_obj = {};
-  //let major_genera=0;
-  //let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
-  let hmp_mapping_data = {},
-    dewhirst_data = {},
-    erenv1v3_data = {},
-    erenv3v5_data = {},
-    hmp_metaphlan_data = {},
-    hmp_refseqv1v3_data = {},
-    hmp_refseqv3v5_data = {};
-  //let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
-  //let dewhirst_max = 0, erenv1v3_max = 0, erenv3v5_max = 0, hmp_metaphlan_max = 0, hmp_refseqv1v3_max = 0, hmp_refseqv3v5_max = 0;
-  //let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
-  let hmp_mapping_table,
-    erenv1v3_table,
-    erenv3v5_table,
-    dewhirst_table,
-    hmp_metaphlan_table,
-    hmp_refseqv1v3_table,
-    hmp_refseqv3v5_table;
-  //logger.info('rank: '+rank+' name: '+tax_name);
-  // TODO::should be in constants???
-  let text = get_rank_text(rank, tax_name);
-
-  let node =
-    C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name + "_" + rank];
-  //logger.info(tax_name+'_'+rank,node)
-  if (!node) {
-    console.error("ERROR - could not find node for", tax_name + "_" + rank);
-  }
-  let genera = get_major_genera(rank, node);
-  // sort genera list
-  genera.sort((a, b) => {
-    return helpers.compareStrings_alpha(a.taxon, b.taxon);
-  });
-  //logger.info(tax_name,rank,node)
-  if (rank === "species") {
-    if (Object.hasOwn(node, "otid")) {
-      otid = node.otid;
+    //logger.info('target',target,req.query.page)
+    if (req.query.otid && req.session.ttable_filter) {
+        //logger.info('got otid for ttable')
+        req.session.ttable_filter.otid = req.query.otid.replace(/^0+/, "");
     }
-  } else if (rank === "subspecies") {
+    //let tax_name = req.params.name
+    //logger.info('req.params',req)
+    //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_rank['subspecies'])
+    //logger.info('rank',rank,'tax',tax_name)
+    if (rank !== "subspecies") {
+        tax_name = tax_name[0].toUpperCase() + tax_name.substring(1); // string[0].toUpperCase() + string.substring(1)
+    }
+    //let segata_text = '',dewhirst_text='',erenv1v3_text='';
+    //logger.info('rank',rank,'tax',tax_name)
+    let hmp_mapping_notes = "",
+        dewhirst_notes = "",
+        erenv1v3_notes = "",
+        erenv3v5_notes = "",
+        hmp_metaphlan_notes = "",
+        hmp_refseqv1v3_notes = "",
+        hmp_refseqv3v5_notes = "";
+    //let max = 0;
+    let otid = "0";
+    //let max_obj = {};
+    //let major_genera=0;
+    //let segata_data={},dewhirst_data={},erenv1v3_data={},erenv3v5_data={};
+    let hmp_mapping_data = {},
+        dewhirst_data = {},
+        erenv1v3_data = {},
+        erenv3v5_data = {},
+        hmp_metaphlan_data = {},
+        hmp_refseqv1v3_data = {},
+        hmp_refseqv3v5_data = {};
+    //let segata_max=0,dewhirst_max=0,erenv1v3_max=0,erenv3v5_max=0;
+    //let dewhirst_max = 0, erenv1v3_max = 0, erenv3v5_max = 0, hmp_metaphlan_max = 0, hmp_refseqv1v3_max = 0, hmp_refseqv3v5_max = 0;
+    //let erenv1v3_table='',erenv3v5_table='',dewhirst_table='',segata_table='';
+    let hmp_mapping_table,
+        erenv1v3_table,
+        erenv3v5_table,
+        dewhirst_table,
+        hmp_metaphlan_table,
+        hmp_refseqv1v3_table,
+        hmp_refseqv3v5_table;
+    //logger.info('rank: '+rank+' name: '+tax_name);
+    // TODO::should be in constants???
+    let text = get_rank_text(rank, tax_name);
+
+    let node =
+        C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
+            tax_name + "_" + rank
+        ];
+    //logger.info(tax_name+'_'+rank,node)
+    if (!node) {
+        console.error("ERROR - could not find node for", tax_name + "_" + rank);
+    }
+    let genera = get_major_genera(rank, node);
+    // sort genera list
+    genera.sort((a, b) => {
+        return helpers.compareStrings_alpha(a.taxon, b.taxon);
+    });
+    //logger.info(tax_name,rank,node)
+    if (rank === "species") {
+        if (Object.hasOwn(node, "otid")) {
+            otid = node.otid;
+        }
+    } else if (rank === "subspecies") {
+        //logger.info(node)
+        otid = node.otid;
+    }
+    //logger.info('node',node)
     //logger.info(node)
-    otid = node.otid;
-  }
-  //logger.info('node',node)
-  //logger.info(node)
-  // /subspecies/subsp.%20dentisani%20clade%20058
-  //logger.info(node)
-  let children_list = [];
-  for (let i in node.children_ids) {
-    // must sort?? by getting list of nodes=>sort=>then create list
-    let n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]];
-    //children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
-    children_list.push(
-      "<a href='/taxa/ecology?rank=" +
-        n.rank +
-        "&name=" +
-        n.taxon +
-        "&page=" +
-        page +
-        "'>" +
-        helpers_taxa.clean_rank_name_for_show(n.rank) +
-        ":" +
-        n.taxon +
-        "</a>",
-    );
-  }
-
-  if (!node) {
-    logger.info("ERROR Node");
-  }
-  //logger.info('node',node)
-  let lineage_list = helpers_taxa.make_lineage(node);
-  let has_data = {
-    mapping: 0,
-    erenv1v3: 0,
-    erenv3v5: 0,
-    hmpv1v3: 0,
-    hmpv3v5: 0,
-    metaphlan: 0,
-    dewhirst: 0,
-  };
-  if (!lineage_list[0]) {
-    lineage_list[0] = "";
-    logger.error("ERROR Lineage");
-  } else {
-    if (lineage_list[0] in C.abundance_lookup) {
-      if (
-        "dewhirst" in C.abundance_lookup[lineage_list[0]] &&
-        Object.keys(C.abundance_lookup[lineage_list[0]]["dewhirst"]).length !==
-          0
-      ) {
-        has_data.dewhirst = 1;
-        //dewhirst_max = C.abundance_lookup[lineage_list[0]]['max_dewhirst']
-        //logger.info('in Dewhirst')
-
-        dewhirst_data = Object.values(
-          C.abundance_lookup[lineage_list[0]]["dewhirst"],
+    // /subspecies/subsp.%20dentisani%20clade%20058
+    //logger.info(node)
+    let children_list = [];
+    for (let i in node.children_ids) {
+        // must sort?? by getting list of nodes=>sort=>then create list
+        let n = C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[i]];
+        //children.push(helpers.clean_rank_name_for_show(n.rank)+': '+n.taxon)
+        children_list.push(
+            "<a href='/taxa/ecology?rank=" +
+                n.rank +
+                "&name=" +
+                n.taxon +
+                "&page=" +
+                page +
+                "'>" +
+                helpers_taxa.clean_rank_name_for_show(n.rank) +
+                ":" +
+                n.taxon +
+                "</a>",
         );
-        //logger.info('dew data',dewhirst_data)
-        dewhirst_data = sort_obj_by_abundance_order(
-          dewhirst_data,
-          C.dewhirst_abundance_order,
-        );
-        // order by constants.dewhirst_abundance_order
-        let clone_dewhirst_data = JSON.parse(JSON.stringify(dewhirst_data)); // clone to avoid difficult errors
-        dewhirst_table = build_abundance_table(
-          "dewhirst",
-          clone_dewhirst_data,
-          C.dewhirst_abundance_order,
-        );
-        if ("dewhirst" in C.abundance_lookup[lineage_list[0]]["notes"]) {
-          dewhirst_notes =
-            C.abundance_lookup[lineage_list[0]]["notes"]["dewhirst"];
-        }
-      }
-      if (
-        "eren_v1v3" in C.abundance_lookup[lineage_list[0]] &&
-        Object.keys(C.abundance_lookup[lineage_list[0]]["eren_v1v3"]).length !==
-          0
-      ) {
-        has_data.erenv1v3 = 1;
-        //erenv1v3_max = C.abundance_lookup[lineage_list[0]]['max_erenv1v3']
-        erenv1v3_data = Object.values(
-          C.abundance_lookup[lineage_list[0]]["eren_v1v3"],
-        );
-        erenv1v3_data = sort_obj_by_abundance_order(
-          erenv1v3_data,
-          C.eren_abundance_order,
-        );
-        // order by constants.eren_abundance_order
-        let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)); // clone to avoid difficult errors
-
-        erenv1v3_table = build_abundance_table(
-          "eren_v1v3",
-          clone_eren_data,
-          C.eren_abundance_order,
-        );
-        if ("eren_v1v3" in C.abundance_lookup[lineage_list[0]]["notes"]) {
-          erenv1v3_notes =
-            C.abundance_lookup[lineage_list[0]]["notes"]["eren_v1v3"];
-        }
-      }
-      if (
-        "eren_v3v5" in C.abundance_lookup[lineage_list[0]] &&
-        Object.keys(C.abundance_lookup[lineage_list[0]]["eren_v3v5"]).length !==
-          0
-      ) {
-        has_data.erenv3v5 = 1;
-        erenv3v5_data = Object.values(
-          C.abundance_lookup[lineage_list[0]]["eren_v3v5"],
-        );
-        erenv3v5_data = sort_obj_by_abundance_order(
-          erenv3v5_data,
-          C.eren_abundance_order,
-        );
-        let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)); // clone to avoid difficult errors
-        erenv3v5_table = build_abundance_table(
-          "eren_v3v5",
-          clone_eren_data,
-          C.eren_abundance_order,
-        );
-        if ("eren_v3v5" in C.abundance_lookup[lineage_list[0]]["notes"]) {
-          erenv3v5_notes =
-            C.abundance_lookup[lineage_list[0]]["notes"]["eren_v3v5"];
-        }
-      }
-      if (
-        "hmp_mapping" in C.abundance_lookup[lineage_list[0]] &&
-        Object.keys(C.abundance_lookup[lineage_list[0]]["hmp_mapping"])
-          .length !== 0
-      ) {
-        has_data.mapping = 1;
-        hmp_mapping_data = Object.values(
-          C.abundance_lookup[lineage_list[0]]["hmp_mapping"],
-        );
-        hmp_mapping_data = sort_obj_by_abundance_order(
-          hmp_mapping_data,
-          C.hmp_mapping_abundance_order,
-        );
-        let clone_hmp_mapping_data = JSON.parse(
-          JSON.stringify(hmp_mapping_data),
-        ); // clone to avoid difficult errors
-        hmp_mapping_table = build_abundance_table(
-          "hmp_mapping",
-          clone_hmp_mapping_data,
-          C.hmp_mapping_abundance_order,
-        );
-        if ("hmp_mapping" in C.abundance_lookup[lineage_list[0]]["notes"]) {
-          hmp_mapping_notes =
-            C.abundance_lookup[lineage_list[0]]["notes"]["hmp_mapping"];
-        }
-      }
-      if (
-        "hmp_metaphlan" in C.abundance_lookup[lineage_list[0]] &&
-        Object.keys(C.abundance_lookup[lineage_list[0]]["hmp_metaphlan"])
-          .length !== 0
-      ) {
-        has_data.metaphlan = 1;
-        hmp_metaphlan_data = Object.values(
-          C.abundance_lookup[lineage_list[0]]["hmp_metaphlan"],
-        );
-        hmp_metaphlan_data = sort_obj_by_abundance_order(
-          hmp_metaphlan_data,
-          C.hmp_metaphlan_abundance_order,
-        );
-        let clone_hmp_metaphlan_data = JSON.parse(
-          JSON.stringify(hmp_metaphlan_data),
-        ); // clone to avoid difficult errors
-        hmp_metaphlan_table = build_abundance_table(
-          "hmp_metaphlan",
-          clone_hmp_metaphlan_data,
-          C.hmp_metaphlan_abundance_order,
-        );
-        if ("hmp_metaphlan" in C.abundance_lookup[lineage_list[0]]["notes"]) {
-          hmp_metaphlan_notes =
-            C.abundance_lookup[lineage_list[0]]["notes"]["hmp_metaphlan"];
-        }
-      }
-      if (
-        "hmp_refseq_v1v3" in C.abundance_lookup[lineage_list[0]] &&
-        Object.keys(C.abundance_lookup[lineage_list[0]]["hmp_refseq_v1v3"])
-          .length !== 0
-      ) {
-        has_data.hmpv1v3 = 1;
-        hmp_refseqv1v3_data = Object.values(
-          C.abundance_lookup[lineage_list[0]]["hmp_refseq_v1v3"],
-        );
-        hmp_refseqv1v3_data = sort_obj_by_abundance_order(
-          hmp_refseqv1v3_data,
-          C.hmp_refseq_abundance_order,
-        );
-        let clone_hmp_refseqv1v3_data = JSON.parse(
-          JSON.stringify(hmp_refseqv1v3_data),
-        ); // clone to avoid difficult errors
-        hmp_refseqv1v3_table = build_abundance_table(
-          "hmp_refseqv1v3",
-          clone_hmp_refseqv1v3_data,
-          C.hmp_refseq_abundance_order,
-        );
-        if ("hmp_refseq_v1v3" in C.abundance_lookup[lineage_list[0]]["notes"]) {
-          hmp_refseqv1v3_notes =
-            C.abundance_lookup[lineage_list[0]]["notes"]["hmp_refseq_v1v3"];
-        }
-      }
-      if (
-        "hmp_refseq_v3v5" in C.abundance_lookup[lineage_list[0]] &&
-        Object.keys(C.abundance_lookup[lineage_list[0]]["hmp_refseq_v3v5"])
-          .length !== 0
-      ) {
-        has_data.hmpv3v5 = 1;
-        hmp_refseqv3v5_data = Object.values(
-          C.abundance_lookup[lineage_list[0]]["hmp_refseq_v3v5"],
-        );
-        hmp_refseqv3v5_data = sort_obj_by_abundance_order(
-          hmp_refseqv3v5_data,
-          C.hmp_refseq_abundance_order,
-        );
-        let clone_hmp_refseqv3v5_data = JSON.parse(
-          JSON.stringify(hmp_refseqv3v5_data),
-        ); // clone to avoid difficult errors
-        hmp_refseqv3v5_table = build_abundance_table(
-          "hmp_refseqv3v5",
-          clone_hmp_refseqv3v5_data,
-          C.hmp_refseq_abundance_order,
-        );
-        if ("hmp_refseq_v3v5" in C.abundance_lookup[lineage_list[0]]["notes"]) {
-          hmp_refseqv3v5_notes =
-            C.abundance_lookup[lineage_list[0]]["notes"]["hmp_refseq_v3v5"];
-        }
-      }
     }
-  }
-  children_list.sort();
-  let bodysite = "";
 
-  if (otid != "0") {
-    bodysite = C.site_lookup[otid].major_body_site;
-  }
+    if (!node) {
+        logger.info("ERROR Node");
+    }
+    //logger.info('node',node)
+    let lineage_list = helpers_taxa.make_lineage(node);
+    let has_data = {
+        mapping: 0,
+        erenv1v3: 0,
+        erenv3v5: 0,
+        hmpv1v3: 0,
+        hmpv3v5: 0,
+        metaphlan: 0,
+        dewhirst: 0,
+    };
+    if (!lineage_list[0]) {
+        lineage_list[0] = "";
+        logger.error("ERROR Lineage");
+    } else {
+        if (lineage_list[0] in C.abundance_lookup) {
+            if (
+                "dewhirst" in C.abundance_lookup[lineage_list[0]] &&
+                Object.keys(C.abundance_lookup[lineage_list[0]]["dewhirst"])
+                    .length !== 0
+            ) {
+                has_data.dewhirst = 1;
+                //dewhirst_max = C.abundance_lookup[lineage_list[0]]['max_dewhirst']
+                //logger.info('in Dewhirst')
 
-  if (C.hmp_v3v5_to_suppress.indexOf(otid) !== -1) {
-    hmp_refseqv3v5_notes =
-      "No data – the v3v5 region of the 16S rRNA gene does not distinguish this species from its close relatives.";
-  }
-  //logger.info('hmp_refseqv1v3_notes',hmp_refseqv1v3_notes)
-  //logger.info('lineage_list',lineage_list)
-  let lineage_string = helpers_taxa.make_lineage_string_with_links(
-    lineage_list,
-    "ecology",
-    page,
-  );
-  let rank_show;
-  if (rank == "klass" || rank == "Klass") {
-    rank_show = "Class";
-  } else {
-    rank_show = rank.charAt(0).toUpperCase() + rank.slice(1);
-  }
-  let legend_visibility = "no_show"; // show or no_show
-  res.render("pages/taxa/ecology_lollipop", {
-    title: "HOMD ::" + rank_show + ":" + tax_name,
-    pgname: "taxon/ecology", // for AbountThisPage
-    config: JSON.stringify(ENV),
-    tax_name: tax_name,
-    //headline: 'Life: Cellular Organisms',
-    lineage: lineage_string,
-    lin: lineage_list[0],
-    rank: rank,
-    legendvis: legend_visibility,
-    //max: JSON.stringify({ 'hmp_refseqv1v3': hmp_refseqv1v3_max, 'hmp_refseqv3v5': hmp_refseqv3v5_max, 'hmp_metaphlan': hmp_metaphlan_max, 'dewhirst': dewhirst_max, 'erenv1v3': erenv1v3_max, 'erenv3v5': erenv3v5_max }),
-    otid: otid, // zero unless species (or subspecies)
-    bodysite: bodysite,
-    genera: JSON.stringify(genera),
-    text_file: text[0],
-    page: page,
-    text_format: text[1],
-    children: JSON.stringify(children_list),
-    notes: JSON.stringify({
-      mapping: hmp_mapping_notes,
-      hmpv1v3: hmp_refseqv1v3_notes,
-      hmpv3v5: hmp_refseqv3v5_notes,
-      metaphlan: hmp_metaphlan_notes,
-      dewhirst: dewhirst_notes,
-      erenv1v3: erenv1v3_notes,
-      erenv3v5: erenv3v5_notes,
-    }),
-    has_data: JSON.stringify(has_data),
+                dewhirst_data = Object.values(
+                    C.abundance_lookup[lineage_list[0]]["dewhirst"],
+                );
+                //logger.info('dew data',dewhirst_data)
+                dewhirst_data = sort_obj_by_abundance_order(
+                    dewhirst_data,
+                    C.dewhirst_abundance_order,
+                );
+                // order by constants.dewhirst_abundance_order
+                let clone_dewhirst_data = JSON.parse(
+                    JSON.stringify(dewhirst_data),
+                ); // clone to avoid difficult errors
+                dewhirst_table = build_abundance_table(
+                    "dewhirst",
+                    clone_dewhirst_data,
+                    C.dewhirst_abundance_order,
+                );
+                if (
+                    "dewhirst" in C.abundance_lookup[lineage_list[0]]["notes"]
+                ) {
+                    dewhirst_notes =
+                        C.abundance_lookup[lineage_list[0]]["notes"][
+                            "dewhirst"
+                        ];
+                }
+            }
+            if (
+                "eren_v1v3" in C.abundance_lookup[lineage_list[0]] &&
+                Object.keys(C.abundance_lookup[lineage_list[0]]["eren_v1v3"])
+                    .length !== 0
+            ) {
+                has_data.erenv1v3 = 1;
+                //erenv1v3_max = C.abundance_lookup[lineage_list[0]]['max_erenv1v3']
+                erenv1v3_data = Object.values(
+                    C.abundance_lookup[lineage_list[0]]["eren_v1v3"],
+                );
+                erenv1v3_data = sort_obj_by_abundance_order(
+                    erenv1v3_data,
+                    C.eren_abundance_order,
+                );
+                // order by constants.eren_abundance_order
+                let clone_eren_data = JSON.parse(JSON.stringify(erenv1v3_data)); // clone to avoid difficult errors
 
-    dewhirst_table: dewhirst_table,
-    erenv1v3_table: erenv1v3_table,
-    erenv3v5_table: erenv3v5_table,
-    metaphlan_table: hmp_metaphlan_table,
-    hmpv1v3_table: hmp_refseqv1v3_table,
-    hmpv3v5_table: hmp_refseqv3v5_table,
-    mapping_table: hmp_mapping_table,
+                erenv1v3_table = build_abundance_table(
+                    "eren_v1v3",
+                    clone_eren_data,
+                    C.eren_abundance_order,
+                );
+                if (
+                    "eren_v1v3" in C.abundance_lookup[lineage_list[0]]["notes"]
+                ) {
+                    erenv1v3_notes =
+                        C.abundance_lookup[lineage_list[0]]["notes"][
+                            "eren_v1v3"
+                        ];
+                }
+            }
+            if (
+                "eren_v3v5" in C.abundance_lookup[lineage_list[0]] &&
+                Object.keys(C.abundance_lookup[lineage_list[0]]["eren_v3v5"])
+                    .length !== 0
+            ) {
+                has_data.erenv3v5 = 1;
+                erenv3v5_data = Object.values(
+                    C.abundance_lookup[lineage_list[0]]["eren_v3v5"],
+                );
+                erenv3v5_data = sort_obj_by_abundance_order(
+                    erenv3v5_data,
+                    C.eren_abundance_order,
+                );
+                let clone_eren_data = JSON.parse(JSON.stringify(erenv3v5_data)); // clone to avoid difficult errors
+                erenv3v5_table = build_abundance_table(
+                    "eren_v3v5",
+                    clone_eren_data,
+                    C.eren_abundance_order,
+                );
+                if (
+                    "eren_v3v5" in C.abundance_lookup[lineage_list[0]]["notes"]
+                ) {
+                    erenv3v5_notes =
+                        C.abundance_lookup[lineage_list[0]]["notes"][
+                            "eren_v3v5"
+                        ];
+                }
+            }
+            if (
+                "hmp_mapping" in C.abundance_lookup[lineage_list[0]] &&
+                Object.keys(C.abundance_lookup[lineage_list[0]]["hmp_mapping"])
+                    .length !== 0
+            ) {
+                has_data.mapping = 1;
+                hmp_mapping_data = Object.values(
+                    C.abundance_lookup[lineage_list[0]]["hmp_mapping"],
+                );
+                hmp_mapping_data = sort_obj_by_abundance_order(
+                    hmp_mapping_data,
+                    C.hmp_mapping_abundance_order,
+                );
+                let clone_hmp_mapping_data = JSON.parse(
+                    JSON.stringify(hmp_mapping_data),
+                ); // clone to avoid difficult errors
+                hmp_mapping_table = build_abundance_table(
+                    "hmp_mapping",
+                    clone_hmp_mapping_data,
+                    C.hmp_mapping_abundance_order,
+                );
+                if (
+                    "hmp_mapping" in
+                    C.abundance_lookup[lineage_list[0]]["notes"]
+                ) {
+                    hmp_mapping_notes =
+                        C.abundance_lookup[lineage_list[0]]["notes"][
+                            "hmp_mapping"
+                        ];
+                }
+            }
+            if (
+                "hmp_metaphlan" in C.abundance_lookup[lineage_list[0]] &&
+                Object.keys(
+                    C.abundance_lookup[lineage_list[0]]["hmp_metaphlan"],
+                ).length !== 0
+            ) {
+                has_data.metaphlan = 1;
+                hmp_metaphlan_data = Object.values(
+                    C.abundance_lookup[lineage_list[0]]["hmp_metaphlan"],
+                );
+                hmp_metaphlan_data = sort_obj_by_abundance_order(
+                    hmp_metaphlan_data,
+                    C.hmp_metaphlan_abundance_order,
+                );
+                let clone_hmp_metaphlan_data = JSON.parse(
+                    JSON.stringify(hmp_metaphlan_data),
+                ); // clone to avoid difficult errors
+                hmp_metaphlan_table = build_abundance_table(
+                    "hmp_metaphlan",
+                    clone_hmp_metaphlan_data,
+                    C.hmp_metaphlan_abundance_order,
+                );
+                if (
+                    "hmp_metaphlan" in
+                    C.abundance_lookup[lineage_list[0]]["notes"]
+                ) {
+                    hmp_metaphlan_notes =
+                        C.abundance_lookup[lineage_list[0]]["notes"][
+                            "hmp_metaphlan"
+                        ];
+                }
+            }
+            if (
+                "hmp_refseq_v1v3" in C.abundance_lookup[lineage_list[0]] &&
+                Object.keys(
+                    C.abundance_lookup[lineage_list[0]]["hmp_refseq_v1v3"],
+                ).length !== 0
+            ) {
+                has_data.hmpv1v3 = 1;
+                hmp_refseqv1v3_data = Object.values(
+                    C.abundance_lookup[lineage_list[0]]["hmp_refseq_v1v3"],
+                );
+                hmp_refseqv1v3_data = sort_obj_by_abundance_order(
+                    hmp_refseqv1v3_data,
+                    C.hmp_refseq_abundance_order,
+                );
+                let clone_hmp_refseqv1v3_data = JSON.parse(
+                    JSON.stringify(hmp_refseqv1v3_data),
+                ); // clone to avoid difficult errors
+                hmp_refseqv1v3_table = build_abundance_table(
+                    "hmp_refseqv1v3",
+                    clone_hmp_refseqv1v3_data,
+                    C.hmp_refseq_abundance_order,
+                );
+                if (
+                    "hmp_refseq_v1v3" in
+                    C.abundance_lookup[lineage_list[0]]["notes"]
+                ) {
+                    hmp_refseqv1v3_notes =
+                        C.abundance_lookup[lineage_list[0]]["notes"][
+                            "hmp_refseq_v1v3"
+                        ];
+                }
+            }
+            if (
+                "hmp_refseq_v3v5" in C.abundance_lookup[lineage_list[0]] &&
+                Object.keys(
+                    C.abundance_lookup[lineage_list[0]]["hmp_refseq_v3v5"],
+                ).length !== 0
+            ) {
+                has_data.hmpv3v5 = 1;
+                hmp_refseqv3v5_data = Object.values(
+                    C.abundance_lookup[lineage_list[0]]["hmp_refseq_v3v5"],
+                );
+                hmp_refseqv3v5_data = sort_obj_by_abundance_order(
+                    hmp_refseqv3v5_data,
+                    C.hmp_refseq_abundance_order,
+                );
+                let clone_hmp_refseqv3v5_data = JSON.parse(
+                    JSON.stringify(hmp_refseqv3v5_data),
+                ); // clone to avoid difficult errors
+                hmp_refseqv3v5_table = build_abundance_table(
+                    "hmp_refseqv3v5",
+                    clone_hmp_refseqv3v5_data,
+                    C.hmp_refseq_abundance_order,
+                );
+                if (
+                    "hmp_refseq_v3v5" in
+                    C.abundance_lookup[lineage_list[0]]["notes"]
+                ) {
+                    hmp_refseqv3v5_notes =
+                        C.abundance_lookup[lineage_list[0]]["notes"][
+                            "hmp_refseq_v3v5"
+                        ];
+                }
+            }
+        }
+    }
+    children_list.sort();
+    let bodysite = "";
 
-    dewhirst: JSON.stringify(dewhirst_data),
-    erenv1v3: JSON.stringify(erenv1v3_data),
-    erenv3v5: JSON.stringify(erenv3v5_data),
-    metaphlan: JSON.stringify(hmp_metaphlan_data),
-    hmpv1v3: JSON.stringify(hmp_refseqv1v3_data),
-    hmpv3v5: JSON.stringify(hmp_refseqv3v5_data),
-    mapping: JSON.stringify(hmp_mapping_data),
+    if (otid != "0") {
+        bodysite = C.site_lookup[otid].major_body_site;
+    }
 
-    ver_info: JSON.stringify(C.version_information),
-    site_colors: JSON.stringify(C.abundance_site_colors),
-  });
+    if (C.hmp_v3v5_to_suppress.indexOf(otid) !== -1) {
+        hmp_refseqv3v5_notes =
+            "No data – the v3v5 region of the 16S rRNA gene does not distinguish this species from its close relatives.";
+    }
+    //logger.info('hmp_refseqv1v3_notes',hmp_refseqv1v3_notes)
+    //logger.info('lineage_list',lineage_list)
+    let lineage_string = helpers_taxa.make_lineage_string_with_links(
+        lineage_list,
+        "ecology",
+        page,
+    );
+    let rank_show;
+    if (rank == "klass" || rank == "Klass") {
+        rank_show = "Class";
+    } else {
+        rank_show = rank.charAt(0).toUpperCase() + rank.slice(1);
+    }
+    let legend_visibility = "no_show"; // show or no_show
+    res.render("pages/taxa/ecology_lollipop", {
+        title: "HOMD ::" + rank_show + ":" + tax_name,
+        pgname: "taxon/ecology", // for AbountThisPage
+        config: JSON.stringify(ENV),
+        tax_name: tax_name,
+        //headline: 'Life: Cellular Organisms',
+        lineage: lineage_string,
+        lin: lineage_list[0],
+        rank: rank,
+        legendvis: legend_visibility,
+        //max: JSON.stringify({ 'hmp_refseqv1v3': hmp_refseqv1v3_max, 'hmp_refseqv3v5': hmp_refseqv3v5_max, 'hmp_metaphlan': hmp_metaphlan_max, 'dewhirst': dewhirst_max, 'erenv1v3': erenv1v3_max, 'erenv3v5': erenv3v5_max }),
+        otid: otid, // zero unless species (or subspecies)
+        bodysite: bodysite,
+        genera: JSON.stringify(genera),
+        text_file: text[0],
+        page: page,
+        text_format: text[1],
+        children: JSON.stringify(children_list),
+        notes: JSON.stringify({
+            mapping: hmp_mapping_notes,
+            hmpv1v3: hmp_refseqv1v3_notes,
+            hmpv3v5: hmp_refseqv3v5_notes,
+            metaphlan: hmp_metaphlan_notes,
+            dewhirst: dewhirst_notes,
+            erenv1v3: erenv1v3_notes,
+            erenv3v5: erenv3v5_notes,
+        }),
+        has_data: JSON.stringify(has_data),
+
+        dewhirst_table: dewhirst_table,
+        erenv1v3_table: erenv1v3_table,
+        erenv3v5_table: erenv3v5_table,
+        metaphlan_table: hmp_metaphlan_table,
+        hmpv1v3_table: hmp_refseqv1v3_table,
+        hmpv3v5_table: hmp_refseqv3v5_table,
+        mapping_table: hmp_mapping_table,
+
+        dewhirst: JSON.stringify(dewhirst_data),
+        erenv1v3: JSON.stringify(erenv1v3_data),
+        erenv3v5: JSON.stringify(erenv3v5_data),
+        metaphlan: JSON.stringify(hmp_metaphlan_data),
+        hmpv1v3: JSON.stringify(hmp_refseqv1v3_data),
+        hmpv3v5: JSON.stringify(hmp_refseqv3v5_data),
+        mapping: JSON.stringify(hmp_mapping_data),
+
+        ver_info: JSON.stringify(C.version_information),
+        site_colors: JSON.stringify(C.abundance_site_colors),
+    });
 });
 function sort_obj_by_abundance_order(obj, order) {
-  let new_obj = [];
-  for (let n in order) {
-    for (let j in obj) {
-      if (obj[j].site === order[n]) {
-        new_obj.push(obj[j]);
-      }
+    let new_obj = [];
+    for (let n in order) {
+        for (let j in obj) {
+            if (obj[j].site === order[n]) {
+                new_obj.push(obj[j]);
+            }
+        }
     }
-  }
-  return new_obj;
+    return new_obj;
 }
 
 //
 router.get("/abundance_by_site/:rank", function abundance_by_site(req, res) {
-  //logger.info('in abundance_by_site')
+    //logger.info('in abundance_by_site')
 
-  let rank = req.params.rank;
+    let rank = req.params.rank;
 
-  let node_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank];
-  //let abund_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
-  let abund_sites = Object.keys(C.abundance_names);
+    let node_list = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank];
+    //let abund_refs = ['segata','eren_v1v3','eren_v3v5','dewhirst']
+    let abund_sites = Object.keys(C.abundance_names);
 
-  let group_collector = {},
-    top_ten = {},
-    node,
-    lineage_list;
-  for (let i in node_list) {
-    //logger.info(phyla[p])
-    node = node_list[i];
-    lineage_list = helpers_taxa.make_lineage(node);
-    //logger.info('node',node)
-    //logger.info('rank',rank)
-    //logger.info('lineage_list-2',lineage_list)
+    let group_collector = {},
+        top_ten = {},
+        node,
+        lineage_list;
+    for (let i in node_list) {
+        //logger.info(phyla[p])
+        node = node_list[i];
+        lineage_list = helpers_taxa.make_lineage(node);
+        //logger.info('node',node)
+        //logger.info('rank',rank)
+        //logger.info('lineage_list-2',lineage_list)
 
-    //let avg = get_site_avgs(C.abundance_lookup[lineage_list[0]])
-    //logger.info('C.abundance_lookup[lineage_list[0]]',C.taxon_counts_lookup[lineage_list[0]])
-    group_collector[lineage_list[0]] = get_site_avgs(
-      C.abundance_lookup[lineage_list[0]],
-    );
-  }
-  for (let i in abund_sites) {
-    let site = abund_sites[i];
-    top_ten[site] = get_sorted_abund_names(group_collector, site, rank, 10);
-  }
-  //logger.info(top_ten)
-  //const porder = [...C.base_abundance_order] //;.concat(['NS'])
-  //porder.push('NS')
-  //logger.info(C.base_abundance_order,porder)
-  res.render("pages/taxa/abundance_by_site", {
-    title: "HOMD ::Abundance by oral site",
-    pgname: "", // for AbountThisPage
-    config: JSON.stringify(ENV),
-    ver_info: JSON.stringify(C.version_information),
+        //let avg = get_site_avgs(C.abundance_lookup[lineage_list[0]])
+        //logger.info('C.abundance_lookup[lineage_list[0]]',C.taxon_counts_lookup[lineage_list[0]])
+        group_collector[lineage_list[0]] = get_site_avgs(
+            C.abundance_lookup[lineage_list[0]],
+        );
+    }
+    for (let i in abund_sites) {
+        let site = abund_sites[i];
+        top_ten[site] = get_sorted_abund_names(group_collector, site, rank, 10);
+    }
+    //logger.info(top_ten)
+    //const porder = [...C.base_abundance_order] //;.concat(['NS'])
+    //porder.push('NS')
+    //logger.info(C.base_abundance_order,porder)
+    res.render("pages/taxa/abundance_by_site", {
+        title: "HOMD ::Abundance by oral site",
+        pgname: "", // for AbountThisPage
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
 
-    data: JSON.stringify(top_ten),
-    plot_order: C.base_abundance_order,
-    site_names: JSON.stringify(C.abundance_names),
-    rank: rank,
-  });
+        data: JSON.stringify(top_ten),
+        plot_order: C.base_abundance_order,
+        site_names: JSON.stringify(C.abundance_names),
+        rank: rank,
+    });
 });
 //
 router.get(
-  "/show_all_abundance/:site/:rank",
-  function show_all_abundance(req, res) {
-    //logger.info('in show_all_abundance')
-    let site = req.params.site;
-    let rank = req.params.rank;
-    //logger.info('site2',site,'rank2',rank)
-    let group = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank];
-    let group_collector = {},
-      top_names,
-      node,
-      lineage_list,
-      showrank;
-    if (rank === "klass") {
-      showrank = "Class";
-    } else {
-      showrank = rank.charAt(0).toUpperCase() + rank.slice(1);
-    }
-    for (let i in group) {
-      //logger.info(phyla[p])
-      node = group[i];
-      lineage_list = helpers_taxa.make_lineage(node);
-      //logger.info('lineage_list3',lineage_list[0])
-      group_collector[lineage_list[0]] = get_site_avgs(
-        C.abundance_lookup[lineage_list[0]],
-      );
-    }
-    top_names = get_sorted_abund_names(group_collector, site, rank, "all");
-    //logger.info(top_names)
-    let count = 1;
-    let txt = `Oral Site: ${C.abundance_names[site]}<br><table border='1'>`;
-    txt += `<tr><td></td><td>Level: <b>${showrank}</b></td><td><b>% Abund</b></td></tr>`;
-    for (let i in top_names) {
-      txt += "<tr><td>" + count.toString() + "</td>";
-      if (rank === "species") {
-        txt += `<td><i>${top_names[i].name}</i></td>`;
-      } else {
-        txt += `<td>${top_names[i].name}</td>`;
-      }
-      txt += `<td>${top_names[i].value}</td></tr>`;
-      count += 1;
-    }
-    txt += "</table>";
-    res.send(txt);
-  },
+    "/show_all_abundance/:site/:rank",
+    function show_all_abundance(req, res) {
+        //logger.info('in show_all_abundance')
+        let site = req.params.site;
+        let rank = req.params.rank;
+        //logger.info('site2',site,'rank2',rank)
+        let group = C.homd_taxonomy.taxa_tree_dict_map_by_rank[rank];
+        let group_collector = {},
+            top_names,
+            node,
+            lineage_list,
+            showrank;
+        if (rank === "klass") {
+            showrank = "Class";
+        } else {
+            showrank = rank.charAt(0).toUpperCase() + rank.slice(1);
+        }
+        for (let i in group) {
+            //logger.info(phyla[p])
+            node = group[i];
+            lineage_list = helpers_taxa.make_lineage(node);
+            //logger.info('lineage_list3',lineage_list[0])
+            group_collector[lineage_list[0]] = get_site_avgs(
+                C.abundance_lookup[lineage_list[0]],
+            );
+        }
+        top_names = get_sorted_abund_names(group_collector, site, rank, "all");
+        //logger.info(top_names)
+        let count = 1;
+        let txt = `Oral Site: ${C.abundance_names[site]}<br><table border='1'>`;
+        txt += `<tr><td></td><td>Level: <b>${showrank}</b></td><td><b>% Abund</b></td></tr>`;
+        for (let i in top_names) {
+            txt += "<tr><td>" + count.toString() + "</td>";
+            if (rank === "species") {
+                txt += `<td><i>${top_names[i].name}</i></td>`;
+            } else {
+                txt += `<td>${top_names[i].name}</td>`;
+            }
+            txt += `<td>${top_names[i].value}</td></tr>`;
+            count += 1;
+        }
+        txt += "</table>";
+        res.send(txt);
+    },
 );
 //
 router.get("/dropped", async function dropped(req, res) {
-  const q = queries.get_dropped_taxa();
-  //logger.info(q)
-  const rows = await queries.run_query(q, req, res);
-  res.render("pages/taxa/dropped", {
-    title: "HOMD :: Dropped Taxa",
-    pgname: "", // for AbountThisPage
-    pgtitle: "Dropped Taxa Table",
-    config: JSON.stringify(ENV),
-    ver_info: JSON.stringify(C.version_information),
+    const q = queries.get_dropped_taxa();
+    //logger.info(q)
+    const rows = await queries.run_query(q, req, res);
+    res.render("pages/taxa/dropped", {
+        title: "HOMD :: Dropped Taxa",
+        pgname: "", // for AbountThisPage
+        pgtitle: "Dropped Taxa Table",
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
 
-    data: JSON.stringify(rows),
-    row_count: rows.length,
-  });
+        data: JSON.stringify(rows),
+        row_count: rows.length,
+    });
 });
 router.get("/tree_d3", function tree_d3(req, res) {
-  let unique_phyla_obj = {};
-  let file_name = "HOMD_16S_rRNA_RefSeq_V15.23.reroot.order.tre";
-  //let file_name = 'HOMD_16S_rRNA_RefSeq_Tree_V16.tre'
-  fs.readFile(
-    path.join("public/" + file_name),
-    "utf8",
-    function readTreeFile(err, data) {
-      if (err) {
-        console.error("xxx", err);
-      } else {
-        //let treedata = JSON.parse(data);
-        let refseq_tree_lookup = {};
-        for (let otid in C.refseq_lookup) {
-          let hmt = helpers.make_otid_display_name(otid);
-          //logger.info(otid, C.refseq_lookup[otid], C.taxon_lineage_lookup[otid])
-          for (let n in C.refseq_lookup[otid]) {
-            refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid] = {};
-            refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].hmt = hmt;
-            if (Object.hasOwn(C.taxon_lineage_lookup, otid)) {
-              unique_phyla_obj[C.taxon_lineage_lookup[otid].phylum] = 1;
-              refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].phylum =
-                C.taxon_lineage_lookup[otid].phylum;
-              refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].species =
-                C.taxon_lineage_lookup[otid].species.replace(/"/g, "");
-              if (C.taxon_lineage_lookup[otid].subspecies) {
-                refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].species =
-                  C.taxon_lineage_lookup[otid].species.replace(/"/g, "") +
-                  " " +
-                  C.taxon_lineage_lookup[otid].subspecies;
-              }
+    let unique_phyla_obj = {};
+    let file_name = "HOMD_16S_rRNA_RefSeq_V15.23.reroot.order.tre";
+    //let file_name = 'HOMD_16S_rRNA_RefSeq_Tree_V16.tre'
+    fs.readFile(
+        path.join("public/" + file_name),
+        "utf8",
+        function readTreeFile(err, data) {
+            if (err) {
+                console.error("xxx", err);
             } else {
-              refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].phylum =
-                "Dropped";
-              refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].species =
-                C.taxon_lookup[otid].genus +
-                " " +
-                C.taxon_lookup[otid].species.replace(/"/g, "");
+                //let treedata = JSON.parse(data);
+                let refseq_tree_lookup = {};
+                for (let otid in C.refseq_lookup) {
+                    let hmt = helpers.make_otid_display_name(otid);
+                    //logger.info(otid, C.refseq_lookup[otid], C.taxon_lineage_lookup[otid])
+                    for (let n in C.refseq_lookup[otid]) {
+                        refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid] =
+                            {};
+                        refseq_tree_lookup[
+                            C.refseq_lookup[otid][n].refseqid
+                        ].hmt = hmt;
+                        if (Object.hasOwn(C.taxon_lineage_lookup, otid)) {
+                            unique_phyla_obj[
+                                C.taxon_lineage_lookup[otid].phylum
+                            ] = 1;
+                            refseq_tree_lookup[
+                                C.refseq_lookup[otid][n].refseqid
+                            ].phylum = C.taxon_lineage_lookup[otid].phylum;
+                            refseq_tree_lookup[
+                                C.refseq_lookup[otid][n].refseqid
+                            ].species = C.taxon_lineage_lookup[
+                                otid
+                            ].species.replace(/"/g, "");
+                            if (C.taxon_lineage_lookup[otid].subspecies) {
+                                refseq_tree_lookup[
+                                    C.refseq_lookup[otid][n].refseqid
+                                ].species =
+                                    C.taxon_lineage_lookup[
+                                        otid
+                                    ].species.replace(/"/g, "") +
+                                    " " +
+                                    C.taxon_lineage_lookup[otid].subspecies;
+                            }
+                        } else {
+                            refseq_tree_lookup[
+                                C.refseq_lookup[otid][n].refseqid
+                            ].phylum = "Dropped";
+                            refseq_tree_lookup[
+                                C.refseq_lookup[otid][n].refseqid
+                            ].species =
+                                C.taxon_lookup[otid].genus +
+                                " " +
+                                C.taxon_lookup[otid].species.replace(/"/g, "");
+                        }
+
+                        //refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].species = C.taxon_lineage_lookup[otid].species +' '+C.taxon_lineage_lookup[otid].subspecies
+                    }
+                }
+                let unique_phyla = Object.keys(unique_phyla_obj);
+                let unique_phyla_sorted = unique_phyla.sort();
+                unique_phyla_sorted.push("Dropped");
+                //unique_phyla_obj['Dropped'] = 1
+                //logger.info(refseq_tree_lookup)
+
+                res.render("pages/taxa/tree_d3", {
+                    title: "HOMD :: tree",
+                    pgname: "", // for AbountThisPage
+                    pgtitle: "D3 Tree",
+                    config: JSON.stringify(ENV),
+                    ver_info: JSON.stringify(C.version_information),
+
+                    mdata: JSON.stringify(refseq_tree_lookup),
+                    tdata: JSON.stringify(data),
+                    uphyla: JSON.stringify(unique_phyla_sorted),
+                    fname: file_name,
+                });
             }
-
-            //refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].species = C.taxon_lineage_lookup[otid].species +' '+C.taxon_lineage_lookup[otid].subspecies
-          }
-        }
-        let unique_phyla = Object.keys(unique_phyla_obj);
-        let unique_phyla_sorted = unique_phyla.sort();
-        unique_phyla_sorted.push("Dropped");
-        //unique_phyla_obj['Dropped'] = 1
-        //logger.info(refseq_tree_lookup)
-
-        res.render("pages/taxa/tree_d3", {
-          title: "HOMD :: tree",
-          pgname: "", // for AbountThisPage
-          pgtitle: "D3 Tree",
-          config: JSON.stringify(ENV),
-          ver_info: JSON.stringify(C.version_information),
-
-          mdata: JSON.stringify(refseq_tree_lookup),
-          tdata: JSON.stringify(data),
-          uphyla: JSON.stringify(unique_phyla_sorted),
-          fname: file_name,
-        });
-      }
-    },
-  );
+        },
+    );
 });
 
 ////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// FUNCTIONS //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 function get_rank_text(rank, tax_name, otid) {
-  //logger.info('xx',rank,tax_name,otid)
-  let text = [false, false];
-  if (rank === "genus") {
-    if (C.names_w_text.genera.indexOf(tax_name) !== -1) {
-      text[0] = "genus/" + tax_name + ".ejs";
-      //}else if(C.names_w_text.provisional_genera_v4.indexOf(tax_name) != -1){
-    } else if (tax_name.includes("[")) {
-      //logger.info('GOT Provisional')
-      //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
-      let children_ids =
-        C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name + "_genus"]
-          .children_ids;
-      let num_species = children_ids.length;
-      //let children = []
-      text[1] =
-        tax_name + " is a provisionally named genus constructed to provide a";
-      text[1] +=
-        " stably named reference for a currently unnamed taxon represented";
-      text[1] +=
-        " by a set of 16S rRNA clones.  It contains " +
-        num_species.toString() +
-        " species:<br>";
-      for (let n in children_ids) {
-        text[1] +=
-          " - " +
-          C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]].taxon +
-          "<br>";
-      }
+    //logger.info('xx',rank,tax_name,otid)
+    let text = [false, false];
+    if (rank === "genus") {
+        if (C.names_w_text.genera.indexOf(tax_name) !== -1) {
+            text[0] = "genus/" + tax_name + ".ejs";
+            //}else if(C.names_w_text.provisional_genera_v4.indexOf(tax_name) != -1){
+        } else if (tax_name.includes("[")) {
+            //logger.info('GOT Provisional')
+            //logger.info(C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[tax_name+'_genus'])
+            let children_ids =
+                C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
+                    tax_name + "_genus"
+                ].children_ids;
+            let num_species = children_ids.length;
+            //let children = []
+            text[1] =
+                tax_name +
+                " is a provisionally named genus constructed to provide a";
+            text[1] +=
+                " stably named reference for a currently unnamed taxon represented";
+            text[1] +=
+                " by a set of 16S rRNA clones.  It contains " +
+                num_species.toString() +
+                " species:<br>";
+            for (let n in children_ids) {
+                text[1] +=
+                    " - " +
+                    C.homd_taxonomy.taxa_tree_dict_map_by_id[children_ids[n]]
+                        .taxon +
+                    "<br>";
+            }
+        }
     }
-  }
-  if (rank === "species") {
-    if (C.names_w_text.species.indexOf(otid) !== -1) {
-      return ["species/" + otid + ".ejs"];
+    if (rank === "species") {
+        if (C.names_w_text.species.indexOf(otid) !== -1) {
+            return ["species/" + otid + ".ejs"];
+        }
     }
-  }
-  return text;
+    return text;
 }
 //
 //
 function get_sorted_abund_names(collector, site, rank, num_to_return) {
-  let tmp1 = {},
-    tmp2 = [];
+    let tmp1 = {},
+        tmp2 = [];
 
-  for (let taxname in collector) {
-    //logger.info('taxname',taxname)
-    tmp1[taxname] = collector[taxname];
-    tmp2.push(tmp1);
-  }
-  //logger.info('tmp2-1',tmp2)
-  let x = tmp2.map((el) => {
-    //logger.info(Object.keys(el)[0])
-    let obj = {};
-    let name_ary = Object.keys(el)[0].split(";");
-    obj["name"] = name_ary[name_ary.length - 1];
-    obj["value"] = el[Object.keys(el)[0]][site];
-    if (rank === "species") {
-      obj["otid"] =
-        C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
-          name_ary[name_ary.length - 1] + "_species"
-        ].otid;
+    for (let taxname in collector) {
+        //logger.info('taxname',taxname)
+        tmp1[taxname] = collector[taxname];
+        tmp2.push(tmp1);
     }
-    return obj;
-  });
+    //logger.info('tmp2-1',tmp2)
+    let x = tmp2.map((el) => {
+        //logger.info(Object.keys(el)[0])
+        let obj = {};
+        let name_ary = Object.keys(el)[0].split(";");
+        obj["name"] = name_ary[name_ary.length - 1];
+        obj["value"] = el[Object.keys(el)[0]][site];
+        if (rank === "species") {
+            obj["otid"] =
+                C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
+                    name_ary[name_ary.length - 1] + "_species"
+                ].otid;
+        }
+        return obj;
+    });
 
-  //sort by value
-  if (num_to_return === "all") {
-    return sortByKeyDEC(x, "value");
-  } else {
-    return sortByKeyDEC(x, "value").slice(0, 10);
-  }
+    //sort by value
+    if (num_to_return === "all") {
+        return sortByKeyDEC(x, "value");
+    } else {
+        return sortByKeyDEC(x, "value").slice(0, 10);
+    }
 }
 
 function sortByKeyDEC(array, key) {
-  return array.sort((a, b) => {
-    return b[key] - a[key];
-  });
+    return array.sort((a, b) => {
+        return b[key] - a[key];
+    });
 }
 //
 function get_site_avgs(obj) {
-  //logger.info('\nin obj',obj)
-  let return_obj = {};
-  if (!obj) {
-    return return_obj;
-  }
+    //logger.info('\nin obj',obj)
+    let return_obj = {};
+    if (!obj) {
+        return return_obj;
+    }
 
-  let ref, site;
-  let abund_refs = C.abundance_refs;
-  //let abund_refs = ['dewhirst']
-  //let abund_sites = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
-  let abund_sites = Object.keys(C.abundance_names);
-  //logger.info('obj',obj)
-  let counter_per_site = {};
-  for (let i in abund_sites) {
-    site = abund_sites[i];
-    counter_per_site[site] = 0;
-    return_obj[abund_sites[i]] = 0;
-  }
-
-  for (let n in abund_refs) {
-    ref = abund_refs[n];
-
+    let ref, site;
+    let abund_refs = C.abundance_refs;
+    //let abund_refs = ['dewhirst']
+    //let abund_sites = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
+    let abund_sites = Object.keys(C.abundance_names);
+    //logger.info('obj',obj)
+    let counter_per_site = {};
     for (let i in abund_sites) {
-      site = abund_sites[i];
-
-      if (
-        Object.hasOwn(obj, ref) &&
-        Object.keys(obj[ref]).indexOf(site) !== -1
-      ) {
-        //logger.info('found site',site, 'adding',parseFloat(obj[ref][site].avg))
-        return_obj[site] += parseFloat(obj[ref][site].avg);
-        counter_per_site[site] += 1;
-      } else {
-        //logger.info('excluding',ref,site)
-      }
-    }
-  }
-  //constants.base_abundance_order X2    = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SAL','STO','SUBP','SUPP','THR','TDO','VIN']
-  //constants.eren_abundance_order X2    = ['AKE',      'BMU','HPA',                        'PTO',            'SAL','STO','SUBP','SUPP','THR','TDO']
-  //constants.dewhirst_abundance_order X1 = ['AKE','ANA','BMU','HPA',                        'PTO',            'SAL',      'SUBP','SUPP','THR','TDO']
-
-  //logger.info('counter SV',counter_per_site['SV'])
-  //logger.info('countSV',count,return_obj)
-  let result;
-  for (let site in return_obj) {
-    if (
-      ["AKE", "BMU", "HPA", "PTO", "SAL", "SUBP", "SUPP", "THR", "TDO"].indexOf(
-        site,
-      ) !== -1
-    ) {
-      // divide by 5
-      result = (return_obj[site] / 5).toFixed(3); // divide by 5
-      return_obj[site] = result;
-    } else if (site === "STO") {
-      // divide by 4
-      result = (return_obj[site] / 4).toFixed(3); // divide by 4 a
-      return_obj[site] = result;
-    } else if (site === "ANA") {
-      // divide by 3
-      result = (return_obj[site] / 3).toFixed(3); // divide by 3
-      return_obj[site] = result;
-    } else {
-      //#7
-      //divide by 2
-      result = (return_obj[site] / 2).toFixed(3); // divide by 2
-      return_obj[site] = result;
+        site = abund_sites[i];
+        counter_per_site[site] = 0;
+        return_obj[abund_sites[i]] = 0;
     }
 
-    //let result = (return_obj[site] / counter_per_site[site]).toFixed(3)
-    // if(site == 'NS'){   // only Dewhirst
-    //             let result = (return_obj[site]).toFixed(3)  // divide by 1 ONLY Dewhirst
-    //             return_obj[site] = result
-    //           }else if(rank === 'species'){  //only dewhirst and erinx2
-    //             let result = (return_obj[site] / 3).toFixed(3)  // divide by 4 a
-    //             return_obj[site] = result
-    //           }else{
-    //             let result = (return_obj[site] / 4).toFixed(3)  // divide by 4 a
-    //             return_obj[site] = result
-    //           }
+    for (let n in abund_refs) {
+        ref = abund_refs[n];
 
-    // }else{
-    //               return_obj[site] = '0.000'
-    //           }
-  }
+        for (let i in abund_sites) {
+            site = abund_sites[i];
 
-  //logger.info('avg return SubP',return_obj['SubP'])
-  //logger.info('avg return SV',return_obj['SV'])
-  //logger.info('')
-  return return_obj;
+            if (
+                Object.hasOwn(obj, ref) &&
+                Object.keys(obj[ref]).indexOf(site) !== -1
+            ) {
+                //logger.info('found site',site, 'adding',parseFloat(obj[ref][site].avg))
+                return_obj[site] += parseFloat(obj[ref][site].avg);
+                counter_per_site[site] += 1;
+            } else {
+                //logger.info('excluding',ref,site)
+            }
+        }
+    }
+    //constants.base_abundance_order X2    = ['AKE','ANA','BMU','HPA','LAF','LRC','MVA','PFO','PTO','RAF','RRC','SAL','STO','SUBP','SUPP','THR','TDO','VIN']
+    //constants.eren_abundance_order X2    = ['AKE',      'BMU','HPA',                        'PTO',            'SAL','STO','SUBP','SUPP','THR','TDO']
+    //constants.dewhirst_abundance_order X1 = ['AKE','ANA','BMU','HPA',                        'PTO',            'SAL',      'SUBP','SUPP','THR','TDO']
+
+    //logger.info('counter SV',counter_per_site['SV'])
+    //logger.info('countSV',count,return_obj)
+    let result;
+    for (let site in return_obj) {
+        if (
+            [
+                "AKE",
+                "BMU",
+                "HPA",
+                "PTO",
+                "SAL",
+                "SUBP",
+                "SUPP",
+                "THR",
+                "TDO",
+            ].indexOf(site) !== -1
+        ) {
+            // divide by 5
+            result = (return_obj[site] / 5).toFixed(3); // divide by 5
+            return_obj[site] = result;
+        } else if (site === "STO") {
+            // divide by 4
+            result = (return_obj[site] / 4).toFixed(3); // divide by 4 a
+            return_obj[site] = result;
+        } else if (site === "ANA") {
+            // divide by 3
+            result = (return_obj[site] / 3).toFixed(3); // divide by 3
+            return_obj[site] = result;
+        } else {
+            //#7
+            //divide by 2
+            result = (return_obj[site] / 2).toFixed(3); // divide by 2
+            return_obj[site] = result;
+        }
+
+        //let result = (return_obj[site] / counter_per_site[site]).toFixed(3)
+        // if(site == 'NS'){   // only Dewhirst
+        //             let result = (return_obj[site]).toFixed(3)  // divide by 1 ONLY Dewhirst
+        //             return_obj[site] = result
+        //           }else if(rank === 'species'){  //only dewhirst and erinx2
+        //             let result = (return_obj[site] / 3).toFixed(3)  // divide by 4 a
+        //             return_obj[site] = result
+        //           }else{
+        //             let result = (return_obj[site] / 4).toFixed(3)  // divide by 4 a
+        //             return_obj[site] = result
+        //           }
+
+        // }else{
+        //               return_obj[site] = '0.000'
+        //           }
+    }
+
+    //logger.info('avg return SubP',return_obj['SubP'])
+    //logger.info('avg return SV',return_obj['SV'])
+    //logger.info('')
+    return return_obj;
 }
 function get_rank_display(rank, use_plural) {
-  let display_name = "not_working";
-  if (use_plural) {
-    if (rank === "domain") {
-      display_name = "Domains";
-    } else if (rank === "phylum") {
-      display_name = "Phyla";
-    } else if (rank === "klass") {
-      display_name = "Classes";
-    } else if (rank === "order") {
-      display_name = "Orders";
-    } else if (rank === "family") {
-      display_name = "Families";
-    } else if (rank === "genus") {
-      display_name = "Genera";
-    } else if (rank === "species") {
-      display_name = "Species";
-    } else if (rank === "subspecies") {
-      display_name = "Subspecies/Clade";
-    }
-  } else {
-    if (rank === "klass") {
-      display_name = "Class";
+    let display_name = "not_working";
+    if (use_plural) {
+        if (rank === "domain") {
+            display_name = "Domains";
+        } else if (rank === "phylum") {
+            display_name = "Phyla";
+        } else if (rank === "klass") {
+            display_name = "Classes";
+        } else if (rank === "order") {
+            display_name = "Orders";
+        } else if (rank === "family") {
+            display_name = "Families";
+        } else if (rank === "genus") {
+            display_name = "Genera";
+        } else if (rank === "species") {
+            display_name = "Species";
+        } else if (rank === "subspecies") {
+            display_name = "Subspecies/Clade";
+        }
     } else {
-      display_name = helpers.capitalizeFirst(rank);
+        if (rank === "klass") {
+            display_name = "Class";
+        } else {
+            display_name = helpers.capitalizeFirst(rank);
+        }
     }
-  }
 
-  return display_name;
+    return display_name;
 }
 
 // function get_options_by_node(node) {
@@ -2550,236 +2661,259 @@ function get_rank_display(rank, use_plural) {
 
 //
 function find_otid_images(rank, otid) {
-  let image_list = [];
-  let img_obj, hr;
-  if (Object.hasOwn(C.images_tax.species, otid)) {
-    img_obj = C.images_tax.species[otid];
-    //logger.info('image:',eval(img_obj.filename1))
-    //logger.info('img_obj',img_obj)
-    if (Object.hasOwn(C.images_tax.species[otid], "filename1")) {
-      hr = false;
-      if (Object.hasOwn(C.hires_images, eval(img_obj.filename1))) {
-        //logger.info('got hires image1')
-        hr = C.hires_images[eval(img_obj.filename1)];
-      }
-      image_list.push({
-        name: path.join(rank, eval(img_obj.filename1)),
-        text: eval(img_obj.text1),
-        title: eval(img_obj.title1),
-        hires: hr,
-      });
+    let image_list = [];
+    let img_obj, hr;
+    if (Object.hasOwn(C.images_tax.species, otid)) {
+        img_obj = C.images_tax.species[otid];
+        //logger.info('image:',eval(img_obj.filename1))
+        //logger.info('img_obj',img_obj)
+        if (Object.hasOwn(C.images_tax.species[otid], "filename1")) {
+            hr = false;
+            if (Object.hasOwn(C.hires_images, eval(img_obj.filename1))) {
+                //logger.info('got hires image1')
+                hr = C.hires_images[eval(img_obj.filename1)];
+            }
+            image_list.push({
+                name: path.join(rank, eval(img_obj.filename1)),
+                text: eval(img_obj.text1),
+                title: eval(img_obj.title1),
+                hires: hr,
+            });
+        }
+        if (Object.hasOwn(C.images_tax.species[otid], "filename2")) {
+            hr = false;
+            if (Object.hasOwn(C.hires_images, eval(img_obj.filename2))) {
+                //logger.info('got hires image2')
+                hr = C.hires_images[eval(img_obj.filename2)];
+            }
+            image_list.push({
+                name: path.join(
+                    rank,
+                    eval(C.images_tax.species[otid].filename2),
+                ),
+                text: eval(C.images_tax.species[otid].text2),
+                title: eval(C.images_tax.species[otid].title2),
+                hires: hr,
+            });
+        }
+        if (Object.hasOwn(C.images_tax.species[otid], "filename3")) {
+            hr = false;
+            if (Object.hasOwn(C.hires_images, eval(img_obj.filename3))) {
+                //logger.info('got hires image3')
+                hr = C.hires_images[eval(img_obj.filename3)];
+            }
+            image_list.push({
+                name: path.join(
+                    rank,
+                    eval(C.images_tax.species[otid].filename3),
+                ),
+                text: eval(C.images_tax.species[otid].text3),
+                title: eval(C.images_tax.species[otid].title3),
+                hires: hr,
+            });
+        }
+        if (Object.hasOwn(C.images_tax.species[otid], "filename4")) {
+            hr = false;
+            if (Object.hasOwn(C.hires_images, eval(img_obj.filename4))) {
+                //logger.info('got hires image4')
+                hr = C.hires_images[eval(img_obj.filename4)];
+            }
+            image_list.push({
+                name: path.join(
+                    rank,
+                    eval(C.images_tax.species[otid].filename4),
+                ),
+                text: eval(C.images_tax.species[otid].text4),
+                title: eval(C.images_tax.species[otid].title4),
+                hires: hr,
+            });
+        }
+    } else {
+        logger.error("NO images found:", otid);
     }
-    if (Object.hasOwn(C.images_tax.species[otid], "filename2")) {
-      hr = false;
-      if (Object.hasOwn(C.hires_images, eval(img_obj.filename2))) {
-        //logger.info('got hires image2')
-        hr = C.hires_images[eval(img_obj.filename2)];
-      }
-      image_list.push({
-        name: path.join(rank, eval(C.images_tax.species[otid].filename2)),
-        text: eval(C.images_tax.species[otid].text2),
-        title: eval(C.images_tax.species[otid].title2),
-        hires: hr,
-      });
-    }
-    if (Object.hasOwn(C.images_tax.species[otid], "filename3")) {
-      hr = false;
-      if (Object.hasOwn(C.hires_images, eval(img_obj.filename3))) {
-        //logger.info('got hires image3')
-        hr = C.hires_images[eval(img_obj.filename3)];
-      }
-      image_list.push({
-        name: path.join(rank, eval(C.images_tax.species[otid].filename3)),
-        text: eval(C.images_tax.species[otid].text3),
-        title: eval(C.images_tax.species[otid].title3),
-        hires: hr,
-      });
-    }
-    if (Object.hasOwn(C.images_tax.species[otid], "filename4")) {
-      hr = false;
-      if (Object.hasOwn(C.hires_images, eval(img_obj.filename4))) {
-        //logger.info('got hires image4')
-        hr = C.hires_images[eval(img_obj.filename4)];
-      }
-      image_list.push({
-        name: path.join(rank, eval(C.images_tax.species[otid].filename4)),
-        text: eval(C.images_tax.species[otid].text4),
-        title: eval(C.images_tax.species[otid].title4),
-        hires: hr,
-      });
-    }
-  } else {
-    logger.error("NO images found:", otid);
-  }
 
-  return image_list;
+    return image_list;
 }
 function find_life_images(rank, tax_name) {
-  let image_list = [];
-  //logger.info(rank, tax_name)
-  if (Object.hasOwn(C.images_tax[rank], tax_name)) {
-    if (Object.hasOwn(C.images_tax[rank][tax_name], "filename1")) {
-      image_list.push({
-        name: path.join(rank, eval(C.images_tax[rank][tax_name].filename1)),
-        text: eval(C.images_tax[rank][tax_name].text1),
-        title: eval(C.images_tax[rank][tax_name].title1),
-      });
+    let image_list = [];
+    //logger.info(rank, tax_name)
+    if (Object.hasOwn(C.images_tax[rank], tax_name)) {
+        if (Object.hasOwn(C.images_tax[rank][tax_name], "filename1")) {
+            image_list.push({
+                name: path.join(
+                    rank,
+                    eval(C.images_tax[rank][tax_name].filename1),
+                ),
+                text: eval(C.images_tax[rank][tax_name].text1),
+                title: eval(C.images_tax[rank][tax_name].title1),
+            });
+        }
+        if (Object.hasOwn(C.images_tax[rank][tax_name], "filename2")) {
+            image_list.push({
+                name: path.join(
+                    rank,
+                    eval(C.images_tax[rank][tax_name].filename2),
+                ),
+                text: eval(C.images_tax[rank][tax_name].text2),
+                title: eval(C.images_tax[rank][tax_name].title2),
+            });
+        }
+        if (Object.hasOwn(C.images_tax[rank][tax_name], "filename3")) {
+            image_list.push({
+                name: path.join(
+                    rank,
+                    eval(C.images_tax[rank][tax_name].filename3),
+                ),
+                text: eval(C.images_tax[rank][tax_name].text3),
+                title: eval(C.images_tax[rank][tax_name].title3),
+            });
+        }
+        if (Object.hasOwn(C.images_tax[rank][tax_name], "filename4")) {
+            image_list.push({
+                name: path.join(
+                    rank,
+                    eval(C.images_tax[rank][tax_name].filename4),
+                ),
+                text: eval(C.images_tax[rank][tax_name].text4),
+                title: eval(C.images_tax[rank][tax_name].title4),
+            });
+        }
     }
-    if (Object.hasOwn(C.images_tax[rank][tax_name], "filename2")) {
-      image_list.push({
-        name: path.join(rank, eval(C.images_tax[rank][tax_name].filename2)),
-        text: eval(C.images_tax[rank][tax_name].text2),
-        title: eval(C.images_tax[rank][tax_name].title2),
-      });
-    }
-    if (Object.hasOwn(C.images_tax[rank][tax_name], "filename3")) {
-      image_list.push({
-        name: path.join(rank, eval(C.images_tax[rank][tax_name].filename3)),
-        text: eval(C.images_tax[rank][tax_name].text3),
-        title: eval(C.images_tax[rank][tax_name].title3),
-      });
-    }
-    if (Object.hasOwn(C.images_tax[rank][tax_name], "filename4")) {
-      image_list.push({
-        name: path.join(rank, eval(C.images_tax[rank][tax_name].filename4)),
-        text: eval(C.images_tax[rank][tax_name].text4),
-        title: eval(C.images_tax[rank][tax_name].title4),
-      });
-    }
-  }
-  //logger.info('ImList', image_list)
-  return image_list;
+    //logger.info('ImList', image_list)
+    return image_list;
 }
 
 function build_abundance_table(cite, data, order) {
-  //logger.info('data',data)
-  //C.abundance_names
-  let datapt;
-  let html = "<table class='abundance-table'><thead><tr><th></th>";
-  for (let n in order) {
-    html +=
-      "<td class='abundance-table-head' title='" +
-      C.abundance_names[order[n]] +
-      "' style='background:" +
-      C.abundance_site_colors[order[n]] +
-      "'>" +
-      order[n] +
-      "</td>";
-  }
-  html += "</tr></thead><tbody>";
+    //logger.info('data',data)
+    //C.abundance_names
+    let datapt;
+    let html = "<table class='abundance-table'><thead><tr><th></th>";
+    for (let n in order) {
+        html +=
+            "<td class='abundance-table-head' title='" +
+            C.abundance_names[order[n]] +
+            "' style='background:" +
+            C.abundance_site_colors[order[n]] +
+            "'>" +
+            order[n] +
+            "</td>";
+    }
+    html += "</tr></thead><tbody>";
 
-  html += "<tr><th>Avg (%)</th>";
-  for (let n in data) {
-    datapt = parseFloat(data[n].avg).toFixed(2);
-    if (datapt === "NaN" || parseFloat(datapt) === 0) {
-      datapt = "0";
+    html += "<tr><th>Avg (%)</th>";
+    for (let n in data) {
+        datapt = parseFloat(data[n].avg).toFixed(2);
+        if (datapt === "NaN" || parseFloat(datapt) === 0) {
+            datapt = "0";
+        }
+        html += "<td class='alignright'>" + datapt + "</td>";
     }
-    html += "<td class='alignright'>" + datapt + "</td>";
-  }
-  html += "</tr>";
-  html += "<tr><th>n</th>";
-  for (let n in data) {
-    datapt = parseInt(data[n]["n"]);
-    if (datapt === "NaN" || parseInt(datapt) === 0) {
-      datapt = "0";
+    html += "</tr>";
+    html += "<tr><th>n</th>";
+    for (let n in data) {
+        datapt = parseInt(data[n]["n"]);
+        if (datapt === "NaN" || parseInt(datapt) === 0) {
+            datapt = "0";
+        }
+        html += "<td class='alignright'>" + datapt + "</td>";
     }
-    html += "<td class='alignright'>" + datapt + "</td>";
-  }
 
-  //}
-  html += "<tr><th>10<sup>th</sup>p</th>";
-  for (let n in data) {
-    datapt = parseFloat(data[n]["10p"]).toFixed(2);
-    if (datapt === "NaN" || parseFloat(datapt) === 0) {
-      datapt = "0";
+    //}
+    html += "<tr><th>10<sup>th</sup>p</th>";
+    for (let n in data) {
+        datapt = parseFloat(data[n]["10p"]).toFixed(2);
+        if (datapt === "NaN" || parseFloat(datapt) === 0) {
+            datapt = "0";
+        }
+        html += "<td class='alignright'>" + datapt + "</td>";
     }
-    html += "<td class='alignright'>" + datapt + "</td>";
-  }
-  html += "</tr>";
-  html += "<tr><th>90<sup>th</sup>p</th>";
-  for (let n in data) {
-    datapt = parseFloat(data[n]["90p"]).toFixed(2);
-    if (datapt === "NaN" || parseFloat(datapt) === 0) {
-      datapt = "0";
+    html += "</tr>";
+    html += "<tr><th>90<sup>th</sup>p</th>";
+    for (let n in data) {
+        datapt = parseFloat(data[n]["90p"]).toFixed(2);
+        if (datapt === "NaN" || parseFloat(datapt) === 0) {
+            datapt = "0";
+        }
+        html += "<td class='alignright'>" + datapt + "</td>";
     }
-    html += "<td class='alignright'>" + datapt + "</td>";
-  }
-  html += "</tr>";
+    html += "</tr>";
 
-  html += "<tr><th>Stdev</th>";
-  for (let n in data) {
-    datapt = parseFloat(data[n].sd).toFixed(2);
-    if (datapt === "NaN" || parseFloat(datapt) === 0) {
-      datapt = "0";
+    html += "<tr><th>Stdev</th>";
+    for (let n in data) {
+        datapt = parseFloat(data[n].sd).toFixed(2);
+        if (datapt === "NaN" || parseFloat(datapt) === 0) {
+            datapt = "0";
+        }
+        html += "<td class='alignright'>" + datapt + "</td>";
     }
-    html += "<td class='alignright'>" + datapt + "</td>";
-  }
-  html += "</tr>";
+    html += "</tr>";
 
-  html += "<tr><th>Prev(%)</th>";
-  for (let n in data) {
-    datapt = parseFloat(data[n].prev).toFixed(2);
-    if (datapt === "NaN" || parseFloat(datapt) === 0) {
-      datapt = "0";
+    html += "<tr><th>Prev(%)</th>";
+    for (let n in data) {
+        datapt = parseFloat(data[n].prev).toFixed(2);
+        if (datapt === "NaN" || parseFloat(datapt) === 0) {
+            datapt = "0";
+        }
+        html += "<td class='alignright'>" + datapt + "</td>";
     }
-    html += "<td class='alignright'>" + datapt + "</td>";
-  }
-  html += "</tr>";
+    html += "</tr>";
 
-  html += "</tbody></table>";
-  return html;
+    html += "</tbody></table>";
+    return html;
 }
 //
 function get_major_genera(rank, node) {
-  let genera = [];
-  if (["phylum", "klass", "order"].indexOf(rank) !== -1) {
-    // find major genera per Jessica (hand curated)
-    // or abundance >1% at some site
-    // find all genera under tax_name the get the counts
-    // how to find all genera from node?
+    let genera = [];
+    if (["phylum", "klass", "order"].indexOf(rank) !== -1) {
+        // find major genera per Jessica (hand curated)
+        // or abundance >1% at some site
+        // find all genera under tax_name the get the counts
+        // how to find all genera from node?
 
-    for (let n in node.children_ids) {
-      let new_node1 =
-        C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[n]]; // klass ,order or family
-      for (let m in new_node1.children_ids) {
-        let new_node2 =
-          C.homd_taxonomy.taxa_tree_dict_map_by_id[new_node1.children_ids[m]]; // order, family or genus
-        if (new_node2.rank === "genus") {
-          //stop you're done
-          //counts = C.taxon_counts_lookup[make_lineage(new_node2)[0]]
-          genera.push(new_node2);
-        } else {
-          for (let p in new_node2.children_ids) {
-            let new_node3 =
-              C.homd_taxonomy.taxa_tree_dict_map_by_id[
-                new_node2.children_ids[p]
-              ]; // family or genus
-            if (new_node3.rank === "genus") {
-              //stop you're done
-              //counts = C.taxon_counts_lookup[make_lineage(new_node3)[0]]
-              genera.push(new_node3);
-            } else {
-              for (let q in new_node3.children_ids) {
-                let new_node4 =
-                  C.homd_taxonomy.taxa_tree_dict_map_by_id[
-                    new_node3.children_ids[q]
-                  ]; // must be genus
+        for (let n in node.children_ids) {
+            let new_node1 =
+                C.homd_taxonomy.taxa_tree_dict_map_by_id[node.children_ids[n]]; // klass ,order or family
+            for (let m in new_node1.children_ids) {
+                let new_node2 =
+                    C.homd_taxonomy.taxa_tree_dict_map_by_id[
+                        new_node1.children_ids[m]
+                    ]; // order, family or genus
+                if (new_node2.rank === "genus") {
+                    //stop you're done
+                    //counts = C.taxon_counts_lookup[make_lineage(new_node2)[0]]
+                    genera.push(new_node2);
+                } else {
+                    for (let p in new_node2.children_ids) {
+                        let new_node3 =
+                            C.homd_taxonomy.taxa_tree_dict_map_by_id[
+                                new_node2.children_ids[p]
+                            ]; // family or genus
+                        if (new_node3.rank === "genus") {
+                            //stop you're done
+                            //counts = C.taxon_counts_lookup[make_lineage(new_node3)[0]]
+                            genera.push(new_node3);
+                        } else {
+                            for (let q in new_node3.children_ids) {
+                                let new_node4 =
+                                    C.homd_taxonomy.taxa_tree_dict_map_by_id[
+                                        new_node3.children_ids[q]
+                                    ]; // must be genus
 
-                genera.push(new_node4);
-              }
+                                genera.push(new_node4);
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
-      }
+        //major_genera=1
     }
-    //major_genera=1
-  }
-  // the counts here are not abundance
-  // here get majors
-  // phylum/Actinobacteria from jessica
-  // Actinomyces, Corynebacterium, Cutibacterium, Propionibacterium, Rothia, Schaalia.
+    // the counts here are not abundance
+    // here get majors
+    // phylum/Actinobacteria from jessica
+    // Actinomyces, Corynebacterium, Cutibacterium, Propionibacterium, Rothia, Schaalia.
 
-  return genera;
+    return genera;
 }
 
 export default router;
