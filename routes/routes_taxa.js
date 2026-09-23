@@ -959,7 +959,8 @@ router.get("/tax_description", async function TaxDescription(req, res) {
         //args.lineage = lineage_string
         renderTaxonDescription(req, res, args);
         return;
-    } // END DROPPED
+    }
+    // END DROPPED
 
     lineage = C.taxon_lineage_lookup[otid]; // dropped not in lineage lookup use hierarchy
     logger.info(`lineage: ${lineage}`);
@@ -1060,6 +1061,27 @@ router.get("/tax_description", async function TaxDescription(req, res) {
                 C.site_lookup[otid].subsite_of_primary +
                 "</small>";
         }
+        if (C.site_lookup[otid].site_reason) {
+            sites +=
+                "<br><small>Reason: " +
+                C.site_lookup[otid].site_reason +
+                "</small>";
+        }
+        if (C.site_lookup[otid].curation_reference) {
+            let pts = C.site_lookup[otid].curation_reference.split(";");
+            //console.log('LENGTH',pts.length)
+
+            sites += "<br><small>Reference: ";
+            for (let n in pts) {
+                sites +=
+                    "<a href='" +
+                    pts[n] +
+                    "' target='_blank'>" +
+                    pts[n] +
+                    "</a>";
+            }
+            sites += "</small>";
+        }
     }
     let gstrains = {};
     for (let n in lookup_data.genomes) {
@@ -1074,8 +1096,7 @@ router.get("/tax_description", async function TaxDescription(req, res) {
     // add pangenomes
     //logger.info('refseq',refseq)
     args.data1.pangenomes = pangenomes; // always a list??
-    logger.info(pangenomes);
-    logger.info(`lookup_data ${args.data1}`);
+
     args.msg = lookup_data.notes;
     args.text_file = text_file[0];
     args.tinfo = info;
@@ -1723,6 +1744,8 @@ router.get("/body_sites", function body_sites(req, res) {
         obj.otid = otid;
 
         if (C.dropped_taxids.indexOf(otid) !== -1) {
+            obj.site_reason = "";
+            obj.curation_reference = "";
             obj.gen_habitat = "Unassigned";
             obj.major_body_site = "Unassigned";
             obj.secondary = "";
@@ -1734,6 +1757,8 @@ router.get("/body_sites", function body_sites(req, res) {
                 C.taxon_lookup[otid].species +
                 " (<b>DROPPED</b>)";
         } else if (otid in C.site_lookup) {
+            obj.site_reason = C.site_lookup[otid].site_reason;
+            obj.curation_reference = C.site_lookup[otid].curation_reference;
             obj.gen_habitat = C.site_lookup[otid].general_habitat;
             obj.major_body_site =
                 C.site_lookup[otid].major_body_site +

@@ -1374,6 +1374,7 @@ router.get("/explorer", async function explorer_get(req, res) {
 });
 
 router.get("/blast_select_genome", function blast_select_genome(req, res) {
+    console.log("blast_select_genome");
     const gid = req.query.gid;
     let gc = 0;
     if (gid) {
@@ -1406,7 +1407,7 @@ router.get("/blast_select_genome", function blast_select_genome(req, res) {
 
 router.post("/blast_ss_single", function blast_ss_single(req, res) {
     logger.info("IN POST blast_ss_single");
-    //logger.info(req.body)
+    logger.info(req.body);
     let gid = req.body.gid;
     //logger.info(ENV.BLAST_URL_BASE)
 
@@ -1421,10 +1422,15 @@ router.post("/blast_ss_single", function blast_ss_single(req, res) {
             ENV.BLAST_URL_BASE +
             "/genome_blast_single_ncbi/?gid=" +
             req.body.gid;
-    } else {
+    } else if (req.body.annotation === "prokka") {
         url =
             ENV.BLAST_URL_BASE +
             "/genome_blast_single_prokka/?gid=" +
+            req.body.gid;
+    } else {
+        url =
+            ENV.BLAST_URL_BASE +
+            "/genome_blast_single_bakta/?gid=" +
             req.body.gid;
     }
     res.redirect(url);

@@ -29,6 +29,8 @@
                     <% } %>
                     &nbsp;<a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= gid %>' target="_self">PROKKA BLAST</a> 
                     <!-- <a class='an-button greyed' href='#'>BLAST</a> -->
+                  
+                  
                   <% }else if(anno_type == "bakta"){ %>
                     
                     &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
@@ -38,7 +40,9 @@
                     <% }else{ %>
                         &nbsp;<span href='#' class='pill pill-grayed'>NCBI</span>
                     <% } %>
-                     &nbsp;<a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= gid %>' target="_self">PROKKA BLAST</a>  
+                     &nbsp;<a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_bakta/?gid=<%= gid %>' target="_self">BAKTA BLAST</a>  
+                  
+                  
                   
                   <% }else if(anno_type == "ncbi"){ %>
                     &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
@@ -49,6 +53,8 @@
                         &nbsp;<span href='#' class='pill pill-grayed'>NCBI</span>
                     <% } %>
                     &nbsp;<a class='an-button' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_ncbi/?gid=<%= gid %>' target="_self">NCBI BLAST</a> 
+                  
+                  
                   <% }else { %>
                     &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=bakta'>BAKTA</a>

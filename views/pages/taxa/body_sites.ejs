@@ -24,7 +24,7 @@ thead th { position: sticky; top: 0; }
   color: #303030;
   overflow: hidden;
   /* text-overflow: ellipsis; */
-  white-space: nowrap;
+  /* white-space: nowrap; */
 }
 #main-box{
    height:800px;
@@ -115,12 +115,13 @@ tr.selected td{
         <th class="col2" nowrap>Taxon-ID</th>
         <th class='col2'>Abundance</th>
         <th nowrap>Genus-Species</th>
-        <th class='col3' nowrap>Naming Status</th>
-        <th class='col3'>Cultivation Status</th>
+       
         <th>General Habitat</th>
         <th>Major Body Site</th>
         <th>Subsites of Primary Site</th>
         <th>Other Body Sites</th>
+         <th class='' >Site Reason</th>
+        <th class=''>Curation Reference</th>
         
         </tr>
         </thead>
@@ -143,13 +144,22 @@ tr.selected td{
                      <%= subsp[otid] %>
                  <% } %>
                  </td> 
-                 <td class='center' nowrap><%= data[n].naming_status %></td> 
-                 <td class='center' nowrap><%= data[n].cultivation_status %></td> 
+                
                  <td class='ellipsis center' nowrap title='<%= data[n]['s1'] %>'><%= data[n]['gen_habitat'] %></td>
                  <td class='ellipsis' nowrap title='<%= data[n]['s1'] %>'><%= data[n]['major_body_site'] %></td>
                  <td><%= data[n]['subsite'] %></td>
                  <td class='ellipsis' nowrap title='<%= data[n]['s2'] %>'><%= data[n]['secondary'] %></td>
+                 <td class='' ><%= data[n].site_reason %></td> 
+                 <% var pts = data[n].curation_reference.split(";") %>
                  
+                 <td class='' >
+                 <% for(let n in pts){ %>
+                   <a href='<%= pts[n] %>' target='_blank'>
+                   <%= pts[n] %></a>
+                 <% } %>
+                 </td> 
+               
+               
                </tr>
            
        <% } %>

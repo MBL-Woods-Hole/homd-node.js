@@ -16,11 +16,11 @@
 <% %>
 <link href="/css/select2.min.css" rel="stylesheet" /> 
 <body>
-  	<div id='wrapper'>
+    <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
     <div class='page-content' >
-		<p class='title h3'><%= page_type %> (Select a Genome)</p>
+        <p class='title h3'><%= page_type %> (Select a Genome)</p>
 
 <div id='genome_choices'>
   <span nowrap>Search and Select a Genome from a Total of <%= tgenomes %> 
@@ -41,15 +41,17 @@
 <% }else{ %>
   <!-- SequenceServer -->
   <form id='blast_single_form' name='' method='POST' action='blast_ss_single'>
-    <input type='hidden' name='annotation' value='prokka'>
-    <br>Select a genome to load a BLAST database.
+    <!-- <input type='hidden' name='annotation' value='prokka'> -->
+    Available Annotations:&nbsp;&nbsp;&nbsp; 
+    <input type='radio' checked name='annotation' value='bakta'> BAKTA&nbsp;&nbsp;&nbsp;
+    <input type='radio' name='annotation' value='prokka'> PROKKA&nbsp;&nbsp;&nbsp;
+    <input type='radio' name='annotation' value='ncbi'> NCBI
+    <br><br>Select a genome to load a BLAST database.
     <br>
-    <!-- <select id='selGenome' name='gid' style='width: 800px;' onchange="this.form.submit()"> -->
-    <!-- https://<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid='+req.body.gid -->
-    <select id='selGenome' name='gid' style='width: 800px;' onchange='window.open("<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid="+this.value,"_self")'
-     <option id=''  value='0'>Search & Select...</option>
+    <select id='selGenome' name='gid' style='width: 800px;' onchange="this.form.submit()">
+     <option value='0' placeholder='search'>Search & Select...</option>
      <% for(i in gn){ %>
-        <option id='' value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].organism %></option>
+        <option value='<%= gn[i].gid %>'><%= gn[i].gid %> <%= gn[i].organism %></option>
      <% } %>
     </select>
   </form>
@@ -59,7 +61,7 @@
 <br/>
 <div id='result'></div>
 </div>
-		
+
     </div> <!-- end: page-content -->
      
     <div id='footer'>

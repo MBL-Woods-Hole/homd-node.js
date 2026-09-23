@@ -195,7 +195,7 @@ def run_sites(args):
 #     q += " JOIN sites p1 on `status`.primary_body_site_id=p1.site_id"
 #     q += " JOIN sites p2 on `status`.secondary_body_site_id=p2.site_id  ORDER BY otid"
     
-    q = "SELECT otid,general_habitat,major_body_site,subsite_of_primary,major_site_abundance,secondary_sites,secondary_site_abundance from otid_prime"
+    q = "SELECT otid,general_habitat,major_body_site,subsite_of_primary,major_site_abundance,secondary_sites,secondary_site_abundance,site_reason,curation_reference from otid_prime"
     q += " JOIN body_sites using(otid)"
     # "76": {"s1": "Skin (Abundance: Scarce)", "s2": "Unassigned", "ref_link": "", "notes": ""},
     lookup = {}

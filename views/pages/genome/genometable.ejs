@@ -227,7 +227,7 @@ thead th { position: sticky; top: 0; }
                 <li><a class='pill pill-colorkit3 icon-link' href='conserved_protein_tree?gid=<%= ginfo[n].gid %>' target='_blank'>Genome Tree</a></li>
                 <li><a class='pill pill-colorkit4' href='/taxa/tax_description?gid=<%= ginfo[n].gid %>&otid=<%= ginfo[n].otid %>'>Taxon Info: <%= taxidfullname %></a></li>
                 <li><a class='pill pill-colorkit5' href='/taxa/tax_hierarchy?otid=<%= ginfo[n].otid %>'>Taxon Tree: <%= taxidfullname %></a></li>
-                <li><a class='pill pill-colorkit6' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_prokka/?gid=<%= ginfo[n].gid %>' target="_self">BLAST</a></li> 
+                <li><a class='pill pill-colorkit6' href='<%= cfg.BLAST_URL_BASE %>/genome_blast_single_bakta/?gid=<%= ginfo[n].gid %>' target="_self">BLAST</a></li> 
                 <% if(ginfo[n].phage == 'yes' ){ %>
                     <li><a class='pill pill-colorkit7' href='/phage/phage?gid=<%= ginfo[n].gid %>' target="_self">Phage</a></li>
                 <% }else{ %>
