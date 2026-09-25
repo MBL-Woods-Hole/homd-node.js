@@ -99,7 +99,7 @@ tr.selected td{
     
     <div class='page-content' >
        
-       <p class='title h3'>HOMD Taxa Preferred Body Sites <small>(<span class='red-text'>in Beta</span>)</small></p>
+       <p class='title h3'>HOMD Taxa Preferred Body Sites</p>
        
        <span class='small'>[<a href="javascript:window.history.back();"><-- Back</a>]&nbsp;&nbsp;&nbsp;&nbsp;[<a href='body_sites'>Reload Page</a>]</span>
        <a class='download_browser_text_excel'  href='/download/download/taxon' >Download Options</a> 
@@ -186,10 +186,12 @@ tr.selected td{
   mainmenu()
   var otid = '<%= selected %>'
   const targetRow = document.getElementById(otid);
+  if(targetRow){
   targetRow.scrollIntoView({ 
     behavior: 'smooth', // Optional: for smooth scrolling animation
     block: 'center'    // Optional: aligns the row to the center of the viewport
   });
+  }
 </script>
 
 

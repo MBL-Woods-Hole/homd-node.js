@@ -70,6 +70,7 @@
     border-radius: 3px;
     border: 1px solid darkgreen;
     cursor: pointer;
+    height:30px;
   }
 
   #header_buttons {
@@ -110,6 +111,17 @@
     margin: auto;
     width: 70%;
   }
+.button-link {
+  display: inline-block;
+  padding: 5px 20px;
+  background-color: lightgray;
+  border: 1px solid darkgreen;
+  color: black;
+  text-decoration: none; /* Removes the underline */
+  border-radius: 5px;
+  font-family: sans-serif;
+  text-align: center;
+}
 
 </style>
 <%- include('../../partials/header_html'); %>
@@ -145,25 +157,26 @@
         <% }else{ %>
 
           <div id='header_buttons'>
-            <a class='gd-button' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page:
+            <a type='button' class='button-link' href='/taxa/tax_description?otid=<%= ginfo.otid %>'>Taxon Page:
               (<%= taxidfullnameplus %>)</a>
             <!-- <a class='gd-button' href="<%= cfg.JBROWSE_URL %>/<%= ginfo.gid %>&tracks=DNA,prokka,prokka_ncrna,ncbi,ncbi_ncrna,GC Content (pivot at <%= gc2 %>),GC Skew" target='_blank' rel="noopener noreferrer">Genome Viewer</a> -->
-            <a class='gd-button' href='#'
+            <a class='button-link' href='#'
               onclick="open_jbrowse('<%= ginfo.gid %>','explorer','<%= gc2 %>')">Genome
               Viewer</a>
 
             <form name='' class="form-inline" method='POST' action='blast_ss_single'>
               <input type='hidden' name='gid' value='<%= ginfo.gid %>'>
-              <input type='hidden' name='annotation' value='prokka'>
-              <input type='submit' class='gd-button' value='BLAST'>
+              <input type='hidden' name='annotation' value='bakta'>
+              <input type='submit' class='button-link' value='BLAST'>
             </form>
             
-            
-
-            <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=prokka'>PROKKA
-              Annotation</a>
-            <a class='gd-button' href='explorer?gid=<%= ginfo.gid %>&anno=ncbi'>NCBI
-              Annotation</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;Annotations:
+            <a class='button-link' href='explorer?gid=<%= ginfo.gid %>&anno=bakta'>BAKTA
+              </a>
+            <a class='button-link' href='explorer?gid=<%= ginfo.gid %>&anno=prokka'>PROKKA
+              </a>
+            <a class='button-link' href='explorer?gid=<%= ginfo.gid %>&anno=ncbi'>NCBI
+              </a>
           </div>
 
 

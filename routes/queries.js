@@ -40,7 +40,7 @@ export const run_query_stream_async = async (sql, res) => {
 export const run_query_stream = (sql, res) => {
     //helpers.logPoolStatus(pool, sql);
     let conn;
-    console.log("pool", pool);
+    //console.log("pool", pool);
     const stream = pool.query(sql).stream();
     return stream;
     // pool.getConnection((err, conn) => {

@@ -355,7 +355,8 @@ router.post(
 router.post(
     "/advanced_site_search_anno_mysql",
     async function advanced_site_search_anno_mysqlPOST(req, res) {
-        console.log(req.body, "index.js `mysql fullsearch` body");
+        console.log("advanced_site_search_anno_mysql");
+        console.log(req.body);
         //let search_type = req.body.anno_search_type
         let anno = req.body.anno;
         let annoUpper = anno.toUpperCase();
@@ -380,8 +381,9 @@ router.post(
             " WHERE MATCH(attribute_product,attribute_gene) AGAINST('" +
             search_string +
             "' IN BOOLEAN MODE);";
-        console.log(q);
+
         //try{
+        console.log(q);
         let cnt = 0;
         let conn;
         //const rows = await queries.run_query(q, req,res)
@@ -816,9 +818,9 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
 router.post(
     "/advanced_site_search_anno_grep",
     async function advanced_site_search_annoPOST(req, res) {
-        logger.info("in advanced_site_search_grep - index.js");
+        logger.info("in advanced_site_search_grep - routes_search.js");
         // anno now includes prokka, ncbi and bakta
-        logger.info(req.body, "body");
+        console.log(req.body, "body");
         const searchText = req.body.search_text.toLowerCase();
         const annoLower = req.body.anno;
         let allowed_max = C.grep_search_max_rows; // died at 73,000
