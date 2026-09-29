@@ -1961,6 +1961,7 @@ router.get("/oralgen", function oralgen(req, res) {
 });
 //////////////////
 router.get("/peptide_table", async function peptide_table_get(req, res) {
+    console.log("inpeptide table");
     const q = queries.get_peptide();
     let pid, gid, prod, temp, pep, otid, org, mol, pepid, jb_link, study_id;
     const rows = await queries.run_query(q, req, res);
