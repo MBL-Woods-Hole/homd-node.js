@@ -543,7 +543,7 @@ export const calculate_homd_stats = () => {
         count_sec,
         s = {};
     //TAXA////TAXA////TAXA////TAXA////TAXA////TAXA////TAXA//
-    logger.info(C.taxon_lookup["118"]);
+    //logger.info(C.taxon_lookup["118"]);
     //s.taxa_count = Object.keys(C.taxon_lookup).length
     let homd_taxa = Object.values(C.taxon_lookup).filter(
         (item) => item.active_status.toLowerCase() !== "dropped",
