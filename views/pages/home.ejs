@@ -29,20 +29,16 @@
         <br>
             
             eHOMD provides comprehensive curated information on bacteria in the human mouth and aerodigestive tract. 
-            
-            
-            
+
             Of the <span class='underline'><a href='#' onclick="show_specific_ttable('no_dropped')"><%= s.taxon_count %> taxa</a></span> 
             in the database, 547 are primarily oral and 45 primarily nasal.
             Including secondary as well as primary sites, 
             <span class='underline'><a href='#' onclick="show_specific_ttable('oral_only')"><%= s.all_oral %></a></span>
              taxa are oral and 
             <span class='underline'><a href='#' onclick="show_specific_ttable('nasal_only')"><%= s.all_nasal %></a></span> 
-            taxa are nasal.
+            taxa are nasal. 
             
-            
-            
-            primarily nasal. Of the oral taxa, 
+            Of the oral taxa, 
             <%= parseFloat(s.taxa_status_named_cult.pct_of_taxa) + parseFloat(s.taxa_status_named_uncult.pct_of_taxa) %>% are named, 
             <%= s.taxa_status_unnamed_cult.pct_of_taxa %>% unnamed but cultivated and 
             <%= s.taxa_status_phylotype.pct_of_taxa %>% are known only as 
