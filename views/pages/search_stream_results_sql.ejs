@@ -70,7 +70,7 @@ tr:nth-child(odd) { background-color: lightblue; }
                 eventSource.close();
                 
                 const notification = document.getElementById('end-notice');
-                notification.innerHTML = "DONE (row count: "+eventData.count.toString()+")"
+                notification.innerHTML = "DONE (row count: "+eventData.count.toString()+") - Click on table headers to sort."
                 console.log('Stream ended by server.');
                 //document.querySelector('#table-div').style.display = "none";
                 document.querySelector("#loader").style.visibility = "hidden";

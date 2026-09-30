@@ -378,9 +378,9 @@ router.post(
             annoUpper +
             ".gff_fullsearch";
         q +=
-            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('" +
+            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
             search_string +
-            "' IN BOOLEAN MODE);";
+            "\"' IN BOOLEAN MODE);";
 
         //try{
         console.log(q);
@@ -606,9 +606,9 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
         annoUpper +
         ".gff_fullsearch";
     q +=
-        " WHERE MATCH(attribute_product,attribute_gene) AGAINST('" +
+        " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
         search_text +
-        "' IN BOOLEAN MODE);";
+        "\"' IN BOOLEAN MODE);";
     console.log(q);
 
     res.setHeader("Content-Type", "text/event-stream");
