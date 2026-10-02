@@ -51,7 +51,7 @@ html, body { min-height: 100%; }
    cursor:pointer;
 }
 </style>
-<%- include('../partials/header_html'); %>
+<%- include('../../partials/header_html'); %>
 <% var otids = JSON.parse(otid_list) %>
 <% var refseqs = JSON.parse(refseq_obj) %>
 <% var gids = JSON.parse(gid_list) %>
@@ -63,8 +63,8 @@ html, body { min-height: 100%; }
 <body>
   
     <div id='wrapper'>
-    <%- include('../partials/header_img'); %>
-    <%- include('../partials/navbar'); %>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
     <div class='page-content' > 
        <p class='h3 title'>Search Result [<small>Search String: <span id='srch_txt'>"<%= search_text %>"</span> (Case Insensitive)</small>]
        </p>
@@ -202,7 +202,7 @@ html, body { min-height: 100%; }
     </div> <!-- end: page-content -->
     
     <div id='footer'>
-         <%- include('../partials/footer'); %>
+         <%- include('../../partials/footer'); %>
     </div>
   </div>     
 </body>

@@ -208,7 +208,7 @@ app.use((err, req, res, next) => {
         }),
 
         msg: "We're Sorry -- Something Broke!<br><br>If it happens again please let us know. Below is the error message:",
-        trace: error.toString(),
+        trace: err.toString(),
     });
     next();
 });

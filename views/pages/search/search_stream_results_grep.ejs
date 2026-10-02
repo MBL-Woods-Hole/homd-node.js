@@ -11,7 +11,9 @@ th, td { border: 1px solid #ddd; padding: 8px; text-align: left;  }
 th { background-color: #f4f4f4; }
 tr:nth-child(even) { background-color: #f9f9f9; }
 tr:nth-child(odd) { background-color: lightblue; }
-
+.nowrap td{
+    white-space: nowrap;
+}
 #end-notice{
    color:red;
 }
@@ -26,16 +28,16 @@ tr:nth-child(odd) { background-color: lightblue; }
     z-index: 9999999;
 }
 </style>
-<%- include('../partials/header_html'); %>
+<%- include('../../partials/header_html'); %>
 
 
 <body>
     <div id="loader" class="center-loader" style='z-index:1'></div>
     <div id='wrapper'>
-    <%- include('../partials/header_img'); %>
-    <%- include('../partials/navbar'); %>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
     <div class='page-content' > 
-    <h3><%= anno.toUpperCase() %> Annotations SQL Streaming Search Results for: <small>'<%= search_text %>'</small></h3>
+    <h3><%= anno.toUpperCase() %> Annotations Grep Streaming Search Results for: <small>'<%= search_text %>'</small></h3>
     <center><span id='end-notice'>Streaming Search Results...</span></center>
     <div id='table-div'>
     <table class='sortable'>
@@ -61,7 +63,7 @@ tr:nth-child(odd) { background-color: lightblue; }
         //outputDiv.textContent = ''; 
          //outputDiv.innerHTML = "";
         // Connect to the SSE endpoint
-        const eventSource = new EventSource('/search/get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>');
+        const eventSource = new EventSource('/search/get_grep_stream?anno=<%= anno %>&search_text=<%= search_text %>&download=0');
 
         eventSource.onmessage = function(event) {
             const eventData = JSON.parse(event.data);
@@ -70,7 +72,11 @@ tr:nth-child(odd) { background-color: lightblue; }
                 eventSource.close();
                 
                 const notification = document.getElementById('end-notice');
-                notification.innerHTML = "DONE (row count: "+eventData.count.toString()+") - Click on table headers to sort."
+                var notify = "DONE (row count: "+eventData.count.toString()+") - Click on table headers to sort."
+                notify += "<span style='float:right;'><a class='link' href='get_grep_stream?anno=<%= anno %>&search_text=<%= search_text %>&download=1'>Download Results</a></span>"
+                notification.innerHTML = notify
+                
+                
                 console.log('Stream ended by server.');
                 //document.querySelector('#table-div').style.display = "none";
                 document.querySelector("#loader").style.visibility = "hidden";
@@ -138,6 +144,10 @@ tr:nth-child(odd) { background-color: lightblue; }
             eventSource.close();
         };
     </script>
+    </div> <!-- end: page-content -->
+    
+    <div id='footer'>
+         <%- include('../../partials/footer'); %>
     </div>
     </div>
 </body>
