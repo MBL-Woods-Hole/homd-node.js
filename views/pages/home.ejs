@@ -214,9 +214,14 @@
       </div>
     </div>
         
-   
-        
-        
+   <% if(cfg.DB_HOST === "localhost"){ %>
+       Hello Developer!
+   <% }else{ %>
+      <% const ipAddress = cfg.DB_HOST %>
+      <% const octets = ipAddress.split(".") %>
+      AWS EC2 <%= octets[2] %>.<%= octets[3] %>
+    <% } %>
+    
 </div>
 </center>
 
