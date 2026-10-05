@@ -540,9 +540,10 @@ export const calculate_homd_stats = () => {
     logger.info("Calculating Stats...");
     let pct,
         count,
+        count_sec,
         s = {};
     //TAXA////TAXA////TAXA////TAXA////TAXA////TAXA////TAXA//
-    //logger.info(C.taxon_lookup['10'])
+    //logger.info(C.taxon_lookup["118"]);
     //s.taxa_count = Object.keys(C.taxon_lookup).length
     let homd_taxa = Object.values(C.taxon_lookup).filter(
         (item) => item.active_status.toLowerCase() !== "dropped",
@@ -588,12 +589,19 @@ export const calculate_homd_stats = () => {
     s.taxa_status_phylotype = { count: count, pct_of_taxa: pct.toFixed(1) };
     // Body Sites
     //logger.info(C.site_lookup['10'])
+
     count = homd_taxa.filter((item) => item.body_site === "Oral").length;
+    count_sec = homd_taxa.filter((item) => item.body_site2 === "Oral").length;
     pct = (count / s.taxon_count) * 100;
     s.taxa_site_oral = { count: count, pct_of_taxa: pct.toFixed(1) };
+    s.all_oral = count + count_sec;
+
     count = homd_taxa.filter((item) => item.body_site === "Nasal").length;
+    count_sec = homd_taxa.filter((item) => item.body_site2 === "Nasal").length;
     pct = (count / s.taxon_count) * 100;
     s.taxa_site_nasal = { count: count, pct_of_taxa: pct.toFixed(1) };
+    s.all_nasal = count + count_sec;
+
     count = homd_taxa.filter((item) => item.body_site === "Skin").length;
     pct = (count / s.taxon_count) * 100;
     s.taxa_site_skin = { count: count, pct_of_taxa: pct.toFixed(1) };

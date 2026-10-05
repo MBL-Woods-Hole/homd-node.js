@@ -189,7 +189,7 @@ app.use("/search", search);
 
 // error handler middleware:
 app.use((err, req, res, next) => {
-    console.log("in app.js", error);
+    console.log("in app.js", err);
     //res.status(500).send('Something Broke! Please use the browsers \'Back\' button');
     //if(process.env.ENV === 'development'){
     //if(process.env.ENV === 'production'){
@@ -208,7 +208,7 @@ app.use((err, req, res, next) => {
         }),
 
         msg: "We're Sorry -- Something Broke!<br><br>If it happens again please let us know. Below is the error message:",
-        trace: error.toString(),
+        trace: err.toString(),
     });
     next();
 });

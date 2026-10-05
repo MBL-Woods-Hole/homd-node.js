@@ -12,9 +12,8 @@ import datetime
 from datetime import datetime,date
 ranks = ['domain','phylum','klass','order','family','genus','species']
 today = str(date.today())
-sys.path.append('../homd-data/')
-sys.path.append('../../homd-data/')
-sys.path.append('../../config/')
+sys.path.append('/Users/avoorhis/programming/')
+sys.path.append('/home/ubuntu/homd-work/')
 from connect import MyConnection
 
 
@@ -135,9 +134,13 @@ if __name__ == "__main__":
         args.DATABASE = 'homd'
         dbhost= '192.168.1.58'
     
-    elif args.dbhost == 'homd_dev':
+    elif args.dbhost == 'homd_v43':
         args.DATABASE = 'homd'
         dbhost= '192.168.1.71'
+    
+    elif args.dbhost == 'homd_dev':
+        args.DATABASE = 'homd'
+        dbhost= '192.168.1.71XXX'
     
     elif args.dbhost == 'localhost':
         args.DATABASE = 'homd'

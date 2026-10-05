@@ -18,7 +18,7 @@ import logger from "../config/app_config.js";
 ////
 router.get("/full_site_search", function full_site_search_GET(req, res) {
     //logger.info('full_site_searchGET')
-    res.render("pages/full_site_search", {
+    res.render("pages/search/full_site_search", {
         title: "HOMD :: Human Oral Microbiome Database",
         pgname: "", // for AbountThisPage
         config: JSON.stringify(ENV),
@@ -316,7 +316,7 @@ router.post(
                 return helpers.compareStrings_alpha(a.species, b.species);
             });
             //logger.info('sort_lst2',Object.keys(all_phage_search_ids_lookup))
-            res.render("pages/full_site_search_results", {
+            res.render("pages/search/full_site_search_results", {
                 title: "HOMD :: Search Results",
                 pgname: "", // for AboutThisPage
                 config: JSON.stringify(ENV),
@@ -458,7 +458,7 @@ router.post(
                     b.species + b.strain,
                 );
             });
-            res.render("pages/full_site_search_results", {
+            res.render("pages/search/full_site_search_results", {
                 title: "HOMD :: Search Results",
                 pgname: "", // for AboutThisPage
                 config: JSON.stringify(ENV),
@@ -492,34 +492,34 @@ router.post(
         //}
     },
 );
-router.post(
-    "/advanced_site_search_grep_stream",
-    async function advanced_site_search_streamPOST(req, res) {
-        console.log("in advanced_site_search_grep_stream");
-        console.log(req.body);
-        //let search_type = req.body.anno_search_type
-        let anno = req.body.anno;
-        //let annoUpper = anno.toUpperCase()
-        let annoLower = anno.toLowerCase();
-        //let search_string = req.body.search_text
-        res.render("pages/grep_stream", {
-            title: "HOMD :: Search Results",
-            pgname: "", // for AboutThisPage
-            config: JSON.stringify(ENV),
-            ver_info: JSON.stringify(C.version_information),
-
-            anno: annoLower,
-            search_text: req.body.search_text,
-        });
-    },
-);
+// router.post(
+//     "/advanced_site_search_grep_stream",
+//     async function advanced_site_search_streamPOST(req, res) {
+//         console.log("in advanced_site_search_grep_stream");
+//         console.log(req.body);
+//         //let search_type = req.body.anno_search_type
+//         let anno = req.body.anno;
+//         //let annoUpper = anno.toUpperCase()
+//         let annoLower = anno.toLowerCase();
+//         //let search_string = req.body.search_text
+//         res.render("pages/grep_stream", {
+//             title: "HOMD :: Search Results",
+//             pgname: "", // for AboutThisPage
+//             config: JSON.stringify(ENV),
+//             ver_info: JSON.stringify(C.version_information),
+//
+//             anno: annoLower,
+//             search_text: req.body.search_text,
+//         });
+//     },
+// );
 router.get("/stream_results_sql", function stream_results_sql(req, res) {
     console.log("IN SQL_stream_result");
     console.log(req.query);
     const annoLower = req.query.anno;
     //const annoUpper = annoLower.toUpperCase()
     const search_text = req.query.search_text.toLowerCase();
-    res.render("pages/search_stream_results_sql", {
+    res.render("pages/search/search_stream_results_sql", {
         title: "HOMD :: Search Results",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
@@ -534,7 +534,7 @@ router.get("/stream_results_grep", function stream_results_grep(req, res) {
     const annoLower = req.query.anno;
     //const annoUpper = annoLower.toUpperCase()
     const search_text = req.query.search_text.toLowerCase();
-    res.render("pages/search_stream_results_grep", {
+    res.render("pages/search/search_stream_results_grep", {
         title: "HOMD :: Search Results",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
@@ -585,13 +585,16 @@ router.get("/stream_results_grep", function stream_results_grep(req, res) {
 //     });
 // });
 router.get("/get_sql_stream", async function get_sql_stream(req, res) {
-    console.log("IN get_grep_stream");
+    console.log("IN get_sql_stream");
     console.log(req.query);
     //const annoLower = req.query.anno
     const annoUpper = req.query.anno.toUpperCase();
+    const annoLower = req.query.anno.toLowerCase();
     const search_text = req.query.search_text
         .toLowerCase()
         .replace(/\|/g, "\\|");
+    const download = req.query.download;
+    let dt = helpers.get_today_obj();
     let allowed_max = C.grep_search_max_rows;
     let gid, payload, start, end, region, url, hmt;
     let gid_count = {},
@@ -610,10 +613,32 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
         search_text +
         "\"' IN BOOLEAN MODE);";
     console.log(q);
-
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
+    if (download === "1") {
+        console.log("DOWNLOAD");
+        let fname =
+            "HOMD_" +
+            annoLower +
+            "_search" +
+            dt.today +
+            "_" +
+            dt.seconds +
+            ".csv";
+        res.setHeader("Content-Disposition", "attachment; filename=" + fname);
+        res.setHeader("Content-Type", "text/plain");
+        res.setHeader("Transfer-Encoding", "chunked");
+        res.write(
+            "HOMD Annotation Search\t" +
+                annoUpper +
+                "\tSearchText:" +
+                search_text +
+                "\n",
+        );
+        res.write("Genome-ID\tHMT-ID\tOrganism\tProtein-ID\tGene\tProduct\n");
+    } else {
+        res.setHeader("Content-Type", "text/event-stream");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Connection", "keep-alive");
+    }
     res.flushHeaders();
     //try{
     const conn = await promisePool.getConnection();
@@ -676,8 +701,24 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
             gene: tmp_obj.gene,
             jburl: url,
         };
-        //console.log('pl',payload)
-        res.write(`data: ${JSON.stringify(payload)}\n\n`);
+        if (download === "1") {
+            let text =
+                gid +
+                "\t" +
+                hmt +
+                "\t" +
+                species +
+                "\t" +
+                tmp_obj.pid +
+                "\t" +
+                tmp_obj.gene +
+                "\t" +
+                tmp_obj.prod +
+                "\n";
+            res.write(text);
+        } else {
+            res.write(`data: ${JSON.stringify(payload)}\n\n`);
+        }
         //logger.info('tmp_obj',tmp_obj)
     });
     stream.on("error", (err) => {
@@ -700,11 +741,14 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
 });
 router.get("/get_grep_stream", async function get_grep_stream(req, res) {
     console.log("IN get_grep_stream");
-    console.log(req.query);
-    const annoLower = req.query.anno;
+    console.log("req.query", req.query);
+    const annoLower = req.query.anno.toLowerCase();
+    const annoUpper = req.query.anno.toUpperCase();
     const search_text = req.query.search_text
         .toLowerCase()
         .replace(/\|/g, "\\|");
+    const download = req.query.download;
+    let dt = helpers.get_today_obj();
     let args,
         grep_cmd_base,
         full_cmd_str,
@@ -716,6 +760,10 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
         region,
         url,
         hmt,
+        org,
+        pid,
+        gene,
+        prod,
         otid;
     //args = ['-type','f','-name','"'+filenames+'"','|','parallel','-j 8','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
     //let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
@@ -728,10 +776,32 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
             ENV.PATH_TO_SEARCH + "/" + annoLower + "_annotations/" + file,
         );
     });
-
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
+    if (download === "1") {
+        console.log("DOWNLOAD");
+        let fname =
+            "HOMD_" +
+            annoLower +
+            "_search" +
+            dt.today +
+            "_" +
+            dt.seconds +
+            ".csv";
+        res.setHeader("Content-Disposition", "attachment; filename=" + fname);
+        res.setHeader("Content-Type", "text/plain");
+        res.setHeader("Transfer-Encoding", "chunked");
+        res.write(
+            "HOMD Annotation Search\t" +
+                annoUpper +
+                "\tSearchText:" +
+                search_text +
+                "\n",
+        );
+        res.write("Genome-ID\tHMT-ID\tOrganism\tProtein-ID\tGene\tProduct\n");
+    } else {
+        res.setHeader("Content-Type", "text/event-stream");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Connection", "keep-alive");
+    }
     res.flushHeaders();
 
     args = ["--line-buffered", "-iIN", '"' + search_text + '"'].concat(fpaths);
@@ -770,6 +840,10 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
                     gid = line_pts[1].toUpperCase();
                     otid = C.genome_lookup[gid].otid;
                     hmt = helpers.make_otid_display_name(otid);
+                    org = C.genome_lookup[gid].organism;
+                    pid = line_pts[4].toUpperCase();
+                    gene = line_pts[3];
+                    prod = line_pts[5];
                     region = line_pts[2].toUpperCase();
                     start = line_pts[6];
                     end = line_pts[7];
@@ -779,14 +853,30 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
                         gid: gid,
                         hmt: hmt,
                         otid: otid,
-                        org: C.genome_lookup[gid].organism,
-                        pid: line_pts[4].toUpperCase(),
-                        prod: line_pts[5],
-                        gene: line_pts[3],
+                        org: org,
+                        pid: pid,
+                        prod: prod,
+                        gene: gene,
                         jburl: url,
                     };
-
-                    res.write(`data: ${JSON.stringify(payload)}\n\n`);
+                    if (download === "1") {
+                        let text =
+                            gid +
+                            "\t" +
+                            hmt +
+                            "\t" +
+                            org +
+                            "\t" +
+                            pid +
+                            "\t" +
+                            gene +
+                            "\t" +
+                            prod +
+                            "\n";
+                        res.write(text);
+                    } else {
+                        res.write(`data: ${JSON.stringify(payload)}\n\n`);
+                    }
                 }
             }
         });
@@ -1024,7 +1114,7 @@ router.post(
                 );
             });
             //logger.info('obj2',obj2)
-            res.render("pages/full_site_search_results", {
+            res.render("pages/search/full_site_search_results", {
                 title: "HOMD :: Search Results",
                 pgname: "", // for AboutThisPage
                 config: JSON.stringify(ENV),
@@ -1164,7 +1254,7 @@ router.post("/basic_site_search", function basic_site_search(req, res) {
         //req.session.site_search_result_prokka = {}
         //req.session.site_search_result_ncbi = {}
         //logger.info('st',searchText)
-        res.render("pages/basic_search_result", {
+        res.render("pages/search/basic_search_result", {
             title: "HOMD :: Site Search",
             pgname: "", // for AbountThisPage
             config: JSON.stringify(ENV),
@@ -1188,6 +1278,11 @@ router.post("/basic_site_search", function basic_site_search(req, res) {
         });
     });
 });
+
+//
+//
+//
+//
 function search_taxonomy(text_string) {
     // type is names or otids
     // lets search the taxonomy names

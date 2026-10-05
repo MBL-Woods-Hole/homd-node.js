@@ -175,7 +175,7 @@ table.sortable thead {
    
 }
 </style>
-<%- include('../partials/header_html'); %>
+<%- include('../../partials/header_html'); %>
 <% var otids = JSON.parse(otid_list) %>
 
 <% var gids = JSON.parse(gid_list) %>
@@ -196,8 +196,8 @@ table.sortable thead {
 
    <div id="loader" class="center-loader" style='z-index:1'></div>
     <div id='wrapper'>
-    <%- include('../partials/header_img'); %>
-    <%- include('../partials/navbar'); %>
+    <%- include('../../partials/header_img'); %>
+    <%- include('../../partials/navbar'); %>
     <div class='page-content' > 
        <% if(search_type.length == 1){ %>
          <p class='title h3'><%= anno.toUpperCase() %> <%= search_type[0][0].toUpperCase() + search_type[0].slice(1).toLowerCase(); %> Search Result  </p>
@@ -387,7 +387,7 @@ table.sortable thead {
     </div> <!-- end: page-content -->
     
     <div id='footer'>
-         <%- include('../partials/footer'); %>
+         <%- include('../../partials/footer'); %>
     </div>
   </div>     
 </body>
