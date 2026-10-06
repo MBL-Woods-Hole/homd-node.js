@@ -1,3 +1,5 @@
 # Ignore artifacts:
 build
 coverage
+ImageLocation_tax.js
+ImageLocation_loc.js
