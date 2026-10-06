@@ -214,13 +214,17 @@
       </div>
     </div>
         
-   <% if(cfg.DB_HOST === "localhost"){ %>
-       Hello Developer!
-   <% }else{ %>
-      <% const ipAddress = cfg.WEB_HOST %>
-      <% const octets = ipAddress.split(".") %>
-      AWS EC2 <%= octets[2] %>.<%= octets[3] %>
+   <% const ipAddress = cfg.WEB_HOST %>
+    <% const dbAddress = cfg.DB_HOST %>
+    <% const ipoctets = ipAddress.split(".") %>
+    <% const dboctets = dbAddress.split(".") %>
+    <span style="">
+    <% if(cfg.DB_HOST === "localhost"){ %>
+       Hello Developer!  =><%= cfg.DATABASE_URL %>
+    <% }else{ %>
+        AWS EC2 <%= ipoctets[2] %>.<%= ipoctets[3] %>/<%= dboctets[2] %>.<%= dboctets[3] %>
     <% } %>
+    </span>
     
 </div>
 </center>
