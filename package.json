@@ -13,6 +13,7 @@
     "better-sqlite3": "^13.0.3",
     "body-parser": "^1.20.0",
     "dotenv": "^17.2.3",
+    "dotenv-expand": "^1000.0.0",
     "ejs": "^3.1.10",
     "express": "^4.17.3",
     "express-fileupload": "^1.5.2",
@@ -53,7 +54,7 @@
   },
   "lint-staged": {
     "*.js": [
-       "prettier --write"
-     ]
+      "prettier --write"
+    ]
   }
 }

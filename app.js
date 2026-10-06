@@ -1,29 +1,34 @@
 "use strict";
-// import dotenv from 'dotenv';
-// dotenv.config();
 
-//import process.env from './config/config.js';
-import "dotenv/config";
-//const process
+//import "dotenv/config";
+//const ENV = process.env;
+import "./config/load-env.js";
+//import * as dotenv from 'dotenv';
+//import dotenvExpand from 'dotenv-expand';
+// 1. Initialize dotenv and grab the parsed object
 const ENV = process.env;
 
-//import { * } from './config/config.js';
+// 2. Pass the parsed object into dotenv-expand
+//dotenvExpand.expand(Env);
+
+//const process
+
+console.log("ENV.DATABASE_URL", ENV.DATABASE_URL);
 
 import path from "path";
 
 //=============================================================
-ENV.PROCESS_DIR = path.join(ENV.BASE_DIR, ENV.PROCESS_DIR_BASENAME);
-ENV.PATH_TO_STATIC_DOWNLOADS = path.join(
-    ENV.BASE_DIR,
-    ENV.PATH_TO_STATIC_DOWNLOADS_BASENAME,
-);
-ENV.PATH_TO_DATA = path.join(ENV.BASE_DIR, ENV.PATH_TO_DATA_BASENAME);
-ENV.PATH_TO_SEARCH = path.join(ENV.BASE_DIR, ENV.PATH_TO_SEARCH_BASENAME);
-ENV.PATH_TO_SCRIPTS = path.join(ENV.PROCESS_DIR, ENV.PATH_TO_SCRIPTS_BASENAME);
+//ENV.PROCESS_DIR = path.join(ENV.BASE_DIR, ENV.PROCESS_DIR_BASENAME);
+// ENV.PATH_TO_STATIC_DOWNLOADS = path.join(
+//     ENV.BASE_DIR,
+//     ENV.PATH_TO_STATIC_DOWNLOADS_BASENAME,
+// );
+//ENV.PATH_TO_DATA = path.join(ENV.BASE_DIR, ENV.PATH_TO_DATA_BASENAME);
+//ENV.PATH_TO_SEARCH = path.join(ENV.BASE_DIR, ENV.PATH_TO_SEARCH_BASENAME);
+//ENV.PATH_TO_SCRIPTS = path.join(ENV.PROCESS_DIR, ENV.PATH_TO_SCRIPTS_BASENAME);
 
-ENV.PATH_TO_TMP = path.join(ENV.BASE_DIR, ENV.PATH_TO_TMP_BASENAME);
-ENV.PATH_TO_IMAGES = path.join(ENV.BASE_DIR, ENV.PATH_TO_IMAGES_BASENAME);
-ENV.access_logfile = path.join(ENV.LOGGING_DIR, "logs", "homd-access.log");
+//ENV.PATH_TO_TMP = path.join(ENV.BASE_DIR, ENV.PATH_TO_TMP_BASENAME);
+//ENV.PATH_TO_IMAGES = path.join(ENV.BASE_DIR, ENV.PATH_TO_IMAGES_BASENAME);
 
 //=============================================================
 import logger from "./config/app_config.js";
@@ -33,9 +38,9 @@ import logger from "./config/app_config.js";
 //const logger = pino()
 // see helpers.pino_conf()
 //
-logger.info("ENV:Base Dir", ENV.BASE_DIR);
-logger.info("ENV.PATH_TO_SCRIPTS", ENV.PATH_TO_SCRIPTS);
-
+logger.info("ENV:Base Dir: " + ENV.BASE_DIR);
+logger.info("ENV.PATH_TO_STATIC_DOWNLOADS: " + ENV.PATH_TO_STATIC_DOWNLOADS);
+logger.info("ENV.PATH_TO_SCRIPTS: " + ENV.PATH_TO_SCRIPTS);
 logger.info("Pino logger.info Testing! Pino is working with ES Modules.");
 logger.warn("Pino logger.warn Testing! Pino is working with ES Modules.");
 logger.error("Pino logger.error Testing! Pino is working with ES Modules.");
@@ -45,7 +50,8 @@ logger.error("Pino logger.error Testing! Pino is working with ES Modules.");
 // logger.debug('this is a debug statement')
 
 logger.info(`NODE_ENV: ${ENV.NODE_ENV}`);
-
+logger.info(`Database IP: ${ENV.DB_HOST}`);
+logger.info(`Web IP: ${ENV.WEB_HOST}`);
 const dirname = import.meta.dirname;
 
 //// SQL Connection ///////////////
@@ -139,7 +145,7 @@ import search from "./routes/routes_search.js";
 // 1- Make sure NODE_ENV (in .env file) is set to 'production'  <= for console.log()
 // 2- Make sure LOG_LEVEL (in .env file) is set to 'silent' <= for logger.info()
 
-if (process.env.NODE_ENV === "production") {
+if (ENV.NODE_ENV === "production") {
     console.log("!!Turning off console logging for production mode!!");
     console.log("To debug: run `npm run debug`");
     console.log = function () {}; // turn off console.logging
@@ -200,7 +206,7 @@ app.use((err, req, res, next) => {
         url: req.url,
         pgname: "lost",
         title: "HOMD Lost",
-        config: JSON.stringify(process.env),
+        config: JSON.stringify(ENV),
         ver_info: JSON.stringify({
             rna_ver: C.rRNA_refseq_version,
             gen_ver: C.genomic_refseq_version,
@@ -223,7 +229,7 @@ app.use(function (req, res) {
             url: req.url,
             pgname: "lost",
             title: "HOMD Lost",
-            config: JSON.stringify(process.env),
+            config: JSON.stringify(ENV),
             ver_info: JSON.stringify({
                 rna_ver: C.rRNA_refseq_version,
                 gen_ver: C.genomic_refseq_version,
@@ -256,33 +262,30 @@ import CustomTaxa from "./routes/helpers/taxa_class.js";
 // passing the array of results in the same order.
 const promises = [
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.taxon_lookup_fn),
+        path.join(ENV.PATH_TO_DATA, C.taxon_lookup_fn),
         "json",
     ),
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.lineage_lookup_fn),
+        path.join(ENV.PATH_TO_DATA, C.lineage_lookup_fn),
         "json",
     ),
-    //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
+
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.genome_lookup_fn),
-        "json",
-    ),
-    helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.refseq_lookup_fn),
+        path.join(ENV.PATH_TO_DATA, C.genome_lookup_fn),
         "json",
     ),
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.references_lookup_fn),
-        "json",
-    ),
-    //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.info_lookup_fn),'json'),
-    helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.taxcounts_fn),
+        path.join(ENV.PATH_TO_DATA, C.refseq_lookup_fn),
         "json",
     ),
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.annotation_lookup_fn),
+        path.join(ENV.PATH_TO_DATA, C.references_lookup_fn),
+        "json",
+    ),
+
+    helpers.readFromFile(path.join(ENV.PATH_TO_DATA, C.taxcounts_fn), "json"),
+    helpers.readFromFile(
+        path.join(ENV.PATH_TO_DATA, C.annotation_lookup_fn),
         "json",
     ),
 
@@ -295,49 +298,37 @@ const promises = [
         "json",
     ), // match image w/ otid or tax rank
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.contig_lookup_fn),
+        path.join(ENV.PATH_TO_DATA, C.contig_lookup_fn),
         "json",
     ),
 
     //2024-Sept  // #10,11,12
+    helpers.readFromFile(path.join(ENV.PATH_TO_DATA, C.site_lookup_fn), "json"),
+
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.site_lookup_fn),
-        "json",
-    ),
-    //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv'),
-    helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.missing_ncbi_genomes_fn),
+        path.join(ENV.PATH_TO_DATA, C.missing_ncbi_genomes_fn),
         "json",
     ),
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, "GCA_NO_NCBI_DB.csv"),
+        path.join(ENV.PATH_TO_DATA, "GCA_NO_NCBI_DB.csv"),
         "csv",
     ),
 
     //Oct 2025  // #13,14,15
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.crispr_lookup_fn),
+        path.join(ENV.PATH_TO_DATA, C.crispr_lookup_fn),
         "json",
     ),
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.phage_lookup_fn),
+        path.join(ENV.PATH_TO_DATA, C.phage_lookup_fn),
         "json",
     ),
-    helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.amr_lookup_fn),
-        "json",
-    ),
+    helpers.readFromFile(path.join(ENV.PATH_TO_DATA, C.amr_lookup_fn), "json"),
 
     //DEC 2025  // #16
-    helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.abundance_fn),
-        "json",
-    ),
+    helpers.readFromFile(path.join(ENV.PATH_TO_DATA, C.abundance_fn), "json"),
     //JAN 2026  // #17
-    helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.pg_lookup_fn),
-        "json",
-    ),
+    helpers.readFromFile(path.join(ENV.PATH_TO_DATA, C.pg_lookup_fn), "json"),
     // ETC ...
 ];
 Promise.all(promises).then((results) => {

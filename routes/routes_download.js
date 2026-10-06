@@ -7,7 +7,7 @@ let router = express.Router();
 //const app = express();
 //app.use(fileUpload());
 import multer from "multer";
-//ENV = process.env;
+const ENV = process.env;
 
 import path from "path";
 import { pipeline, Transform } from "stream";
