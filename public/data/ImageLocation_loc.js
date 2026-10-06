@@ -1,5 +1,5 @@
 	{
-	"arc1":{
+	arc1:{
 		"fname":"Archaea-1.png",
 		"caption":"",
         "title":"https://www.christeyns.com/uk-en/archaea-a-microbiological-world-yet-to-be-discovered/"
@@ -22,7 +22,7 @@
     "I-1":{
        "hires":false,
        "fname":"Corncobs_unpublished-forHOMD.jpg",
-       "caption":"Corncob structures in dental plaque with a \"cob\" formed by <i>Corynebacterium matruchotii</i> (magenta) and \"kernels\" formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or <i>Haemophilus</i> spp.<br>See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>",
+       "caption":"Corncob structures in dental plaque with a 'cob' formed by <i>Corynebacterium matruchotii</i> (magenta) and 'kernels' formed by <i>Streptococcus cristatus</i> or the <i>S. mitis/oralis</i> group (green) and <i>Porphyromonas</i> species (blue).  The orange cells surrounding the streptococci are <i>Aggregatibacter</i> or <i>Haemophilus</i> spp.<br>See <a href='https://doi.org/10.1073/pnas.1522149113' target='_blank'>Mark Welch et al. 2016</a>",
         "title":"Jessica Mark Welch, ADA Forsyth Institute, www.homd.org"
         
     },

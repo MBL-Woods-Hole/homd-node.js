@@ -290,14 +290,17 @@ const promises = [
     ),
 
     helpers.readFromFile(
+        // image name and text # #7
         path.join("public", "data", C.image_location_locfn),
         "json",
-    ), // image name and text
+    ),
     helpers.readFromFile(
+        // match image w/ otid or tax rank  #8
         path.join("public", "data", C.image_location_taxfn),
         "json",
-    ), // match image w/ otid or tax rank
+    ),
     helpers.readFromFile(
+        // #9
         path.join(ENV.PATH_TO_DATA, C.contig_lookup_fn),
         "json",
     ),

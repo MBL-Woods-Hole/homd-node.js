@@ -960,7 +960,7 @@ router.get("/tax_description", async function TaxDescription(req, res) {
         renderTaxonDescription(req, res, args);
         return;
     }
-    // END DROPPED
+    // END DROPPED END DROPPED END DROPPED END DROPPED END DROPPED
 
     lineage = C.taxon_lineage_lookup[otid]; // dropped not in lineage lookup use hierarchy
     logger.info(`lineage: ${lineage}`);
@@ -1008,6 +1008,7 @@ router.get("/tax_description", async function TaxDescription(req, res) {
         data4 = {};
     }
     let image_array = find_otid_images("species", otid);
+    console.log("images", otid, image_array);
     //refseq = {}
     //info = {'general':'','cultavability':'','prevalence':'','disease_associations':'','phenotypic':''}  // unique per otid
     //counts =
