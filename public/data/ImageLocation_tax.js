@@ -12,10 +12,10 @@
           "title3":"C.images_loc['bac3'].title"
         },
        "Archaea":{
-          "filename1":"C.images_loc['arc1'].fname",
-			    "text1":"C.images_loc['arc1'].caption",
-          "title1":"C.images_loc['arc1'].title"
-			}
+        "filename1":"C.images_loc['arc1'].fname",
+        "text1":"C.images_loc['arc1'].caption",
+        "title1":"C.images_loc['arc1'].title"
+        }
     },
     "phylum":{},
     "klass":{},

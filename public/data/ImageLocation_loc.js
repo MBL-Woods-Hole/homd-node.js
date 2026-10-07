@@ -1,24 +1,24 @@
-	{
-	"arc1":{
-		"fname":"Archaea-1.png",
-		"caption":"",
+    {
+    "arc1":{
+        "fname":"Archaea-1.png",
+        "caption":"",
         "title":"https://www.christeyns.com/uk-en/archaea-a-microbiological-world-yet-to-be-discovered/"
-	},
-	"bac1":{
-		"fname":"Bacteria-1.png",
-		"caption":"",
+    },
+    "bac1":{
+        "fname":"Bacteria-1.png",
+        "caption":"",
         "title":"Blood Smear"
-	},
-	"bac2":{
-		"fname":"Bacteria-2.png",
-		"caption":"",
+    },
+    "bac2":{
+        "fname":"Bacteria-2.png",
+        "caption":"",
         "title":"https://www.thoughtco.com/bacteria-shapes-373278"
-	},
-	"bac3":{
-		"fname":"Bacteria-3.png",
-		"caption":"",
+    },
+    "bac3":{
+        "fname":"Bacteria-3.png",
+        "caption":"",
         "title":"https://www.yourdictionary.com/articles/examples-bacteria-types-infections"
-	},
+    },
     "I-1":{
        "hires":false,
        "fname":"Corncobs_unpublished-forHOMD.jpg",
