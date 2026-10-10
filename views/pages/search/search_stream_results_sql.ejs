@@ -45,6 +45,7 @@ tr:nth-child(odd) { background-color: lightblue; }
                 <th class='nowrap'>HMT-ID</th>
                 <th class='nowrap'>Organism</th>
                 <th>Protein-ID</th>
+                <th>Type</th>
                 <th>Gene</th>
                 <th>Product</th>
                 <th class="sorttable_nosort">GenomeViewer</th>
@@ -107,6 +108,9 @@ tr:nth-child(odd) { background-color: lightblue; }
                 const pidCell = document.createElement('td');
                 pidCell.textContent = eventData.pid || "";
 
+                const typeCell = document.createElement('td');
+                typeCell.textContent = eventData.type || "";
+
                 const geneCell = document.createElement('td');
                 geneCell.textContent = eventData.gene || "";
                 
@@ -121,6 +125,7 @@ tr:nth-child(odd) { background-color: lightblue; }
                 row.appendChild(hmtCell);
                 row.appendChild(orgCell);
                 row.appendChild(pidCell);
+                row.appendChild(typeCell);
                 row.appendChild(geneCell);
                 row.appendChild(prodCell);
                 row.appendChild(urlCell);

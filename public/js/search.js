@@ -121,7 +121,7 @@ function show_phage_hits(gid, contig, species, predictor, h) {
 
 function show_anno_hits(obj, anno, gid) {
     var data = JSON.parse(obj);
-    //console.log('data obj',data)
+    console.log("data obj", data);
     //console.log('data[gid]',data[0])
     org = data[0].species;
 
@@ -163,9 +163,9 @@ function show_anno_hits(obj, anno, gid) {
     id_list = [];
     for (n in data) {
         //console.log('1',data[n])
-        if (data[n].pid) {
-            id_list.push("'" + data[n].pid + "'");
-        }
+        //if (data[n].pid) {
+        id_list.push("'" + data[n].id + "'");
+        //}
         // if(anno === 'bakta' || anno === 'prokka'){
         //           console.log('2',"'"+data[n].pid+"'")
         //           if(data[n].pid){

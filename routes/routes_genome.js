@@ -1532,10 +1532,6 @@ router.get("/ribosomal_protein_tree", function ribosomalProteinTree(req, res) {
     }
     // Actual:: https://www.homd.org/ftp/phylogenetic_trees/genome/current/eHOMD_Ribosomal_Protein_Tree.svg
     // Copied to public/trees/eHOMD_Ribosomal_Protein_Tree.svg
-    //let filepath = ENV.FTP_TREE_URL_LOCAL +'/'+'eHOMD_Ribosomal_Protein_Tree.svg'
-    //let filepath = ENV.FTP_TREE_URL +'/genome/current/'+'eHOMD_Ribosomal_Protein_Tree.svg'
-    //let filepath = ENV.FTP_TREE_URL +'/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg'
-    //let filepath = ENV.HOMD_URL_BASE+ENV.RP_TREE_PATH  //'/ftp/phylogenetic_trees/ribosomal_protein_tree/HOMD_Ribosomal_Protein_Tree_V11.0.svg'
     let filepath;
     if (ENV.ENV === "localhost") {
         filepath =
@@ -1602,7 +1598,6 @@ router.get("/rRNA_gene_tree", function rRNAGeneTree(req, res) {
         findme = req.query.gid;
     }
     let filepath;
-    //let filepath = ENV.HOMD_URL_BASE+ENV.GENE_TREE_PATH   //"/ftp/phylogenetic_trees/refseq/V16.0/HOMD_16S_rRNA_RefSeq_Tree_V16.0.svg"
     if (ENV.ENV === "localhost") {
         filepath =
             "/Users/avoorhis/programming/homd-node.js/public/trees/eHOMD_16S_rRNA_Tree.svg";
@@ -1687,8 +1682,8 @@ router.post("/pangenomes", function pangenomes_POST(req, res) {
     html_head += "<th class='center sorttable_nosort'>Download Files";
     html_head +=
         "<br><small>[<a style='color:orange;' href='" +
-        ENV.HOMD_URL_BASE +
-        "ftp/pangenomes/V11.02'>FTP Site</a>]</small></th>";
+        ENV.HOMD_FTP_URL +
+        "pangenomes/V11.02'>FTP Site</a>]</small></th>";
 
     html_head += "</tr>";
     html_head += "</thead><tbody>";
@@ -1776,18 +1771,16 @@ router.post("/pangenomes", function pangenomes_POST(req, res) {
         }
         html_rows += "</td>";
 
-        // <a href='<%= cfg.HOMD_URL_BASE %>ftp/pangenomes/V11.02/targz/<%= pg %>.tar.gz'>download</a>&nbsp;&nbsp;
-        // (<a href='<%= cfg.HOMD_URL_BASE %>ftp/pangenomes/V11.02/targz/<%= pg %>.tar.gz.sha256'>sha256</a>)
         html_rows +=
             "<td class='center'><small><a href='" +
-            ENV.HOMD_URL_BASE +
-            "/ftp/pangenomes/V11.02/targz/" +
+            ENV.HOMD_FTP_URL +
+            "pangenomes/V11.02/targz/" +
             pg +
             ".tar.gz'>download</a>";
         html_rows +=
             "&nbsp;&nbsp;(<a href='" +
-            ENV.HOMD_URL_BASE +
-            "/ftp/pangenomes/V11.02/targz/" +
+            ENV.HOMD_FTP_URL +
+            "pangenomes/V11.02/targz/" +
             pg +
             ".tar.gz.sha256'>sha256</a>)</small>";
 

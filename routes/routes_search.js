@@ -89,6 +89,7 @@ router.post(
         logger.info("in advanced_anno_orf_search RESULTS");
         logger.info(`body: ${req.body}`);
         //logger.info('pidlist',req.body.pid_list)
+        console.log("id.list", req.body.id_list);
         let anno = req.body.anno.toUpperCase();
         let q;
         // if(anno =='BAKTA'){
@@ -121,45 +122,53 @@ router.post(
         //         q+= " LEFT JOIN PROKKA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
         //         q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
         //     }
-        if (anno == "BAKTA") {
-            // no ffn seqs yet
-            q = "SELECT a.region as acc,";
-            q += " a.attribute_locus_tag as pid,";
-            q += " type,";
-            q += " start,";
-            q += " end,";
-            q += " attribute_product as product,";
-            q += " attribute_Gene as gene,";
-            q += " length_aa as laa,";
+        // if (anno == "BAKTA") {
+        //             // no ffn seqs yet
+        //             q = "SELECT a.region as acc,";
+        //             q += " a.attribute_locus_tag as pid,";
+        //             q += " type,";
+        //             q += " start,";
+        //             q += " end,";
+        //             q += " attribute_product as product,";
+        //             q += " attribute_Gene as gene,";
+        //             q += " length_aa as laa,";
+        //             q += " '0' as lna";
+        //             q += " FROM " + anno + ".gff a";
+        //             q +=
+        //                 " LEFT JOIN " +
+        //                 anno +
+        //                 ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
+        //
+        //             q += " WHERE a.attribute_locus_tag in (" + req.body.id_list + ")";
+        //         } else {
+        // PROKKA and NCBI
+        q = "SELECT a.region as acc,";
+        q += " a.attribute_locus_tag as pid,";
+        q += " type,";
+        q += " start,";
+        q += " end,";
+        q += " attribute_product as product,";
+        q += " attribute_Gene as gene,";
+        q += " length_aa as laa,";
+        if (anno === "BAKTA") {
             q += " '0' as lna";
-            q += " FROM " + anno + ".gff a";
-            q +=
-                " LEFT JOIN " +
-                anno +
-                ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
-            q += " WHERE a.attribute_locus_tag in (" + req.body.id_list + ")";
+            q += " FROM " + anno + ".gff_fullsearch a";
         } else {
-            // PROKKA and NCBI
-            q = "SELECT a.region as acc,";
-            q += " a.attribute_locus_tag as pid,";
-            q += " type,";
-            q += " start,";
-            q += " end,";
-            q += " attribute_product as product,";
-            q += " attribute_Gene as gene,";
-            q += " length_aa as laa,";
             q += " length_na as lna";
-            q += " FROM " + anno + ".gff a";
-            q +=
-                " LEFT JOIN " +
-                anno +
-                ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
+            q += " FROM " + anno + ".gff_fullsearch a";
             q +=
                 " LEFT JOIN " +
                 anno +
                 ".ffn c on a.genome_id=c.genome_id and c.protein_id=a.attribute_locus_tag";
-            q += " WHERE a.attribute_locus_tag in (" + req.body.id_list + ")";
         }
+        q +=
+            " LEFT JOIN " +
+            anno +
+            ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
+
+        //q += " WHERE a.attribute_locus_tag in (" + req.body.id_list + ")";
+        q += " WHERE a.id in (" + req.body.id_list + ")";
+        //}
 
         const rows = await queries.run_query(q, req, res);
 
@@ -374,7 +383,7 @@ router.post(
         let allowed_max = C.grep_search_max_rows; // died at 73,000
         //prokka\tGCA_030450175.1\tCDS\tCP073095.1\tGCA_030450175.1_00089\tresA_1\tThiol-disulfide oxidoreductase ResA\t80060\t80623
         let q =
-            "SELECT genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid FROM " +
+            "SELECT id,genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid FROM " +
             annoUpper +
             ".gff_fullsearch";
         q +=
@@ -419,7 +428,7 @@ router.post(
                 pid: row.pid,
                 orf_id: "",
                 prod: row.product,
-                type: "",
+                id: row.id,
             };
             if (gid && Object.hasOwn(C.genome_lookup, gid)) {
                 //if(gid){
@@ -605,7 +614,7 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
     //args = ['-type','f','-name','"'+filenames+'"','|','parallel','-j 8','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
     //let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
     let q =
-        "SELECT genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,region,start,end FROM " +
+        "SELECT genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,region,type,start,end FROM " +
         annoUpper +
         ".gff_fullsearch";
     q +=
@@ -669,7 +678,7 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
             pid: row.pid,
             orf_id: "",
             prod: row.product,
-            type: "",
+            type: row.type,
         };
         //logger.info('3count '+cnt.toString())
         if (gid && Object.hasOwn(C.genome_lookup, gid)) {
@@ -699,6 +708,7 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
             pid: tmp_obj.pid,
             prod: tmp_obj.prod,
             gene: tmp_obj.gene,
+            type: tmp_obj.type,
             jburl: url,
         };
         if (download === "1") {
@@ -710,6 +720,8 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
                 species +
                 "\t" +
                 tmp_obj.pid +
+                "\t" +
+                tmp_obj.type +
                 "\t" +
                 tmp_obj.gene +
                 "\t" +
@@ -758,6 +770,7 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
         start,
         end,
         region,
+        type,
         url,
         hmt,
         org,
@@ -828,25 +841,28 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
         //console.log('DATA',data.toString(),'END DATA')
         const lines = data.toString().split("\n");
         //console.log('line count',lines.length)
-
+        let grep_search_line_length = 9;
         lines.forEach((line) => {
-            if (line.trim() !== "") {
+            if (line.startsWith(annoLower) && line.trim() !== "") {
                 // SSE format requires "data: " prefix and two newlines at the end
                 count += 1;
                 let line_pts = line.split("|");
-                if (line_pts.length === 8) {
-                    //console.log('line',line)
+                if (line_pts.length === grep_search_line_length) {
+                    console.log("line", line);
                     //res.write(`data: ${line}\n\n`);
                     gid = line_pts[1].toUpperCase();
                     otid = C.genome_lookup[gid].otid;
                     hmt = helpers.make_otid_display_name(otid);
                     org = C.genome_lookup[gid].organism;
-                    pid = line_pts[4].toUpperCase();
-                    gene = line_pts[3];
-                    prod = line_pts[5];
                     region = line_pts[2].toUpperCase();
-                    start = line_pts[6];
-                    end = line_pts[7];
+                    type = line_pts[3];
+                    gene = line_pts[4];
+
+                    pid = line_pts[5].toUpperCase();
+
+                    prod = line_pts[6];
+                    start = line_pts[7];
+                    end = line_pts[8];
                     url = helpers.create_jbrowse_url(gid, region, start, end);
                     //console.log('gid',C.genome_lookup[gid])
                     payload = {
@@ -855,6 +871,7 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
                         otid: otid,
                         org: org,
                         pid: pid,
+                        type: type,
                         prod: prod,
                         gene: gene,
                         jburl: url,
@@ -866,6 +883,8 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
                             hmt +
                             "\t" +
                             org +
+                            "\t" +
+                            type +
                             "\t" +
                             pid +
                             "\t" +
@@ -905,6 +924,8 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
         process.kill();
     });
 });
+//
+//
 router.post(
     "/advanced_site_search_anno_grep",
     async function advanced_site_search_annoPOST(req, res) {
@@ -1033,7 +1054,7 @@ router.post(
                         //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
                         //bakta|gca_000174175.1|acfu01000001.1||gca000174175_02365|hypothetical protein|178369|178515
                         let pts = row_array[n].split("|");
-                        //logger.info('grep pts',pts)
+                        //console.log('grep pts',pts)
                         if (
                             pts.length >= split_length &&
                             ["prokka", "ncbi", "bakta"].indexOf(pts[0]) != -1
@@ -1042,25 +1063,12 @@ router.post(
                             //                      if(pts[0] == 'bakta' || pts[0] == 'prokka'){
                             let id_pts = pts[1].split("_");
                             gid = (id_pts[0] + "_" + id_pts[1]).toUpperCase();
-                            pid = pts[4];
-                            prod = pts[5];
-                            gene = pts[3];
-                            type = "";
-                            //                      }else{   //ncbi
-                            // gid  = pts[1].toUpperCase()
-                            //                         type = pts[3]
-                            //                         gene = pts[4]
-                            //                         orf_id  = pts[5].toUpperCase()
-                            //                         pid = ''
-                            //                         if(type === 'cds'){
-                            //                             if(pts[0] === 'prokka'){
-                            //                                 pid = orf_id
-                            //                             }else{  // ncbi
-                            //                                 pid = orf_id.split('-')[1]
-                            //                             }
-                            //                         }
-                            //                         prod = pts[6]
-                            //                     }
+                            //region = id_pts[2]  // not used
+                            type = pts[3];
+                            gene = pts[4];
+                            pid = pts[5];
+                            prod = pts[6];
+
                             gid_count[gid] = 1;
                             //logger.info('LOOKup',C.genome_lookup[gid])
 
