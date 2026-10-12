@@ -257,11 +257,11 @@ import CustomTaxa from "./routes/helpers/taxa_class.js";
 // passing the array of results in the same order.
 const promises = [
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.taxon_lookup_fn),
+        path.join(ENV.PATH_TO_DATA, C.taxon_lookup_fn),
         "json",
     ),
     helpers.readFromFile(
-        path.join(process.env.PATH_TO_DATA, C.lineage_lookup_fn),
+        path.join(ENV.PATH_TO_DATA, C.lineage_lookup_fn),
         "json",
     ),
     //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
