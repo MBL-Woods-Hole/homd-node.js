@@ -3,7 +3,7 @@
 // dotenv.config();
 
 //import process.env from './config/config.js';
-import "dotenv/config";
+import "./config/load-env.js";
 //const process
 const ENV = process.env;
 
@@ -12,18 +12,19 @@ const ENV = process.env;
 import path from "path";
 
 //=============================================================
-ENV.PROCESS_DIR = path.join(ENV.BASE_DIR, ENV.PROCESS_DIR_BASENAME);
-ENV.PATH_TO_STATIC_DOWNLOADS = path.join(
-    ENV.BASE_DIR,
-    ENV.PATH_TO_STATIC_DOWNLOADS_BASENAME,
-);
-ENV.PATH_TO_DATA = path.join(ENV.BASE_DIR, ENV.PATH_TO_DATA_BASENAME);
-ENV.PATH_TO_SEARCH = path.join(ENV.BASE_DIR, ENV.PATH_TO_SEARCH_BASENAME);
-ENV.PATH_TO_SCRIPTS = path.join(ENV.PROCESS_DIR, ENV.PATH_TO_SCRIPTS_BASENAME);
 
-ENV.PATH_TO_TMP = path.join(ENV.BASE_DIR, ENV.PATH_TO_TMP_BASENAME);
-ENV.PATH_TO_IMAGES = path.join(ENV.BASE_DIR, ENV.PATH_TO_IMAGES_BASENAME);
-ENV.access_logfile = path.join(ENV.LOGGING_DIR, "logs", "homd-access.log");
+// ENV.PROCESS_DIR = path.join(ENV.BASE_DIR, ENV.PROCESS_DIR_BASENAME);
+// ENV.PATH_TO_STATIC_DOWNLOADS = path.join(
+//     ENV.BASE_DIR,
+//     ENV.PATH_TO_STATIC_DOWNLOADS_BASENAME,
+// );
+// ENV.PATH_TO_DATA = path.join(ENV.BASE_DIR, ENV.PATH_TO_DATA_BASENAME);
+// ENV.PATH_TO_SEARCH = path.join(ENV.BASE_DIR, ENV.PATH_TO_SEARCH_BASENAME);
+// ENV.PATH_TO_SCRIPTS = path.join(ENV.PROCESS_DIR, ENV.PATH_TO_SCRIPTS_BASENAME);
+//
+// ENV.PATH_TO_TMP = path.join(ENV.BASE_DIR, ENV.PATH_TO_TMP_BASENAME);
+// ENV.PATH_TO_IMAGES = path.join(ENV.BASE_DIR, ENV.PATH_TO_IMAGES_BASENAME);
+// ENV.access_logfile = path.join(ENV.LOGGING_DIR, "logs", "homd-access.log");
 
 //=============================================================
 import logger from "./config/app_config.js";
@@ -33,8 +34,8 @@ import logger from "./config/app_config.js";
 //const logger = pino()
 // see helpers.pino_conf()
 //
-logger.info("ENV:Base Dir", ENV.BASE_DIR);
-logger.info("ENV.PATH_TO_SCRIPTS", ENV.PATH_TO_SCRIPTS);
+logger.info("ENV:Base Dir: " + ENV.BASE_DIR);
+logger.info("ENV.PATH_TO_SCRIPTS: " + ENV.PATH_TO_SCRIPTS);
 
 logger.info("Pino logger.info Testing! Pino is working with ES Modules.");
 logger.warn("Pino logger.warn Testing! Pino is working with ES Modules.");
