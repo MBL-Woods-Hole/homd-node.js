@@ -119,7 +119,7 @@ function show_phage_hits(gid, contig, species, predictor, h) {
     sorttable.makeSortable(document.getElementById("phage-table2"));
 }
 
-function show_anno_hits(obj, anno, gid) {
+function show_anno_hits(obj, anno, gid, hit_source) {
     var data = JSON.parse(obj);
     //console.log('data obj',data)
     //console.log('data[gid]',data[0])
@@ -163,9 +163,11 @@ function show_anno_hits(obj, anno, gid) {
     id_list = [];
     for (n in data) {
         //console.log('1',data[n])
-        //if (data[n].pid) {
-        id_list.push("'" + data[n].id + "'");
-        //}
+        if (hit_source === "mysql") {
+            id_list.push("'" + data[n].id + "'");
+        } else {
+            id_list.push("'" + data[n].pid + "'");
+        }
         // if(anno === 'bakta' || anno === 'prokka'){
         //           console.log('2',"'"+data[n].pid+"'")
         //           if(data[n].pid){
@@ -179,7 +181,7 @@ function show_anno_hits(obj, anno, gid) {
         //         }
     }
     //console.log('pid_list',pid_list)
-    var args = { id_list: id_list, anno: anno };
+    var args = { id_list: id_list, anno: anno, hit_source: hit_source };
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "advanced_anno_orf_search", true); // in routes_search.js
     xmlhttp.setRequestHeader("Content-type", "application/json");

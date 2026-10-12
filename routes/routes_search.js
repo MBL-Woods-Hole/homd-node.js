@@ -87,59 +87,11 @@ router.post(
     "/advanced_anno_orf_search",
     async function advanced_anno_orf_searchPOST(req, res) {
         logger.info("in advanced_anno_orf_search RESULTS");
-        logger.info(`body: ${req.body}`);
+        console.log("body", req.body);
         //logger.info('pidlist',req.body.pid_list)
         let anno = req.body.anno.toUpperCase();
         let q;
-        // if(anno =='BAKTA'){
-        //         //q = "SELECT core_contig_acc as acc,core_ID as pid,core_start as start,core_end as end,bakta_Product as product,bakta_Gene as gene,bakta_Length as laa,'0' as lna from `BAKTA_sub_prokka`.orf WHERE core_ID in ("+req.body.id_list+")"
-        //         q = "SELECT a.region as acc,"
-        //         q+= " a.attribute_locus_tag as pid,"
-        //         q+= " type,"
-        //         q+= " start,"
-        //         q+= " end,"
-        //         q+= " attribute_product as product,"
-        //         q+= " attribute_Gene as gene,"
-        //         q+= " length_aa as laa,"
-        //         q+= " '0' as lna"
-        //         q+= " FROM BAKTA.gff a"
-        //         q+= " LEFT JOIN BAKTA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
-        //         q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
-        //     }else{
-        //         //q = "SELECT accession as acc,type,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE protein_id in ("+req.body.pid_list+")"
-        //         //q = "SELECT region as acc,type,orf_id,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from `"+anno+"`.orf_gff WHERE orf_id in ("+req.body.id_list+")"
-        //         q = "SELECT a.region as acc,"
-        //         q+= " a.attribute_locus_tag as pid,"
-        //         q+= " type,"
-        //         q+= " start,"
-        //         q+= " end,"
-        //         q+= " attribute_product as product,"
-        //         q+= " attribute_Gene as gene,"
-        //         q+= " length_aa as laa,"
-        //         q+= " '0' as lna"
-        //         q+= " FROM PROKKA.gff a"
-        //         q+= " LEFT JOIN PROKKA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag"
-        //         q+= " WHERE a.attribute_locus_tag in ("+req.body.id_list+")"
-        //     }
-        // if (anno == "BAKTA") {
-        //             // no ffn seqs yet
-        //             q = "SELECT a.region as acc,";
-        //             q += " a.attribute_locus_tag as pid,";
-        //             q += " type,";
-        //             q += " start,";
-        //             q += " end,";
-        //             q += " attribute_product as product,";
-        //             q += " attribute_Gene as gene,";
-        //             q += " length_aa as laa,";
-        //             q += " '0' as lna";
-        //             q += " FROM " + anno + ".gff a";
-        //             q +=
-        //                 " LEFT JOIN " +
-        //                 anno +
-        //                 ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
-        //
-        //             q += " WHERE a.attribute_locus_tag in (" + req.body.id_list + ")";
-        //         } else {
+
         // PROKKA and NCBI
         q = "SELECT a.region as acc,";
         q += " a.attribute_locus_tag as pid,";
@@ -166,7 +118,12 @@ router.post(
             ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
 
         //q += " WHERE a.attribute_locus_tag in (" + req.body.id_list + ")";
-        q += " WHERE a.id in (" + req.body.id_list + ")";
+        if (req.body.hit_source === "mysql") {
+            q += " WHERE a.id in (" + req.body.id_list + ")";
+        } else {
+            q += " WHERE a.attribute_locus_tag in (" + req.body.id_list + ")";
+        }
+
         //}
 
         const rows = await queries.run_query(q, req, res);
@@ -489,6 +446,7 @@ router.post(
                 search_params:
                     "(Searches only whole words in `Gene` and `Gene Product`):",
                 gid_count: Object.keys(gid_count).length,
+                hit_source: "mysql",
                 total_hits: total_length,
                 max: helpers.format_long_numbers(allowed_max),
                 form_type: JSON.stringify(["annotations"]),
@@ -1143,6 +1101,7 @@ router.post(
                 phage_lookup: JSON.stringify({}),
                 phage_id_list: JSON.stringify([]),
 
+                hit_source: "grep",
                 gid_count: Object.keys(gid_count).length,
                 total_hits: total_length,
                 max: helpers.format_long_numbers(allowed_max),
