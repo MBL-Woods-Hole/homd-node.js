@@ -182,6 +182,7 @@ function show_anno_hits(obj, anno, gid, hit_source) {
     }
     //console.log('pid_list',pid_list)
     var args = { id_list: id_list, anno: anno, hit_source: hit_source };
+    console.log("args", args);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "advanced_anno_orf_search", true); // in routes_search.js
     xmlhttp.setRequestHeader("Content-type", "application/json");
