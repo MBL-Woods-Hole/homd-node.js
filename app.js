@@ -255,6 +255,7 @@ import CustomTaxa from "./routes/helpers/taxa_class.js";
 // Each Promise reads the file, then calls resolve with the result.
 // This array is passed to Promise.all(), which then calls the callback,
 // passing the array of results in the same order.
+console.log("ENV.PATH_TO_DATA", ENV.PATH_TO_DATA);
 const promises = [
     helpers.readFromFile(
         path.join(ENV.PATH_TO_DATA, C.taxon_lookup_fn),
@@ -265,6 +266,7 @@ const promises = [
         "json",
     ),
     //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
+
     helpers.readFromFile(
         path.join(ENV.PATH_TO_DATA, C.genome_lookup_fn),
         "json",
