@@ -168,27 +168,15 @@ function show_anno_hits(obj, anno, gid, hit_source) {
         } else {
             id_list.push("'" + data[n].pid + "'");
         }
-        // if(anno === 'bakta' || anno === 'prokka'){
-        //           console.log('2',"'"+data[n].pid+"'")
-        //           if(data[n].pid){
-        //            id_list.push("'"+data[n].pid+"'")
-        //           }
-        //         }else{  // ncbi and prokka
-        //           //console.log('2',"'"+data[n].orf_id+"'")
-        //           if(data[n].orf_id){
-        //            id_list.push("'"+data[n].orf_id+"'")
-        //           }
-        //         }
     }
     //console.log('pid_list',pid_list)
     var args = { id_list: id_list, anno: anno, hit_source: hit_source };
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "advanced_anno_orf_search", true); // in routes_search.js
+    xmlhttp.open("POST", "deep_anno_sql_search", true); // in routes_search.js
     xmlhttp.setRequestHeader("Content-type", "application/json");
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var resp_data = JSON.parse(xmlhttp.responseText);
-            //console.log('XXXadvanced_anno_orf_search', resp_data)
             if (resp_data.length == 0) {
                 html =
                     "<span style='float:right;'><a href='#' onclick=\"close_anno_info()\">close</a></span>";
