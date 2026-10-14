@@ -424,17 +424,17 @@ export const deep_anno_search = (anno, hit_source, id_list) => {
     q += " attribute_product as product,";
     q += " attribute_Gene as gene,";
     q += " length_aa as laa,";
-    if (anno === "BAKTA") {
-        q += " '0' as lna";
-        q += " FROM " + anno + ".gff_fullsearch a";
-    } else {
-        q += " length_na as lna";
-        q += " FROM " + anno + ".gff_fullsearch a";
-        q +=
-            " LEFT JOIN " +
-            anno +
-            ".ffn c on a.genome_id=c.genome_id and c.protein_id=a.attribute_locus_tag";
-    }
+    //if (anno === "BAKTA") {
+    //    q += " '0' as lna";
+    //   q += " FROM " + anno + ".gff_fullsearch a";
+    //} else {
+    q += " length_na as lna";
+    q += " FROM " + anno + ".gff_fullsearch a";
+    q +=
+        " LEFT JOIN " +
+        anno +
+        ".ffn c on a.genome_id=c.genome_id and c.protein_id=a.attribute_locus_tag";
+    //}
     q +=
         " LEFT JOIN " +
         anno +
