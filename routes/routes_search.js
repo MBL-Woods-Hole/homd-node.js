@@ -293,7 +293,7 @@ router.post(
 //
 router.post(
     "/advanced_site_search_anno_grep",
-    async function advanced_site_search_annoPOST(req, res) {
+    async function advanced_site_search_anno_grep(req, res) {
         logger.info("in advanced_site_search_grep - routes_search.js");
         // anno now includes prokka, ncbi and bakta
         console.log(req.body, "body");
@@ -315,33 +315,14 @@ router.post(
             pid,
             prod,
             gene,
+            dbid,
+            region,
             type;
         let tmp_obj;
 
         try {
-            //let datapath = path.join(ENV.PATH_TO_SEARCH,annoLower,"*"+annoUpper+"*")
-
-            //let filename = uuidv4();  //ENV.PATH_TO_TMP
-            //let filepath = path.join(ENV.PATH_TO_TMP, filename)
-            //let max_rows = C.grep_search_max_rows //see constants.js 50000
-
             let split_length = 6; // longer okay too
-            //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
 
-            //let args = ['-h','"'+searchText+'"',datapath]
-            // prokka|gca_000174175.1|acfu01000087.1|cds|ynba|gca_000174175.1_00001|inner membrane protein ynba|597|198|14|610
-
-            //// REGULAR GREP
-            //let args = ['-F','-h','-m '+(max_rows/5).toString(),'"'+searchText+'"',datapath]
-            //let grep_cmd_base = 'LC_ALL=C '+ENV.GREP_CMD
-            //let grep_cmd = grep_cmd_base + ' ' + args.join(' ')
-
-            // find ENV.PATH_TO_SEARCH -type f -name "homd_GREP_Search-PROKKA*" | parallel grep "exo"
-            ////// PARALLEL GREP
-            //let filenames = "*"+annoUpper+"*"
-            // GNU parallel:: if only one core (check with nproc)
-            //    use -j 1 to force the program to use only 1 job/core execution at any given moment. <-- DEV
-            //    if more than 1 core don't include the -j 1 tag <-- PROD
             let args,
                 grep_cmd_base,
                 fpaths = [];
@@ -381,10 +362,8 @@ router.post(
                 //row_array = rows.split('\n')
                 for (let n in row_array) {
                     if (row_array[n] != "") {
-                        //ncbi|gca_045159995.1|cp077160.1|kst12_00050|wyk98014.1|hypothetical protein|942|313|6825|7766
-                        //prokka|gca_045159905.1|cp077181.1||gca_045159905.1_00008|hypothetical protein|1371|456|6207|7577
-                        //0anno|1gid|2acc|3gene|4pid|5prod  //|6lna|7laa|8start|9stop
-                        //bakta|gca_000174175.1|acfu01000001.1||gca000174175_02365|hypothetical protein|178369|178515
+                        // ncbi|21|GCA_030450175.1|WKE53005.1|CDS|CP073095.1||ABC transporter ATP-binding protein|8475|9278
+                        // anno/db-id/gid/region/type/pid/gene/product/start/end   LENGTH:10
                         let pts = row_array[n].split("|");
                         //console.log('grep pts',pts)
                         if (
@@ -393,29 +372,34 @@ router.post(
                         ) {
                             //logger.info('pts',pts)
                             //                      if(pts[0] == 'bakta' || pts[0] == 'prokka'){
-                            let id_pts = pts[1].split("_");
-                            gid = (id_pts[0] + "_" + id_pts[1]).toUpperCase();
-                            //region = id_pts[2]  // not used
-                            type = pts[3];
-                            gene = pts[4];
-                            pid = pts[5];
-                            prod = pts[6];
+                            dbid = pts[1];
+                            gid = pts[2].toUpperCase();
+                            region = pts[3];
+                            type = pts[4];
+                            pid = pts[5].toUpperCase();
+
+                            gene = pts[6];
+
+                            prod = pts[7];
 
                             gid_count[gid] = 1;
                             //logger.info('LOOKup',C.genome_lookup[gid])
 
                             tmp_obj = {
+                                dbid: dbid,
                                 gid: gid,
                                 otid: "",
                                 hmt: "",
                                 species: "=>Genome Not Found in db<=",
                                 strain: "",
-                                acc: pts[2].toUpperCase(),
-                                gene: gene.toUpperCase(),
+                                region: region,
+                                gene: gene,
                                 pid: pid,
 
                                 prod: prod,
                                 type: type,
+                                start: pts[8],
+                                end: pts[9],
                             };
                             if (gid && Object.hasOwn(C.genome_lookup, gid)) {
                                 //if(gid){
@@ -491,7 +475,7 @@ router.post(
 
 router.post(
     "/advanced_site_search_anno_mysql",
-    async function advanced_site_search_anno_mysqlPOST(req, res) {
+    async function advanced_site_search_anno_mysql(req, res) {
         console.log("advanced_site_search_anno_mysql");
         console.log(req.body);
         //let search_type = req.body.anno_search_type

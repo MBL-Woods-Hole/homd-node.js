@@ -137,7 +137,7 @@ function show_anno_hits(obj, anno, gid, hit_source) {
         data[0].strain +
         "</center>";
     html +=
-        "<span style='float:right;'><a href='#' onclick=\"close_anno_info()\">close</a></span>";
+        "<span style='float:right;background:ivory;padding:10px;'><a href='#' onclick=\"close_anno_info()\">close</a></span>";
     html += "<br><table class='result-table'>";
     html +=
         "<tr><th>Accession</th><th>Type</th><th>Protein-ID</th> <th>Genome Viewer</th><th>NA<br>length/seq</th><th>AA<br>length/seq</th><th>Gene</th><th>Gene Product</th></tr>";
@@ -166,7 +166,7 @@ function show_anno_hits(obj, anno, gid, hit_source) {
         if (hit_source === "mysql") {
             id_list.push("'" + data[n].id + "'");
         } else {
-            id_list.push("'" + data[n].pid + "'");
+            id_list.push("'" + data[n].dbid + "'");
         }
     }
     //console.log('pid_list',pid_list)
@@ -179,7 +179,7 @@ function show_anno_hits(obj, anno, gid, hit_source) {
             var resp_data = JSON.parse(xmlhttp.responseText);
             if (resp_data.length == 0) {
                 html =
-                    "<span style='float:right;'><a href='#' onclick=\"close_anno_info()\">close</a></span>";
+                    "<span style='float:right;background:ivory;padding:10px;'><a href='#' onclick=\"close_anno_info()\">close</a></span>";
                 el.innerHTML = html + "<br>no data found";
                 el.style.display = "block";
                 return;

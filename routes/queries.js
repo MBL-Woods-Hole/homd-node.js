@@ -440,11 +440,11 @@ export const deep_anno_search = (anno, hit_source, id_list) => {
         anno +
         ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
 
-    if (hit_source === "mysql") {
-        q += " WHERE a.id in (" + id_list + ")";
-    } else {
-        q += " WHERE a.attribute_locus_tag in (" + id_list + ")";
-    }
+    //if (hit_source === "mysql") {
+    q += " WHERE a.id in (" + id_list + ")";
+    //} else {
+    //   q += " WHERE a.attribute_locus_tag in (" + id_list + ")";
+    //}
     return q;
 };
 export default router;
