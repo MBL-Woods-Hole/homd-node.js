@@ -362,8 +362,9 @@ router.post(
                 //row_array = rows.split('\n')
                 for (let n in row_array) {
                     if (row_array[n] != "") {
+                        // SEE grep_database_create.py in homd-data/search
                         // ncbi|21|GCA_030450175.1|WKE53005.1|CDS|CP073095.1||ABC transporter ATP-binding protein|8475|9278
-                        // anno/db-id/gid/region/type/pid/gene/product/start/end   LENGTH:10
+
                         let pts = row_array[n].split("|");
                         //console.log('grep pts',pts)
                         if (
@@ -377,9 +378,7 @@ router.post(
                             region = pts[3];
                             type = pts[4];
                             pid = pts[5].toUpperCase();
-
                             gene = pts[6];
-
                             prod = pts[7];
 
                             gid_count[gid] = 1;
@@ -744,22 +743,24 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
                 // SSE format requires "data: " prefix and two newlines at the end
                 count += 1;
                 let line_pts = line.split("|");
+                // SEE grep_database_create.py in homd-data/search
+                // anno/db-id/gid/region/type/pid/gene/product/start/end   LENGTH:10
                 if (line_pts.length === grep_search_line_length) {
                     console.log("line", line);
                     //res.write(`data: ${line}\n\n`);
-                    gid = line_pts[1].toUpperCase();
+                    dbid = line_pts[1];
+                    gid = line_pts[2].toUpperCase();
                     otid = C.genome_lookup[gid].otid;
                     hmt = helpers.make_otid_display_name(otid);
                     org = C.genome_lookup[gid].organism;
-                    region = line_pts[2].toUpperCase();
-                    type = line_pts[3];
-                    gene = line_pts[4];
-
+                    region = line_pts[3].toUpperCase();
+                    type = line_pts[4];
                     pid = line_pts[5].toUpperCase();
+                    gene = line_pts[6];
 
-                    prod = line_pts[6];
-                    start = line_pts[7];
-                    end = line_pts[8];
+                    prod = line_pts[7];
+                    start = line_pts[8];
+                    end = line_pts[9];
                     url = helpers.create_jbrowse_url(gid, region, start, end);
                     //console.log('gid',C.genome_lookup[gid])
                     payload = {
