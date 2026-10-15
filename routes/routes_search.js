@@ -662,6 +662,7 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
         full_cmd_str,
         fpaths = [],
         gid,
+        dbid,
         payload,
         start,
         end,
@@ -737,7 +738,7 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
         //console.log('DATA',data.toString(),'END DATA')
         const lines = data.toString().split("\n");
         //console.log('line count',lines.length)
-        let grep_search_line_length = 9;
+        let grep_search_line_length = 8;
         lines.forEach((line) => {
             if (line.startsWith(annoLower) && line.trim() !== "") {
                 // SSE format requires "data: " prefix and two newlines at the end
@@ -745,8 +746,8 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
                 let line_pts = line.split("|");
                 // SEE grep_database_create.py in homd-data/search
                 // anno/db-id/gid/region/type/pid/gene/product/start/end   LENGTH:10
-                if (line_pts.length === grep_search_line_length) {
-                    console.log("line", line);
+                if (line_pts.length >= grep_search_line_length) {
+                    //console.log("line", line);
                     //res.write(`data: ${line}\n\n`);
                     dbid = line_pts[1];
                     gid = line_pts[2].toUpperCase();
