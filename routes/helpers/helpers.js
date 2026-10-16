@@ -873,12 +873,12 @@ export const create_jbrowse_url = (gid, region, start, stop) => {
     // https://homd.org/jbrowse/?data=homd_V11.02_phage_1.2%2FGCA_938045525.1&loc=GCA_938045525.1%7CCALIAX010000009.1%3A1..30909&tracks=DNA%2Cprokka%2Cprokka_ncrna%2Cncbi%2Cncbi_ncrna%2Ccenote%2Cgenomad&highlight=
 
     let link, loc, hilite, tmp;
-    if (start[0] === "<") {
+    if (start && start[0] === "<") {
         start = parseInt(start.substring(1));
     } else {
         start = parseInt(start);
     }
-    if (stop[0] === ">") {
+    if (stop && stop[0] === ">") {
         stop = parseInt(stop.substring(1));
     } else {
         stop = parseInt(stop);
