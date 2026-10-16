@@ -121,7 +121,7 @@ function show_phage_hits(gid, contig, species, predictor, h) {
 
 function show_anno_hits(obj, anno, gid, hit_source) {
     var data = JSON.parse(obj);
-    //console.log('data obj',data)
+    console.log("data obj", data);
     //console.log('data[gid]',data[0])
     org = data[0].species;
 
@@ -137,7 +137,7 @@ function show_anno_hits(obj, anno, gid, hit_source) {
         data[0].strain +
         "</center>";
     html +=
-        "<span style='float:right;'><a href='#' onclick=\"close_anno_info()\">close</a></span>";
+        "<span style='float:right;background:ivory;padding:10px;'><a href='#' onclick=\"close_anno_info()\">close</a></span>";
     html += "<br><table class='result-table'>";
     html +=
         "<tr><th>Accession</th><th>Type</th><th>Protein-ID</th> <th>Genome Viewer</th><th>NA<br>length/seq</th><th>AA<br>length/seq</th><th>Gene</th><th>Gene Product</th></tr>";
@@ -166,33 +166,20 @@ function show_anno_hits(obj, anno, gid, hit_source) {
         if (hit_source === "mysql") {
             id_list.push("'" + data[n].id + "'");
         } else {
-            id_list.push("'" + data[n].pid + "'");
+            id_list.push("'" + data[n].dbid + "'");
         }
-        // if(anno === 'bakta' || anno === 'prokka'){
-        //           console.log('2',"'"+data[n].pid+"'")
-        //           if(data[n].pid){
-        //            id_list.push("'"+data[n].pid+"'")
-        //           }
-        //         }else{  // ncbi and prokka
-        //           //console.log('2',"'"+data[n].orf_id+"'")
-        //           if(data[n].orf_id){
-        //            id_list.push("'"+data[n].orf_id+"'")
-        //           }
-        //         }
     }
     //console.log('pid_list',pid_list)
     var args = { id_list: id_list, anno: anno, hit_source: hit_source };
-    console.log("args", args);
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "advanced_anno_orf_search", true); // in routes_search.js
+    xmlhttp.open("POST", "deep_anno_sql_search", true); // in routes_search.js
     xmlhttp.setRequestHeader("Content-type", "application/json");
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             var resp_data = JSON.parse(xmlhttp.responseText);
-            //console.log('XXXadvanced_anno_orf_search', resp_data)
             if (resp_data.length == 0) {
                 html =
-                    "<span style='float:right;'><a href='#' onclick=\"close_anno_info()\">close</a></span>";
+                    "<span style='float:right;background:ivory;padding:10px;'><a href='#' onclick=\"close_anno_info()\">close</a></span>";
                 el.innerHTML = html + "<br>no data found";
                 el.style.display = "block";
                 return;

@@ -7,6 +7,7 @@
   padding:10px;
   border:1px solid red;
 }
+
 .search-form{
    padding:30px;
    margin-top:20px;
@@ -83,6 +84,12 @@
    height: 50px;
    overflow:auto;
 }
+.form-control-box{
+    background:#c5c6d0;
+    color:black;
+    padding:10px 100px;
+    border:1px solid black;
+}
 </style>
 <% var cfg=JSON.parse(config) %>
 <%- include('../../partials/header_html'); %>
@@ -106,20 +113,19 @@
 
         </td>
       </tr>
-      <tr>
-        <td>
+      </table>
+      <div class='form-control-box'>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='adv_search_text' id='adv_search_text' value='' maxlength='80' size='50' /> 
           <!-- <input type='button' class='submit-button' id='submit-button-tax' name='submit-button-tax' value='Submit' onclick="validate_search_form('taxNgenomes')" \> -->
           <button id="submit-button-tax" type="button" class='submit-button'>Submit</button>
-        </td>
-      </tr>
+        </div>
       
-      </table>
+      
      
       
       
-      
+      <!-- ANNOTATIONS -->
       
   </form>
    <form id='adv-search-form-anno_mysql'  class='search-form' method='POST' action='advanced_site_search_anno_mysql'>  <!~~ advanced_site_search_annotations ~~>
@@ -154,62 +160,31 @@
         <b>(SQL) EventSource Streaming</b> (Experimental Search - whole word only)
         </td>
       </tr>
-   
-
-      <tr><td>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     </table>
+     
+      <div class='form-control-box'>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <input type='radio' class='anno_cb_mysql' checked id='prokka_cb_anno_mysql' name='anno' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;
       <input type='radio' class='anno_cb_mysql' id='ncbi_cb_mysql' name='anno' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;
         <input type='radio' class='anno_cb_mysql' id='bakta_cb_mysql' name='anno' value='bakta'  > 
         <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>&nbsp;&nbsp;&nbsp;
-        
-        </td>
-      </tr>
-      <tr>
-        <td>
+      <br>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='search_text' id='search_text_anno_mysql' value='' maxlength='80' size='50' /> 
-          <!~~ <input type='button' class='submit-button' id='submit-button-anno' name='submit-button-anno' value='Submit' onclick="validate_search_form('anno_grep')" \>
           <button id="submit-button-mysql" type="button" class='submit-button'>Submit</button>
-        </td>
-      </tr>
+        </div>
       
-      </table>
-     
       
       <input type="hidden" id="refreshed" value="no">
-      
-     
       
   </form>
   
   
   
- <!-- 
-<div id='' class=''>
- <b>EventSource Streaming</b> (Experimental) 
- <br>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_stream' checked id='prokka_cb_stream' name='anno_cb_stream' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_stream' id='ncbi_cb_stream' name='anno_cb_stream' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;
-        <input type='radio' class='anno_cb_stream' id='bakta_cb_stream' name='anno_cb_stream' value='bakta'  > 
-        <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>&nbsp;&nbsp;&nbsp;
-<br>
- Stream Enter Search Text: 
-          <input type="text" class='search_text' placeholder="Search Site.." name='search_text' id='search_text_stream' value='' maxlength='80' size='50' /> 
-          <!~~ <input type='button' class='submit-button' id='submit-button-stream' name='submit-button-stream' value='Submit' onclick="validate_search_form('anno_grep')" \>
-          <button id="submit-button-stream" type="button" class='submit-button'>Submit</button>
-    
- </div>
- -->
- 
+
   
-  
-  
-  
-  
+     <!-- PHAGE -->
   
   
   
@@ -225,16 +200,15 @@
       </tr>
       <tr>
       </tr>
-      <tr>
-        <td>
+      </table>
+      <div class='form-control-box'>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Site.." name='search_text_phage_grep' id='search_text_phage_grep' value='' maxlength='80' size='50' /> 
           <!-- <input type='button' class='submit-button' id='submit-button-phage' name='submit-button-phage' value='Submit' onclick="validate_search_form('phage_grep')" \> -->
            <button id="submit-button-phage" type="button" class='submit-button'>Submit</button>
-        </td>
-      </tr>
+        </div>
       
-      </table>
+      
      
       
       <input type="hidden" id="refreshed" value="no">

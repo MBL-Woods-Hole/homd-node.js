@@ -399,12 +399,52 @@ export const get_phage_fasta = (search_id_list) => {
 export const get_phage_from_ids_noseqs = (search_id_list) => {
     // always NCBI for taxon description
     let q = "SELECT search_id,genome_id,contig,predictor,start,end,";
-
     q += "accession,";
     q += "description";
-
     q += " from phage_search where search_id in (" + search_id_list + ")";
     return q;
 };
 
+export const search_sql_stream = (anno, text) => {
+    let q =
+        "SELECT id,genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,region,type,start,end";
+    q += " FROM " + anno + ".gff_fullsearch";
+    q +=
+        " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
+        text +
+        "\"' IN BOOLEAN MODE);";
+    return q;
+};
+export const deep_anno_search = (anno, hit_source, id_list) => {
+    let q = "SELECT a.region as acc,";
+    q += " a.attribute_locus_tag as pid,";
+    q += " type,";
+    q += " start,";
+    q += " end,";
+    q += " attribute_product as product,";
+    q += " attribute_Gene as gene,";
+    q += " length_aa as laa,";
+    //if (anno === "BAKTA") {
+    //    q += " '0' as lna";
+    //   q += " FROM " + anno + ".gff_fullsearch a";
+    //} else {
+    q += " length_na as lna";
+    q += " FROM " + anno + ".gff_fullsearch a";
+    q +=
+        " LEFT JOIN " +
+        anno +
+        ".ffn c on a.genome_id=c.genome_id and c.protein_id=a.attribute_locus_tag";
+    //}
+    q +=
+        " LEFT JOIN " +
+        anno +
+        ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
+
+    //if (hit_source === "mysql") {
+    q += " WHERE a.id in (" + id_list + ")";
+    //} else {
+    //   q += " WHERE a.attribute_locus_tag in (" + id_list + ")";
+    //}
+    return q;
+};
 export default router;
