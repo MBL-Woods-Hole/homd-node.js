@@ -1196,7 +1196,7 @@ router.get("/explorer", async function explorer_get(req, res) {
 
     let args;
 
-    const glist = Object.values(C.genome_lookup) || {};
+    const glist = Object.values(C.genome_lookup) || [];
 
     glist.sort((a, b) => {
         return helpers.compareStrings_alpha(a.organism, b.organism);
