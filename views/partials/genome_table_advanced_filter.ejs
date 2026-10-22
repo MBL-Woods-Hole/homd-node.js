@@ -314,17 +314,9 @@ and (min-width : 1824px) {
         
         <span class='adv-filter-title'>Search This Table:</span>
         <span class="">
-          <select class='adv_dropdown' id='field_select' value='<%= fltr.text.field %>' class="" name='field' onclick='adv_update_sb()'>
-            <optgroup>
-            <option value='all'>All Fields</option>
-            <option value='genomeid'>Genome-ID</option>
-            <option value='taxid'>Taxon-ID</option>
-            <option value='organism'>Organism</option>
-            <option value='strain'>Strain</option>
-            </optgroup>
-          </select>
+          
           <span class='button' onclick='adv_clear_search_txt()'>Clear</span>
-          <input  id='gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='adv_dropdown' name='txt_srch' maxlength='100' size='25' onclick='adv_update_sb()'>
+          <input  id='adv_gene_srch_text' type='text' placeholder="Search.." value='<%= fltr.text.txt_srch %>' class='adv_dropdown' name='txt_srch' maxlength='100' size='25' onclick='adv_update_sb()'>
         </span>
         
     </td>
