@@ -541,13 +541,13 @@ function adv_update_sb() {
     btn.innerHTML = "** APPLY **";
 }
 function adv_clear_search_txt() {
-    txt = document.getElementById("gene_srch_text");
-    dd = document.getElementById("field_select");
-    if (txt.value !== "" && dd.value !== "all") {
+    txt = document.getElementById("adv_gene_srch_text");
+    //console.log('txt',txt)
+
+    if (txt.value !== "") {
         adv_update_sb();
     }
     txt.value = "";
-    dd.value = "all";
 }
 function phylum_submit(phylum) {
     console.log("phylum", phylum);
