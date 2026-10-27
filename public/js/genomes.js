@@ -533,12 +533,14 @@ function update_sb() {
 }
 function adv_update_sb() {
     btn = document.getElementById("adv_form_btn");
-    btn.style.color = "orange";
-    btn.style.background = "black";
+    btn.style.color = "black";
+    btn.style.background = "lightgreen";
+    btn.style.border = "1px solid black";
     btn.style.cursor = "pointer";
     btn.style.fontSize = "14px";
-    btn.style.display = "inline-block";
-    btn.innerHTML = "** APPLY **";
+    // btn.style.display = "inline-block";
+    btn.style.visibility = "visible";
+    btn.innerHTML = "** Apply Updated Filter to Table **";
 }
 function adv_clear_search_txt() {
     txt = document.getElementById("adv_gene_srch_text");
