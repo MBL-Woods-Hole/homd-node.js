@@ -8,6 +8,7 @@
     "homd-node": "a_util.js"
   },
   "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
     "access-log": "^0.4.1",
     "async": "^3.2.3",
     "better-sqlite3": "^13.0.3",

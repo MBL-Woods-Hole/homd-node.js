@@ -17,6 +17,7 @@ import * as helpers from "./helpers/helpers.js";
 import * as helpers_taxa from "./helpers/helpers_taxa.js";
 import * as helpers_genomes from "./helpers/helpers_genomes.js";
 import * as queries from "./queries.js";
+import { promisePool } from "../config/database.js";
 const upload = multer({ dest: ENV.PATH_TO_TMP });
 //import pino from 'pino';
 import logger from "../config/app_config.js";
@@ -670,7 +671,8 @@ router.get(
 
 router.post("/anno_search_data", async (req, res) => {
     // Download all Annotation Hits/ table and fasta
-    //logger.info('anno_search_data req body',req.body)
+    logger.info("IN downloads/anno_search_data");
+    console.log("req.body", JSON.stringify(req.body, null, 2));
     let type = req.body.type; // browser, text or excel
     let anno = req.body.anno; // ncbi prokka or bakta
     let anno_cap = anno.toUpperCase();
@@ -685,17 +687,18 @@ router.post("/anno_search_data", async (req, res) => {
     let dt = helpers.get_today_obj();
     //if anno is prokka or ncbi us .map to get all the pids from idlist
     // if anno == bakta ??
-    let selected_gids = Object.keys(id_list);
+    //  let selected_gids = Object.keys(id_list);
     let pid_list = [],
         unique_pidlst,
         lst,
         head_text_array;
-    for (let n in selected_gids) {
-        lst = id_list[selected_gids[n]].map((el) => "'" + el.pid + "'");
-
-        pid_list = pid_list.concat(lst);
-    }
-    unique_pidlst = [...new Set(pid_list)];
+    //     for (let n in selected_gids) {
+    //         lst = id_list[selected_gids[n]].map((el) => "'" + el.pid + "'");
+    //
+    //         pid_list = pid_list.concat(lst);
+    //     }
+    //     unique_pidlst = [...new Set(pid_list)];
+    unique_pidlst = id_list.map((el) => "'" + el + "'");
     //logger.info('unique_lst',unique_pidlst)
     if (anno.toUpperCase() === "BAKTA") {
         if (format === "fasta_aa") {
@@ -832,6 +835,24 @@ router.post("/anno_search_data", async (req, res) => {
         }
     }
 
+    //     if(type === 'browser'){
+    //          //stream_query_to_browser(req,res,q)
+    //          console.log('MyQuery for plain streaming:',q)
+    //          res.render("pages/search/search_stream_results_plain", {
+    //             title: "HOMD :: Search Results",
+    //             pgname: "", // for AboutThisPage
+    //             config: JSON.stringify(ENV),
+    //             ver_info: JSON.stringify(C.version_information),
+    //             //q: JSON.stringify(q),
+    //             search_text: search_text,
+    //             anno: anno,
+    //             type: type,
+    //             format: format,
+    //             pids: JSON.stringify(unique_pidlst),
+    //
+    //          });
+    //          return;
+    //     }else{
     if (format.slice(0, 5) === "fasta") {
         // Set response headers for file download
         //res.setHeader('Content-Type', 'text/plain');
@@ -866,6 +887,7 @@ router.post("/anno_search_data", async (req, res) => {
         res.send(result_text);
         res.end();
     }
+    //}
 });
 ////
 router.post("/anno_data_by_gid", async (req, res) => {
@@ -1311,7 +1333,101 @@ router.post(
         res.end();
     },
 );
+//
+router.get(
+    "/get_download_sql_stream",
+    async function get_download_sql_stream(req, res) {
+        console.log("IN get_download_sql_stream");
+        console.log(req.query);
+        let search_text = req.query.search;
+        let anno = req.query.anno;
+        let output = req.query.output; // type= browser,text,excel
+        let format = req.query.format; // fasta, table
+        let pids = JSON.parse(req.query.pids);
+        console.log("pids", pids[0], pids);
+        //const q // = req.query.q;
+        //let q = "SELECT genome_id as gid,region as acc,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from PROKKA.orf WHERE protein_id in ('GCA_000158275.2_00154','GCA_000158275.2_00199','GCA_000158275.2_01093','GCA_000158275.2_01104','GCA_000158275.2_01587','GCA_938028245.1_00836','GCA_938028245.1_01095')"
+        let q = queries.search_sql_stream(anno, search_text);
+        //let q = "SELECT genome_id as gid,region as acc,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from PROKKA.orf"
+        let dt = helpers.get_today_obj();
+        let allowed_max = C.grep_search_max_rows;
+        let gid, payload, start, end, region, url, hmt;
+        let gid_count = {},
+            tmp_obj = {},
+            otid,
+            species,
+            strain,
+            conn;
 
+        console.log("IN=> get_download_sql_stream", q);
+
+        res.setHeader("Content-Type", "text/event-stream");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Connection", "keep-alive");
+
+        res.flushHeaders();
+
+        try {
+            conn = await promisePool.getConnection();
+            const stream = conn.connection.query(q).stream();
+            let cnt = 0;
+            let r = { x: "XX" };
+            res.write(
+                `data: ${JSON.stringify({ head: "Genome-ID\tHMT-ID\tOrganism\tProtein-ID\tGene\tProduct" })}\n\n`,
+            );
+            // 5. Listen to stream events using stream.on()
+            stream.on("data", (row) => {
+                // Format data specifically for EventSource protocol
+                res.write(`data: ${JSON.stringify(row)}\n\n`);
+            });
+
+            stream.on("end", () => {
+                // Let the client know the stream is finished
+                res.write("event: end\ndata: Stream finished\n\n");
+                res.end();
+            });
+
+            stream.on("error", (err) => {
+                console.error("Stream error:", err);
+                res.write(
+                    `event: error\ndata: ${JSON.stringify({ message: err.message })}\n\n`,
+                );
+                res.end();
+            });
+        } catch (error) {
+            console.error("Database connection error:", error);
+            res.status(500).end();
+        } finally {
+            // 6. Always release the connection back to the pool when the client disconnects
+            req.on("close", () => {
+                if (conn) conn.release();
+            });
+        }
+
+        //}catch(e){
+        //      logger.error(e);
+        //}
+    },
+);
+
+///////////////////////////////////////////
+
+// function stream_query_to_browser(req, res, query) {
+//     console.log("IN /download/stream_query_to_browser");
+//     console.log(query);
+//
+//
+//     res.render("pages/search/search_stream_results_plain", {
+//         title: "HOMD :: Search Results",
+//         pgname: "", // for AboutThisPage
+//         config: JSON.stringify(ENV),
+//         ver_info: JSON.stringify(C.version_information),
+//         q: JSON.stringify(query)
+//
+//     });
+// };
+//
+//
 function create_phage_search_table(sql_rows, header_array, search_term) {
     let gid, otid, hmt, lineage, strain;
     let text = '::Search String: "' + search_term + '"\n';
