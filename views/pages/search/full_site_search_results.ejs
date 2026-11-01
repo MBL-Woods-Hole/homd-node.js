@@ -253,16 +253,16 @@ table.sortable thead {
                <center><div class='outlier-zero'>Zero Hits (Selected Annotation: <%= anno.toUpperCase() %>)</div></center>
          <% }else{ %>
             <div id='download-options' style='float:right;font-size:12px;'>
-                  <form name='' method='POST' action='/download/anno_search_data'>
-                  <input type="hidden" id="anno_ids" name="anno_ids" value='<%= JSON.stringify(pid_list) %>'>
+              <form name='' method='POST' action='/download/anno_search_data'>
+                  
                   <!-- obj.map((el) =>  el.pid) -->
                   <input type="hidden" id="anno" name="anno" value='<%= anno %>'>
                   <input type='hidden' name='search_text' value='<%= search_text %>' \>
                   <strong>Format:</strong>
-                  <input type="radio" checked name="format" value='csv'> [Table]&nbsp;&nbsp;
-                  <% if(anno != 'bakta'){ %>
-                    <input type="radio"         name="format" value='fasta_na'> [NA Fasta File]&nbsp;&nbsp;
-                  <% } %>
+                  <input type="radio" checked name="format" value='table'> [Table]&nbsp;&nbsp;
+                  
+                  <input type="radio"         name="format" value='fasta_na'> [NA Fasta File]&nbsp;&nbsp;
+                  
                   <input type="radio"         name="format" value='fasta_aa'> [AA Fasta File]&nbsp;&nbsp;
                   
                   <input class='pill pill-brown' type="submit" id="submit" name="submit" value='Download all Hits' >&nbsp;&nbsp;
@@ -272,7 +272,7 @@ table.sortable thead {
                   <input type="radio"         name="type" value='text'> [Text]&nbsp;&nbsp;
                   <input type="radio"         name="type" value='excel'> [Excel]&nbsp;&nbsp;
                   
-                  </form>
+              </form>
             </div>
              <div id='anno-div' class='search-box'>
              <span class='search-text-div'>Selected Annotation: <%= anno.toUpperCase() %></span>
@@ -296,7 +296,7 @@ table.sortable thead {
                        <%= anno_list2[gid].length %>
                        <% let giddata = anno_list2[gid] %>
                        <!-- in search.js -->
-                       <small>(<a href='#' onclick="show_anno_hits('<%= JSON.stringify(anno_list2[gid]) %>','<%= anno %>','<%= gid %>','<%= hit_source %>')">view hits</a>)</small>
+                       <small>(<a href='#' onclick="show_anno_hits2('<%= anno %>','<%= gid %>','<%= search_text %>','<%= hit_source %>')">view hits</a>)</small>
                 </td>
                 
                 <td nowrap class='center'>

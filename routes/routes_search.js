@@ -86,22 +86,30 @@ function execPromise(cmd, args, max) {
 router.post(
     "/deep_anno_sql_search",
     async function deep_anno_sql_searchPOST(req, res) {
+        console.log("IN=> deep_anno_sql_searchPOST");
         console.log("body", req.body);
         //logger.info('pidlist',req.body.pid_list)
-        console.log("id.list", req.body.id_list);
+
         let annoUpper = req.body.anno.toUpperCase();
 
-        let q = queries.deep_anno_search(
+        // let q = queries.deep_anno_search(
+        //             annoUpper,
+        //             req.body.hit_source,
+        //             req.body.id_list,
+        //         );
+        let q = queries.deep_anno_search2(
             annoUpper,
-            req.body.hit_source,
-            req.body.id_list,
+            req.body.gid,
+            req.body.search_text,
         );
-
-        console.log("IN=> deep_anno_sql_searchPOST", q);
-
+        console.log(q);
+        let data = {};
+        data.species = C.genome_lookup[req.body.gid].organism;
+        data.strain = C.genome_lookup[req.body.gid].strain;
+        data.gid = req.body.gid;
         const rows = await queries.run_query(q, req, res);
-
-        res.send(JSON.stringify(rows));
+        data.rows = rows;
+        res.send(JSON.stringify(data));
     },
 );
 //

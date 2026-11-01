@@ -118,7 +118,209 @@ function show_phage_hits(gid, contig, species, predictor, h) {
     el.style.display = "block";
     sorttable.makeSortable(document.getElementById("phage-table2"));
 }
+function show_anno_hits2(anno, gid, search_text, hit_source) {
+    console.log("anno", anno);
+    console.log("gid", gid);
+    console.log("search_text", search_text);
+    console.log("hit_source", hit_source);
+    var el = document.getElementById("anno-result");
+    el.style.display = "none";
+    //console.log('org',org)
 
+    annobox = document.getElementById("anno-div");
+    // selected_row = document.getElementById(gid);
+    //
+    //     allrows = document.getElementsByClassName("anno-row");
+    //     tblrows = document.getElementById("anno-table").rows;
+    //     //console.log('rowcount-tblrows',tblrows.length)
+    //     //console.log('rowcount-allrows',allrows.length)
+    //
+    //     for (n in allrows) {
+    //         //console.log('allrows[n]',n,allrows[n])
+    //         if (n <= allrows.length) {
+    //             allrows[n].style.background = "lightgreen";
+    //         }
+    //     }
+    console.log("here1");
+    // selected_row.style.background = "white";
+    //annobox.style.padding = "10px";
+    //annobox.style.height = "400px";
+    var args = {
+        gid: gid,
+        anno: anno,
+        hit_source: hit_source,
+        search_text: search_text,
+    };
+    var xmlhttp = new XMLHttpRequest();
+    console.log("here3");
+    xmlhttp.open("POST", "deep_anno_sql_search", true); // in routes_search.js
+    xmlhttp.setRequestHeader("Content-type", "application/json");
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var resp_data = JSON.parse(xmlhttp.responseText);
+            if (resp_data.length == 0) {
+                html =
+                    "<span style='float:right;background:ivory;padding:10px;'><a href='#' onclick=\"close_anno_info()\">close</a></span>";
+                el.innerHTML = html + "<br>no data found";
+                el.style.display = "block";
+                return;
+            }
+            let sqlrows = resp_data.rows;
+            let species = resp_data.species;
+            let strain = resp_data.strain;
+            let gid = resp_data.gid;
+
+            var html =
+                "<center>" +
+                gid +
+                " | <i>" +
+                species +
+                "</i> | " +
+                strain +
+                "</center>";
+            html +=
+                "<span style='float:right;background:ivory;padding:10px;'><a href='#' onclick=\"close_anno_info()\">close</a></span>";
+            html += "<br><table class='result-table'>";
+            html +=
+                "<tr><th>Accession</th><th>Type</th><th>Protein-ID</th> <th>Genome Viewer</th><th>NA<br>length/seq</th><th>AA<br>length/seq</th><th>Gene</th><th>Gene Product</th></tr>";
+
+            for (n in sqlrows) {
+                //console.log('rdata[n]',n,resp_data[n])
+                if (sqlrows[n].start[0] === "<") {
+                    start = parseInt(sqlrows[n].start.substring(1));
+                } else {
+                    start = parseInt(sqlrows[n].start);
+                }
+                if (sqlrows[n].end[0] === ">") {
+                    end = parseInt(sqlrows[n].end.substring(1));
+                } else {
+                    end = parseInt(sqlrows[n].end);
+                }
+                if (start > end) {
+                    tmp = end;
+                    end = start;
+                    start = tmp;
+                }
+                locstart = start - 500;
+                locstop = end + 500;
+                if (locstart < 1) {
+                    locstart = 1;
+                }
+                let db = anno + "_" + gid; // line_gi
+                seqacc = sqlrows[n].region;
+                //seqacc = data[n].acc.replace('_','|')
+                let loc =
+                    seqacc +
+                    ":" +
+                    locstart.toString() +
+                    ".." +
+                    locstop.toString();
+                let highlight =
+                    seqacc + ":" + start.toString() + ".." + end.toString();
+
+                html += "<tr>";
+                html +=
+                    "<td><a href='https://www.ncbi.nlm.nih.gov/nuccore/" +
+                    sqlrows[n].region +
+                    "' target='_blank'>" +
+                    sqlrows[n].region +
+                    "</a></td>";
+                if (sqlrows[n].type) {
+                    html += "<td>" + sqlrows[n].type + "</td>";
+                } else {
+                    html += "<td></td>"; // AA length
+                }
+                if (anno === "ncbi") {
+                    html +=
+                        "<td><a href='https://www.ncbi.nlm.nih.gov/protein/" +
+                        sqlrows[n].pid +
+                        "' target='_blank'>" +
+                        sqlrows[n].pid +
+                        "</a></td>";
+                } else {
+                    //console.log('/genome/open_ftp_file/'+gid)
+                    //let line = "<a href='/genome/open_ftp_file/"+gid+".faa' target='_blank'>"+resp_data[n].pid+"</a>"
+                    let line =
+                        "<a href='/genome/open_ftp_file?prokka_pid=" +
+                        sqlrows[n].pid +
+                        "' target='_blank'>" +
+                        sqlrows[n].pid +
+                        "</a>";
+                    // <a class='link' href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>16S rRNA Gene Tree
+                    //console.log(line)
+                    html += "<td>" + line + "</td>";
+                }
+
+                html += "<td class='center'>";
+                //in genomes.js open_jbrowse(value, page, gc='', contig='',  annotation='', loc='0', hilit='0'){
+                html +=
+                    " <a title='JBrowse/Genome Viewer:" +
+                    gid +
+                    "' href='#' onclick=\"open_jbrowse('" +
+                    gid +
+                    "','anno_table','','','" +
+                    anno +
+                    "','" +
+                    loc +
+                    "','" +
+                    highlight +
+                    "')\" >open</a>";
+                html += "</td>"; //  JB)
+                if (!sqlrows[n].lna || sqlrows[n].lna == "0") {
+                    html += "<td></td>"; // AA length
+                } else {
+                    html += "<td nowrap class='center'>" + sqlrows[n].lna;
+                    html +=
+                        " [<a title='Nucleic Acid' href='#' onclick=\"get_AA_NA_seq('na','" +
+                        sqlrows[n].pid +
+                        "','" +
+                        db +
+                        "','" +
+                        sqlrows[n].region +
+                        "','" +
+                        species +
+                        "','" +
+                        sqlrows[n].product +
+                        "','" +
+                        gid +
+                        "')\"><b>NA</b></a>]";
+                    html += "</td>"; // NA length
+                }
+                if (!sqlrows[n].laa || sqlrows[n].laa == "0") {
+                    html += "<td></td>"; // AA length
+                } else {
+                    html += "<td nowrap class='center'>" + sqlrows[n].laa;
+                    html +=
+                        " [<a title='Amino Acid' href='#' onclick=\"get_AA_NA_seq('aa','" +
+                        sqlrows[n].pid +
+                        "','" +
+                        db +
+                        "','" +
+                        sqlrows[n].acc +
+                        "','" +
+                        species +
+                        "','" +
+                        sqlrows[n].product +
+                        "','" +
+                        gid +
+                        "')\"><b>AA</b></a>]";
+                    html += "</td>"; // AA length
+                }
+
+                html += "<td>" + sqlrows[n].gene + "</td>";
+                html += "<td>" + sqlrows[n].product + "</td>";
+                html += "</tr>";
+            } // end for
+            html += "</table>";
+            //newbox.innerHTML = html
+            el.innerHTML = html;
+            el.style.display = "block";
+        }
+        console.log("here2");
+    };
+    console.log("here4");
+    xmlhttp.send(JSON.stringify(args));
+}
 function show_anno_hits(obj, anno, gid, hit_source) {
     var data = JSON.parse(obj);
     console.log("data obj", data);

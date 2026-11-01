@@ -415,36 +415,45 @@ export const search_sql_stream = (anno, text) => {
         "\"' IN BOOLEAN MODE);";
     return q;
 };
-export const deep_anno_search = (anno, hit_source, id_list) => {
-    let q = "SELECT a.region as acc,";
-    q += " a.attribute_locus_tag as pid,";
-    q += " type,";
-    q += " start,";
-    q += " end,";
-    q += " attribute_product as product,";
-    q += " attribute_Gene as gene,";
-    q += " length_aa as laa,";
-    //if (anno === "BAKTA") {
-    //    q += " '0' as lna";
-    //   q += " FROM " + anno + ".gff_fullsearch a";
-    //} else {
-    q += " length_na as lna";
+export const deep_anno_search2 = (anno, gid, search_text) => {
+    let q =
+        "SELECT a.id,a.genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,a.region,type,start,end,";
+    q += " length_aa as laa,length_na as lna";
     q += " FROM " + anno + ".gff_fullsearch a";
     q +=
         " LEFT JOIN " +
         anno +
         ".ffn c on a.genome_id=c.genome_id and c.protein_id=a.attribute_locus_tag";
-    //}
     q +=
         " LEFT JOIN " +
         anno +
         ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
+    q +=
+        " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
+        search_text +
+        "\"' IN BOOLEAN MODE) AND a.genome_id='" +
+        gid +
+        "';";
+    return q;
+};
 
-    //if (hit_source === "mysql") {
-    q += " WHERE a.id in (" + id_list + ")";
-    //} else {
-    //   q += " WHERE a.attribute_locus_tag in (" + id_list + ")";
-    //}
+export const fasta_download = (ext, anno, search_text) => {
+    let q =
+        "SELECT g.id,g.genome_id as gid,attribute_product as product,attribute_gene as gene,";
+    q += " attribute_locus_tag as pid,g.region,type,start,end,";
+    q += " UNCOMPRESS(seq_compressed) AS sequence";
+    q += " FROM " + anno + ".gff_fullsearch g";
+    q +=
+        " JOIN " +
+        anno +
+        "." +
+        ext +
+        " s on (s.protein_id=g.attribute_locus_tag and s.region=g.region)";
+    q +=
+        " WHERE MATCH(attribute_product,attribute_gene) AGAINST('" +
+        search_text +
+        "' IN BOOLEAN MODE)";
+
     return q;
 };
 export default router;

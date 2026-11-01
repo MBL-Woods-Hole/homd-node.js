@@ -672,13 +672,13 @@ router.get(
 router.post("/anno_search_data", async (req, res) => {
     // Download all Annotation Hits/ table and fasta
     logger.info("IN downloads/anno_search_data");
-    console.log("req.body", JSON.stringify(req.body, null, 2));
+    console.log("anno_search_data req.body", JSON.stringify(req.body, null, 2));
     let type = req.body.type; // browser, text or excel
     let anno = req.body.anno; // ncbi prokka or bakta
     let anno_cap = anno.toUpperCase();
     let search_text = req.body.search_text;
-    let format = req.body.format; // csv or fasta
-    let id_list = JSON.parse(req.body.anno_ids);
+    let format = req.body.format; // table or fasta
+    //let id_list = JSON.parse(req.body.anno_ids);
     //logger.info('id_list length',id_list.length)
     //logger.info('anno',anno)
     //logger.info('type',type)
@@ -698,196 +698,214 @@ router.post("/anno_search_data", async (req, res) => {
     //         pid_list = pid_list.concat(lst);
     //     }
     //     unique_pidlst = [...new Set(pid_list)];
-    unique_pidlst = id_list.map((el) => "'" + el + "'");
+    //unique_pidlst = id_list.map((el) => "'" + el + "'");
     //logger.info('unique_lst',unique_pidlst)
-    if (anno.toUpperCase() === "BAKTA") {
-        if (format === "fasta_aa") {
-            type = "text";
-            q = "SELECT CONCAT('>BAKTA | ',a.region,' | ', a.genome_id,' | ',";
-            q +=
-                " a.attribute_locus_tag,' | ',start,'..',end,' | length:',b.length_aa) AS defline,";
-            q += " UNCOMPRESS(seq_compressed) as sequence";
-            q += " FROM BAKTA.gff a";
-            q +=
-                " JOIN BAKTA.faa b  on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
-            q += " WHERE a.attribute_locus_tag in (" + unique_pidlst + ")";
-            //head_text_array = ['core_ID','Genome_ID','Contig','BAKTA','seq_length']
-        } else if (format === "fasta_na") {
-            // error  there is no bakta na seqs
-            res.send("Error::BAKTA doesn't have nucleotide (na) sequences.");
-            res.end();
-            return;
-        } else {
-            // bakta table (everthing except seqs)
-            q =
-                "SELECT genome_id as gid,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as end,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,";
-            q +=
-                " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef";
-            q +=
-                " from `BAKTA_sub_prokka`.orf WHERE core_ID in (" +
-                unique_pidlst +
-                ")";
-            head_text_array = [
-                "Genome_ID",
-                "HMT-ID",
-                "Domain",
-                "Phylum",
-                "Class",
-                "Order",
-                "Family",
-                "Genus",
-                "Species",
-                "Subspecies",
-                "Strain",
-                "Contig",
-                "Protein_ID",
-                "seq_length",
-                "start",
-                "end",
-                "Product",
-                "Gene",
-                "bakta_EC",
-                "bakta_GO",
-                "bakta_COG",
-                "bakta_RefSeq",
-                "bakta_UniParc",
-                "bakta_UniRef",
-            ];
-        }
-    } else {
-        // PROKKA and NCBI
+    // if (anno.toUpperCase() === "BAKTA") {
+    //         if (format === "fasta_aa") {
+    //             //type = "text";
+    //             q = "SELECT CONCAT('>BAKTA | ',a.region,' | ', a.genome_id,' | ',";
+    //             q +=
+    //                 " a.attribute_locus_tag,' | ',start,'..',end,' | length:',b.length_aa) AS defline,";
+    //             q += " UNCOMPRESS(seq_compressed) as sequence";
+    //             q += " FROM BAKTA.gff a";
+    //             q +=
+    //                 " JOIN BAKTA.faa b  on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
+    //             q += " WHERE a.attribute_locus_tag in (" + unique_pidlst + ")";
+    //             //head_text_array = ['core_ID','Genome_ID','Contig','BAKTA','seq_length']
+    //         } else if (format === "fasta_na") {
+    //             // error  there is no bakta na seqs
+    //             res.send("Error::BAKTA doesn't have nucleotide (na) sequences.");
+    //             res.end();
+    //             return;
+    //         } else {
+    //             // bakta table (everthing except seqs)
+    //             q =
+    //                 "SELECT genome_id as gid,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as end,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,";
+    //             q +=
+    //                 " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef";
+    //             q +=
+    //                 " from `BAKTA_sub_prokka`.orf WHERE core_ID in (" +
+    //                 unique_pidlst +
+    //                 ")";
+    //             head_text_array = [
+    //                 "Genome_ID",
+    //                 "HMT-ID",
+    //                 "Domain",
+    //                 "Phylum",
+    //                 "Class",
+    //                 "Order",
+    //                 "Family",
+    //                 "Genus",
+    //                 "Species",
+    //                 "Subspecies",
+    //                 "Strain",
+    //                 "Contig",
+    //                 "Protein_ID",
+    //                 "seq_length",
+    //                 "start",
+    //                 "end",
+    //                 "Product",
+    //                 "Gene",
+    //                 "bakta_EC",
+    //                 "bakta_GO",
+    //                 "bakta_COG",
+    //                 "bakta_RefSeq",
+    //                 "bakta_UniParc",
+    //                 "bakta_UniRef",
+    //             ];
+    //         }
+    //     } else {
+    // PROKKA and NCBI
 
-        if (format === "fasta_aa") {
-            type = "text";
-            q = "SELECT";
-            q +=
-                " CONCAT('>" +
-                anno_cap +
-                " | '," +
-                anno_cap +
-                ".orf.genome_id,' | '," +
-                anno_cap +
-                ".orf.region,' | ',protein_id) AS defline,";
-            q += " UNCOMPRESS(seq_compressed) AS sequence";
-            q +=
-                " from " +
-                anno_cap +
-                ".orf JOIN " +
-                anno_cap +
-                ".faa using(protein_id) WHERE protein_id in (" +
-                unique_pidlst +
-                ")";
-            //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
-        } else if (format === "fasta_na") {
-            type = "text";
-            q = "SELECT";
-            q +=
-                " CONCAT('>" +
-                anno_cap +
-                " | '," +
-                anno_cap +
-                ".orf.genome_id,' | '," +
-                anno_cap +
-                ".orf.region,' | ',protein_id) AS defline,";
-            q += " UNCOMPRESS(seq_compressed) AS sequence";
-            q +=
-                " from " +
-                anno_cap +
-                ".orf JOIN " +
-                anno_cap +
-                ".ffn using(protein_id) WHERE protein_id in (" +
-                unique_pidlst +
-                ")";
-            //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
-        } else {
-            // table  PROKKA and NCBI
-            q =
-                "SELECT genome_id as gid,region as acc,protein_id as pid,start,end,product,gene,length_aa as laa,";
-            q +=
-                "length_na as lna from " +
-                anno_cap +
-                ".orf WHERE protein_id in (" +
-                unique_pidlst +
-                ")";
-            //head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
-            // add HMT,taxonomy(inc.subsp),strain
-            head_text_array = [
-                "Genome_ID",
-                "HMT-ID",
-                "Domain",
-                "Phylum",
-                "Class",
-                "Order",
-                "Family",
-                "Genus",
-                "Species",
-                "Subspecies",
-                "Strain",
-                "Contig",
-                "Protein_ID",
-                "seq_length_na",
-                "seq_length_aa",
-                "start",
-                "end",
-                "Product",
-                "Gene",
-            ];
-        }
+    if (format === "fasta_aa") {
+        //type = "text";
+        q = queries.fasta_download("faa", anno_cap, search_text);
+        // q = "SELECT";
+        //             q +=
+        //                 " CONCAT('>" +
+        //                 anno_cap +
+        //                 " | '," +
+        //                 anno_cap +
+        //                 ".orf.genome_id,' | '," +
+        //                 anno_cap +
+        //                 ".orf.region,' | ',protein_id) AS defline,";
+        //             q += " UNCOMPRESS(seq_compressed) AS sequence";
+        //             q +=
+        //                 " from " +
+        //                 anno_cap +
+        //                 ".orf JOIN " +
+        //                 anno_cap +
+        //                 ".faa using(protein_id) WHERE protein_id in (" +
+        //                 unique_pidlst +
+        //                 ")";
+        //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
+    } else if (format === "fasta_na") {
+        //type = "text";
+        q = queries.fasta_download("ffn", anno_cap, search_text);
+        // q = "SELECT";
+        //             q +=
+        //                 " CONCAT('>" +
+        //                 anno_cap +
+        //                 " | '," +
+        //                 anno_cap +
+        //                 ".orf.genome_id,' | '," +
+        //                 anno_cap +
+        //                 ".orf.region,' | ',protein_id) AS defline,";
+        //             q += " UNCOMPRESS(seq_compressed) AS sequence";
+        //             q +=
+        //                 " from " +
+        //                 anno_cap +
+        //                 ".orf JOIN " +
+        //                 anno_cap +
+        //                 ".ffn using(protein_id) WHERE protein_id in (" +
+        //                 unique_pidlst +
+        //                 ")";
+        //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
+    } else {
+        // format == table
+        // table  PROKKA and NCBI
+        q = queries.deep_anno_search2(anno_cap, gid, search_text);
+        // q =
+        //                 "SELECT genome_id as gid,region as acc,protein_id as pid,start,end,product,gene,length_aa as laa,";
+        //             q +=
+        //                 "length_na as lna from " +
+        //                 anno_cap +
+        //                 ".orf WHERE protein_id in (" +
+        //                 unique_pidlst +
+        //                 ")";
+        //head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
+        // add HMT,taxonomy(inc.subsp),strain
+        head_text_array = [
+            "Genome_ID",
+            "HMT-ID",
+            "Domain",
+            "Phylum",
+            "Class",
+            "Order",
+            "Family",
+            "Genus",
+            "Species",
+            "Subspecies",
+            "Strain",
+            "Contig",
+            "Protein_ID",
+            "seq_length_na",
+            "seq_length_aa",
+            "start",
+            "end",
+            "Product",
+            "Gene",
+        ];
     }
 
-    //     if(type === 'browser'){
-    //          //stream_query_to_browser(req,res,q)
-    //          console.log('MyQuery for plain streaming:',q)
-    //          res.render("pages/search/search_stream_results_plain", {
-    //             title: "HOMD :: Search Results",
-    //             pgname: "", // for AboutThisPage
-    //             config: JSON.stringify(ENV),
-    //             ver_info: JSON.stringify(C.version_information),
-    //             //q: JSON.stringify(q),
-    //             search_text: search_text,
-    //             anno: anno,
-    //             type: type,
-    //             format: format,
-    //             pids: JSON.stringify(unique_pidlst),
-    //
-    //          });
-    //          return;
-    //     }else{
-    if (format.slice(0, 5) === "fasta") {
-        // Set response headers for file download
-        //res.setHeader('Content-Type', 'text/plain');
-        let fname = "HOMD_" + anno + "_search" + dt.today + "_" + dt.seconds;
-        stream_sqlquery_download(q, fname, res, "fasta", type);
+    if (type === "browser") {
+        //stream_query_to_browser(req,res,q)
+        console.log("MyQuery for plain streaming:", q);
+        res.render("pages/search/search_stream_results_plain", {
+            title: "HOMD :: Search Results",
+            pgname: "", // for AboutThisPage
+            config: JSON.stringify(ENV),
+            ver_info: JSON.stringify(C.version_information),
+            //q: JSON.stringify(q),
+            search_text: search_text,
+            anno: anno,
+            type: type,
+            format: format,
+            pids: JSON.stringify(unique_pidlst),
+        });
         return;
     } else {
-        const rows = await queries.run_query(q, res);
-
-        ext = ".txt";
-        result_text = create_anno_search_table(
-            rows,
-            anno,
-            head_text_array,
-            search_text,
-        );
-
-        if (type === "browser") {
-            res.set("Content-Type", "text/plain"); // <= important - allows tabs to display
-        } else if (type === "text") {
+        if (format.slice(0, 5) === "fasta") {
+            // Set response headers for file download
+            //res.setHeader('Content-Type', 'text/plain');
             let fname =
-                "HOMD_search" + anno_cap + dt.today + "_" + dt.seconds + ext;
-            res.set({ "Content-Disposition": "attachment; filename=" + fname });
-        } else if (type === "excel") {
-            let fname =
-                "HOMD_search" + anno_cap + dt.today + "_" + dt.seconds + ".xls";
-            res.set({ "Content-Disposition": "attachment; filename=" + fname });
+                "HOMD_" + anno + "_search" + dt.today + "_" + dt.seconds;
+            stream_sqlquery_download(q, fname, res, "fasta", type);
+            return;
         } else {
-            // error
-            logger.error("Download table format ERROR");
+            console.log("QUERY", q);
+            const rows = await queries.run_query(q, res);
+
+            ext = ".txt";
+            result_text = create_anno_search_table(
+                rows,
+                anno,
+                head_text_array,
+                search_text,
+            );
+
+            if (type === "browser") {
+                res.set("Content-Type", "text/plain"); // <= important - allows tabs to display
+            } else if (type === "text") {
+                let fname =
+                    "HOMD_search" +
+                    anno_cap +
+                    dt.today +
+                    "_" +
+                    dt.seconds +
+                    ext;
+                res.set({
+                    "Content-Disposition": "attachment; filename=" + fname,
+                });
+            } else if (type === "excel") {
+                let fname =
+                    "HOMD_search" +
+                    anno_cap +
+                    dt.today +
+                    "_" +
+                    dt.seconds +
+                    ".xls";
+                res.set({
+                    "Content-Disposition": "attachment; filename=" + fname,
+                });
+            } else {
+                // error
+                logger.error("Download table format ERROR");
+            }
+            res.send(result_text);
+            res.end();
         }
-        res.send(result_text);
-        res.end();
     }
-    //}
 });
 ////
 router.post("/anno_data_by_gid", async (req, res) => {
@@ -897,7 +915,7 @@ router.post("/anno_data_by_gid", async (req, res) => {
     let anno = req.body.anno; // ncbi prokka or bakta
     let gid = req.body.gid;
 
-    let format = req.body.format; // csv or fasta
+    let format = req.body.format; // table or fasta
     //let id_list = JSON.parse(req.body.anno_ids)
 
     //logger.info('anno',anno)
@@ -999,7 +1017,7 @@ router.post("/phage_search_data", async (req, res) => {
     // Download all Phage Hits
     //logger.info('req body',req.body)
     let type = req.body.type; // browser, text or excel
-    let format = req.body.format; // csv or fasta
+    let format = req.body.format; // table or fasta
     let search_text = req.body.search_text;
     let id_list = req.body.ids;
     let result_text, ext;
@@ -1343,11 +1361,11 @@ router.get(
         let anno = req.query.anno;
         let output = req.query.output; // type= browser,text,excel
         let format = req.query.format; // fasta, table
-        let pids = JSON.parse(req.query.pids);
-        console.log("pids", pids[0], pids);
+
+        console.log("format", format);
         //const q // = req.query.q;
         //let q = "SELECT genome_id as gid,region as acc,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from PROKKA.orf WHERE protein_id in ('GCA_000158275.2_00154','GCA_000158275.2_00199','GCA_000158275.2_01093','GCA_000158275.2_01104','GCA_000158275.2_01587','GCA_938028245.1_00836','GCA_938028245.1_01095')"
-        let q = queries.search_sql_stream(anno, search_text);
+
         //let q = "SELECT genome_id as gid,region as acc,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from PROKKA.orf"
         let dt = helpers.get_today_obj();
         let allowed_max = C.grep_search_max_rows;
@@ -1357,7 +1375,9 @@ router.get(
             otid,
             species,
             strain,
-            conn;
+            q,
+            conn,
+            stream;
 
         console.log("IN=> get_download_sql_stream", q);
 
@@ -1368,31 +1388,119 @@ router.get(
         res.flushHeaders();
 
         try {
-            conn = await promisePool.getConnection();
-            const stream = conn.connection.query(q).stream();
             let cnt = 0;
-            let r = { x: "XX" };
-            res.write(
-                `data: ${JSON.stringify({ head: "Genome-ID\tHMT-ID\tOrganism\tProtein-ID\tGene\tProduct" })}\n\n`,
-            );
+            if (format == "fasta_aa") {
+                q = queries.fasta_download(
+                    "faa",
+                    anno.toUpperCase(),
+                    search_text,
+                );
+
+                conn = await promisePool.getConnection();
+                stream = conn.connection.query(q).stream();
+                res.write(`data: ${JSON.stringify({ head: "AA FASTA" })}\n\n`);
+            } else if (format == "fasta_na") {
+                q = queries.fasta_download(
+                    "ffn",
+                    anno.toUpperCase(),
+                    search_text,
+                );
+
+                conn = await promisePool.getConnection();
+                stream = conn.connection.query(q).stream();
+                res.write(`data: ${JSON.stringify({ head: "NA FASTA" })}\n\n`);
+            } else {
+                //table
+                q = queries.search_sql_stream(anno, search_text);
+                conn = await promisePool.getConnection();
+                stream = conn.connection.query(q).stream();
+                res.write(
+                    `data: ${JSON.stringify({ head: "Genome-ID\tHMT-ID\tOrganism\tProtein-ID\tGene\tProduct" })}\n\n`,
+                );
+            }
+            console.log(q);
             // 5. Listen to stream events using stream.on()
             stream.on("data", (row) => {
                 // Format data specifically for EventSource protocol
-                res.write(`data: ${JSON.stringify(row)}\n\n`);
+                //console.log(row)
+                if (format == "fasta_aa") {
+                    let defline =
+                        ">" +
+                        row.pid +
+                        " | " +
+                        anno.toUpperCase() +
+                        " | " +
+                        row.type +
+                        " | Gene: " +
+                        row.gene +
+                        " | Product: " +
+                        row.product;
+                    res.write(
+                        `data: ${JSON.stringify({ defline: defline, seq: row.sequence.toString() })}\n\n`,
+                    );
+                } else if (format == "fasta_na") {
+                    let defline =
+                        ">" +
+                        row.pid +
+                        " | " +
+                        anno.toUpperCase() +
+                        " | " +
+                        row.type +
+                        " | Gene: " +
+                        row.gene +
+                        " | Product: " +
+                        row.product;
+                    res.write(
+                        `data: ${JSON.stringify({ defline: defline, seq: row.sequence.toString() })}\n\n`,
+                    );
+                } else {
+                    if (row.gid && Object.hasOwn(C.genome_lookup, row.gid)) {
+                        //if(gid){
+                        otid = C.genome_lookup[row.gid].otid;
+                        //console.log('otid',otid)
+                        hmt = helpers.make_otid_display_name(otid);
+                        //console.log('hmt',hmt)
+                        strain = C.genome_lookup[row.gid]["strain"];
+                        species =
+                            C.taxon_lookup[otid]["genus"] +
+                            " " +
+                            C.taxon_lookup[otid]["species"];
+                    }
+
+                    url = helpers.create_jbrowse_url(
+                        row.gid,
+                        row.region,
+                        row.start,
+                        row.end,
+                    );
+                    payload = {
+                        sqlid: row.id,
+                        gid: row.gid,
+                        hmt: hmt,
+                        otid: otid,
+                        org: species,
+                        pid: row.pid,
+                        prod: row.product,
+                        gene: row.gene,
+                        type: row.type,
+                        jburl: url,
+                    };
+                    res.write(`data: ${JSON.stringify(payload)}\n\n`);
+                }
             });
 
             stream.on("end", () => {
-                // Let the client know the stream is finished
-                res.write("event: end\ndata: Stream finished\n\n");
+                const endpayload = {
+                    notice: "END-OF-STREAM",
+                    count: cnt,
+                };
+                res.write(`data: ${JSON.stringify(endpayload)}\n\n`);
+                console.log("DONE");
                 res.end();
             });
 
             stream.on("error", (err) => {
-                console.error("Stream error:", err);
-                res.write(
-                    `event: error\ndata: ${JSON.stringify({ message: err.message })}\n\n`,
-                );
-                res.end();
+                res.write(`data: ERROR: ${err.toString()}\n\n`);
             });
         } catch (error) {
             console.error("Database connection error:", error);
@@ -1468,7 +1576,7 @@ function create_phage_search_table(sql_rows, header_array, search_term) {
 
 ////
 async function stream_sqlquery_download(q, fname, res, format, type) {
-    logger.error(`in stream_sqlquery_download ${format} ${type}`);
+    console.log(`in stream_sqlquery_download ${format} ${type}`);
     // IMPORTANT: q must have defline and sequence elements
     // format is fasta or table
     if (format === "fasta" && type === "excel") {
@@ -1509,7 +1617,8 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
     });
 
     const stream = await queries.run_query_stream_async(q, res);
-
+    console.log("stream", stream);
+    console.log(q);
     if (format === "table") {
         //transformerStream = tableObjectToStringStream
         const passThroughStream = new Transform.PassThrough();

@@ -4,47 +4,158 @@
     <meta charset="UTF-8">
     <title>MySQL Stream</title>
 </head>
+<style>
+table{
+   border-collapse:collapse;
+}
+table td{
+   border:1px solid black;
+   padding: 3px;
+}
+</style>
 <body>
 
-<div id='output'>Search Text: `<%= search_text %>`</div>
-
+<div id='output'>HOMD <%= anno.toUpperCase() %> Annotation Search:  Text= `<%= search_text %>`</div>
+<br>
+<div id='fasta-div' style='display:none;'>
+  
+  <div id="fasta-body">
+            <!-- Real-time data rows will append here -->
+    </div>
+</div>
+<div id='table-div' style='display:none;'>
+    
+    <table class='table sortable' border='1'>
+        <thead>
+            <tr>
+                <th>Genome-ID</th>
+                <th class='nowrap'>HMT-ID</th>
+                <th class='nowrap'>Organism</th>
+                <th>Protein-ID</th>
+                <th>Type</th>
+                <th>Gene</th>
+                <th>Product</th>
+                <th class="sorttable_nosort">GenomeViewer</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            <!-- Real-time data rows will append here -->
+        </tbody>
+    </table>
+    </div>
+    <!-- <script type="module" src="/js/script.js"></script> -->
     <script>
-        import { fetchEventSource } from '@microsoft/fetch-event-source';
-        function decodeHtmlEntities(text) {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(text, 'text/html');
-          return doc.documentElement.textContent;
-        }
-        let tmp = '<%= pids %>'.replaceAll('&#39;', '')
-        //console.log('tmp',tmp)
-        let tmp2 = decodeHtmlEntities(tmp)
-        //console.log('tmp2',tmp2)
-        let pidList = JSON.parse(tmp2)
-        //console.log(pidList)
-        const outputDiv = document.getElementById('output');
+            //import { fetchEventSource } from '@microsoft/fetch-event-source';
+        //import { fetchEventSource } from 'https://esm.sh';
+    function decodeHtmlEntities(text) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      return doc.documentElement.textContent;
+    }
+    
+    let format = '<%= format %>'
+    const outputDiv = document.getElementById('output');
+    
+    //line 1333 in downloads
+    const eventSource = new EventSource('/download/get_download_sql_stream?search=<%= search_text %>&anno=<%= anno %>&output=<%= type %>&format=<%= format %>');
+
+eventSource.onmessage = function(event) {
+    const eventData = JSON.parse(event.data);
+    
+    if (eventData.notice === 'END-OF-STREAM') {
+        eventSource.close();
         
-        //line 1333 in downloads
-        const eventSource = new EventSource('/download/get_download_sql_stream?pids='+JSON.stringify(pidList)+'&search=<%= search_text %>&anno=<%= anno %>&output=<%= type %>&format=<%= format %>');
-
-        eventSource.onmessage = function(event) {
-            const rowData = JSON.parse(event.data);
+       //  const notification = document.getElementById('end-notice');
+//         var notify = "DONE (row count: "+eventData.count.toString()+") - Click on table headers to sort."
+//         notify += "<span style='float:right;'><a class='link' href='get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>&download=1'>Download Results</a></span>"
+//         notification.innerHTML = notify
+//         console.log('Stream ended by server.');
+//         //document.querySelector('#table-div').style.display = "none";
+//         document.querySelector("#loader").style.visibility = "hidden";
+        return;
+    }
+    // Append the new line
+    //console.log('e.data',event.data)
+    //outputDiv.textContent += event.data + '<br>';
+    console.log('format',format)
+    //outputDiv.innerHTML += event.data +"<br>";
+    // Auto-scroll to the bottom:
+    //outputDiv.scrollTop = outputDiv.scrollHeight;
+        
+            // Parse incoming JSON data from the event stream
+            //const eventData = JSON.parse(event.data);
+    if(format === 'fasta_na' || format === 'fasta_aa'){
+        document.getElementById('fasta-div').style.display = 'block';
+        const fastaBody = document.getElementById('fasta-body');
             
-            const listItem = document.createElement('li');
-            listItem.textContent = JSON.stringify(rowData);
-            outputDiv.appendChild(listItem);
-        };
+        
+        if(eventData.defline){
+            const item = document.createElement('li');
+            item.textContent = eventData.defline
+            fastaBody.appendChild(item);
+            const item2 = document.createElement('li');
+            item2.textContent = eventData.seq
+            fastaBody.appendChild(item2);
+        }
+    }else if(format === 'table'){
+            document.getElementById('table-div').style.display = 'block';
+            const tableBody = document.getElementById('table-body');
+            if(eventData.gid){
+            // 3. Create a new table row element
+            const row = document.createElement('tr');
+           
+            // 4. Create and populate cells
+            const gidCell = document.createElement('td');
+            gidCell.innerHTML = "<a href='/genome/genome_description?gid="+eventData.gid+"'>"+eventData.gid+"</a>";
 
-        // Listen for the custom "end" event to close the connection cleanly
-        eventSource.addEventListener('end', function(event) {
-            console.log(event.data);
-            eventSource.close(); 
-        });
+            const hmtCell = document.createElement('td');
+            hmtCell.setAttribute('style', 'white-space: nowrap;');
+            hmtCell.innerHTML = "<a href='/taxa/tax_description?otid="+eventData.otid+"'>"+eventData.hmt+"</a>";
+            
+            const orgCell = document.createElement('td');
+            orgCell.setAttribute('style', 'white-space: nowrap;');
+            orgCell.innerHTML =  "<i>"+eventData.org+"</i>"
+            
+            const pidCell = document.createElement('td');
+            pidCell.textContent = eventData.pid || "";
 
-        // Listen for errors
+            const typeCell = document.createElement('td');
+            typeCell.textContent = eventData.type || "";
+
+            const geneCell = document.createElement('td');
+            geneCell.textContent = eventData.gene || "";
+            
+            const prodCell = document.createElement('td');
+            prodCell.textContent = eventData.prod || "";
+            
+            const urlCell = document.createElement('td');
+            urlCell.innerHTML = "<a href='"+eventData.jburl+"' target='_blank'>link</a>";
+            
+            // 5. Append cells to the row
+            row.appendChild(gidCell);
+            row.appendChild(hmtCell);
+            row.appendChild(orgCell);
+            row.appendChild(pidCell);
+            row.appendChild(typeCell);
+            row.appendChild(geneCell);
+            row.appendChild(prodCell);
+            row.appendChild(urlCell);
+            
+            // 6. Insert row into the table body
+            // prepend() puts new events at the top. Use append() to put them at the bottom.
+            tableBody.prepend(row); 
+            }
+        }
+}
+       
+
         eventSource.onerror = function(err) {
-            console.error("EventSource failed:", err);
+            console.log("Stream closed or ended ERROR.",err);
+            
             eventSource.close();
         };
+
+    
     </script>
     
 </body>
