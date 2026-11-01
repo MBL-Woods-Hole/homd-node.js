@@ -692,6 +692,23 @@ router.post("/anno_search_data", async (req, res) => {
         unique_pidlst,
         lst,
         head_text_array;
+
+    if (type === "browser") {
+        //stream_query_to_browser(req,res,q)
+        console.log("MyQuery for plain streaming:");
+        res.render("pages/search/search_stream_results_plain", {
+            title: "HOMD :: Search Results",
+            pgname: "", // for AboutThisPage
+            config: JSON.stringify(ENV),
+            ver_info: JSON.stringify(C.version_information),
+            //q: JSON.stringify(q),
+            search_text: search_text,
+            anno: anno,
+            type: type,
+            format: format,
+        });
+        return;
+    }
     //     for (let n in selected_gids) {
     //         lst = id_list[selected_gids[n]].map((el) => "'" + el.pid + "'");
     //
@@ -804,7 +821,8 @@ router.post("/anno_search_data", async (req, res) => {
     } else {
         // format == table
         // table  PROKKA and NCBI
-        q = queries.deep_anno_search2(anno_cap, gid, search_text);
+        //q = queries.deep_anno_search2(anno_cap, gid, search_text);
+        q = queries.search_sql_stream2(anno_cap, search_text);
         // q =
         //                 "SELECT genome_id as gid,region as acc,protein_id as pid,start,end,product,gene,length_aa as laa,";
         //             q +=
@@ -827,7 +845,8 @@ router.post("/anno_search_data", async (req, res) => {
             "Species",
             "Subspecies",
             "Strain",
-            "Contig",
+            "Type",
+            "Region",
             "Protein_ID",
             "seq_length_na",
             "seq_length_aa",
@@ -838,73 +857,43 @@ router.post("/anno_search_data", async (req, res) => {
         ];
     }
 
-    if (type === "browser") {
-        //stream_query_to_browser(req,res,q)
-        console.log("MyQuery for plain streaming:");
-        res.render("pages/search/search_stream_results_plain", {
-            title: "HOMD :: Search Results",
-            pgname: "", // for AboutThisPage
-            config: JSON.stringify(ENV),
-            ver_info: JSON.stringify(C.version_information),
-            //q: JSON.stringify(q),
-            search_text: search_text,
-            anno: anno,
-            type: type,
-            format: format,
-            pids: JSON.stringify(unique_pidlst),
-        });
+    if (format.slice(0, 5) === "fasta") {
+        // Set response headers for file download
+        //res.setHeader('Content-Type', 'text/plain');
+        let fname = "HOMD_" + anno + "_search" + dt.today + "_" + dt.seconds;
+        stream_sqlquery_download(q, fname, res, "fasta", type);
         return;
     } else {
-        if (format.slice(0, 5) === "fasta") {
-            // Set response headers for file download
-            //res.setHeader('Content-Type', 'text/plain');
+        // table
+        console.log("QUERY", q);
+        const rows = await queries.run_query(q, res);
+
+        ext = ".txt";
+        result_text = create_anno_search_table(
+            rows,
+            anno,
+            head_text_array,
+            search_text,
+        );
+
+        if (type === "text") {
             let fname =
-                "HOMD_" + anno + "_search" + dt.today + "_" + dt.seconds;
-            stream_sqlquery_download(q, fname, res, "fasta", type);
-            return;
+                "HOMD_search" + anno_cap + dt.today + "_" + dt.seconds + ext;
+            res.set({
+                "Content-Disposition": "attachment; filename=" + fname,
+            });
+        } else if (type === "excel") {
+            let fname =
+                "HOMD_search" + anno_cap + dt.today + "_" + dt.seconds + ".xls";
+            res.set({
+                "Content-Disposition": "attachment; filename=" + fname,
+            });
         } else {
-            console.log("QUERY", q);
-            const rows = await queries.run_query(q, res);
-
-            ext = ".txt";
-            result_text = create_anno_search_table(
-                rows,
-                anno,
-                head_text_array,
-                search_text,
-            );
-
-            if (type === "browser") {
-                res.set("Content-Type", "text/plain"); // <= important - allows tabs to display
-            } else if (type === "text") {
-                let fname =
-                    "HOMD_search" +
-                    anno_cap +
-                    dt.today +
-                    "_" +
-                    dt.seconds +
-                    ext;
-                res.set({
-                    "Content-Disposition": "attachment; filename=" + fname,
-                });
-            } else if (type === "excel") {
-                let fname =
-                    "HOMD_search" +
-                    anno_cap +
-                    dt.today +
-                    "_" +
-                    dt.seconds +
-                    ".xls";
-                res.set({
-                    "Content-Disposition": "attachment; filename=" + fname,
-                });
-            } else {
-                // error
-                logger.error("Download table format ERROR");
-            }
-            res.send(result_text);
-            res.end();
+            // error
+            logger.error("Download table format ERROR");
         }
+        res.send(result_text);
+        res.end();
     }
 });
 ////
@@ -1604,12 +1593,23 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
         writableObjectMode: true, // Accepts objects
         transform(chunk, encoding, callback) {
             // Convert the object to a string (e.g., JSON string) and push it as a string
+            console.log("chunk", chunk);
             const arr = helpers.chunkSubstr(chunk.sequence.toString(), 100);
             //logger.info('arr[0]',arr[0])
             // let str += arr.join('\n')
             //let record = JSON.stringify(chunk.defline) + '\n'+JSON.stringify(chunk.sequence.toString())+ '\n'
-            let record =
-                JSON.stringify(chunk.defline) + "\n" + arr.join("\n") + "\n";
+            let defline =
+                ">" +
+                chunk.pid +
+                " | " +
+                chunk.type +
+                " | " +
+                chunk.region +
+                " | Gene: " +
+                chunk.gene +
+                " | Product: " +
+                chunk.product;
+            let record = JSON.stringify(defline) + "\n" + arr.join("\n") + "\n";
             this.push(record.replaceAll(/["]/g, ""));
             //this.push(JSON.stringify(chunk.defline+'\n'));
             callback();
@@ -1745,104 +1745,106 @@ function create_anno_search_table(sql_rows, anno, headers, search_term) {
     let text = anno.toUpperCase() + ' ::Search String: "' + search_term + '"\n';
     text += headers.join("\t") + "\n";
 
-    if (anno === "bakta") {
-        //'Bakta' as anno,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
-        //        q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef
-        // ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
+    // if (anno === "bakta") {
+    //         //'Bakta' as anno,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
+    //         //        q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef
+    //         // ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
+    //
+    //         for (let n in sql_rows) {
+    //             hmt = helpers.make_otid_display_name(
+    //                 C.genome_lookup[sql_rows[n].gid].otid,
+    //             );
+    //             strain = C.genome_lookup[sql_rows[n].gid].strain;
+    //             lineage =
+    //                 C.taxon_lineage_lookup[C.genome_lookup[sql_rows[n].gid].otid];
+    //             text += sql_rows[n].gid;
+    //             text += "\t" + hmt;
+    //             text += "\t" + lineage.domain;
+    //             text += "\t" + lineage.phylum;
+    //             text += "\t" + lineage.klass;
+    //             text += "\t" + lineage.order;
+    //             text += "\t" + lineage.family;
+    //             text += "\t" + lineage.genus;
+    //             text += "\t" + lineage.species;
+    //             text += "\t" + lineage.subspecies;
+    //             text += "\t" + strain;
+    //             text +=
+    //                 "\t" +
+    //                 sql_rows[n].region +
+    //                 "\t" +
+    //                 sql_rows[n].pid +
+    //                 "\t" +
+    //                 sql_rows[n].length;
+    //             text +=
+    //                 "\t" +
+    //                 sql_rows[n].start +
+    //                 "\t" +
+    //                 sql_rows[n].end +
+    //                 "\t" +
+    //                 sql_rows[n].product +
+    //                 "\t" +
+    //                 sql_rows[n].gene;
+    //             text +=
+    //                 "\t" +
+    //                 sql_rows[n].bakta_EC +
+    //                 "\t" +
+    //                 sql_rows[n].bakta_GO +
+    //                 "\t" +
+    //                 sql_rows[n].bakta_COG;
+    //             text +=
+    //                 "\t" +
+    //                 sql_rows[n].bakta_RefSeq +
+    //                 "\t" +
+    //                 sql_rows[n].bakta_UniParc +
+    //                 "\t" +
+    //                 sql_rows[n].bakta_UniRef;
+    //             text += "\n";
+    //         }
+    //     } else {
+    //text='anno table: '+anno
 
-        for (let n in sql_rows) {
-            hmt = helpers.make_otid_display_name(
-                C.genome_lookup[sql_rows[n].gid].otid,
-            );
-            strain = C.genome_lookup[sql_rows[n].gid].strain;
-            lineage =
-                C.taxon_lineage_lookup[C.genome_lookup[sql_rows[n].gid].otid];
-            text += sql_rows[n].gid;
-            text += "\t" + hmt;
-            text += "\t" + lineage.domain;
-            text += "\t" + lineage.phylum;
-            text += "\t" + lineage.klass;
-            text += "\t" + lineage.order;
-            text += "\t" + lineage.family;
-            text += "\t" + lineage.genus;
-            text += "\t" + lineage.species;
-            text += "\t" + lineage.subspecies;
-            text += "\t" + strain;
-            text +=
-                "\t" +
-                sql_rows[n].contig +
-                "\t" +
-                sql_rows[n].pid +
-                "\t" +
-                sql_rows[n].length;
-            text +=
-                "\t" +
-                sql_rows[n].start +
-                "\t" +
-                sql_rows[n].end +
-                "\t" +
-                sql_rows[n].product +
-                "\t" +
-                sql_rows[n].gene;
-            text +=
-                "\t" +
-                sql_rows[n].bakta_EC +
-                "\t" +
-                sql_rows[n].bakta_GO +
-                "\t" +
-                sql_rows[n].bakta_COG;
-            text +=
-                "\t" +
-                sql_rows[n].bakta_RefSeq +
-                "\t" +
-                sql_rows[n].bakta_UniParc +
-                "\t" +
-                sql_rows[n].bakta_UniRef;
-            text += "\n";
-        }
-    } else {
-        //text='anno table: '+anno
+    for (let n in sql_rows) {
+        console.log("sql_rows", sql_rows[n]);
+        hmt = helpers.make_otid_display_name(
+            C.genome_lookup[sql_rows[n].gid].otid,
+        );
+        strain = C.genome_lookup[sql_rows[n].gid].strain;
+        lineage = C.taxon_lineage_lookup[C.genome_lookup[sql_rows[n].gid].otid];
+        text += sql_rows[n].gid;
+        text += "\t" + hmt;
+        text += "\t" + lineage.domain;
+        text += "\t" + lineage.phylum;
+        text += "\t" + lineage.klass;
+        text += "\t" + lineage.order;
+        text += "\t" + lineage.family;
+        text += "\t" + lineage.genus;
+        text += "\t" + lineage.species;
+        text += "\t" + lineage.subspecies;
+        text += "\t" + strain;
+        text +=
+            "\t" +
+            sql_rows[n].type +
+            "\t" +
+            sql_rows[n].region +
+            "\t" +
+            sql_rows[n].pid +
+            "\t" +
+            sql_rows[n].lna;
 
-        for (let n in sql_rows) {
-            hmt = helpers.make_otid_display_name(
-                C.genome_lookup[sql_rows[n].gid].otid,
-            );
-            strain = C.genome_lookup[sql_rows[n].gid].strain;
-            lineage =
-                C.taxon_lineage_lookup[C.genome_lookup[sql_rows[n].gid].otid];
-            text += sql_rows[n].gid;
-            text += "\t" + hmt;
-            text += "\t" + lineage.domain;
-            text += "\t" + lineage.phylum;
-            text += "\t" + lineage.klass;
-            text += "\t" + lineage.order;
-            text += "\t" + lineage.family;
-            text += "\t" + lineage.genus;
-            text += "\t" + lineage.species;
-            text += "\t" + lineage.subspecies;
-            text += "\t" + strain;
-            text +=
-                "\t" +
-                sql_rows[n].acc +
-                "\t" +
-                sql_rows[n].pid +
-                "\t" +
-                sql_rows[n].lna;
+        text += "\t" + sql_rows[n].laa;
+        text +=
+            "\t" +
+            sql_rows[n].start +
+            "\t" +
+            sql_rows[n].end +
+            "\t" +
+            sql_rows[n].product +
+            "\t" +
+            sql_rows[n].gene;
 
-            text += "\t" + sql_rows[n].laa;
-            text +=
-                "\t" +
-                sql_rows[n].start +
-                "\t" +
-                sql_rows[n].end +
-                "\t" +
-                sql_rows[n].product +
-                "\t" +
-                sql_rows[n].gene;
-
-            text += "\n";
-        }
+        text += "\n";
     }
+    //}
 
     return text;
 }

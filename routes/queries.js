@@ -15,7 +15,7 @@ export const run_query = async (sql, req, res) => {
         return rows;
     } catch (e) {
         logger.error(`Database Query Error: ${e}`);
-        res.status(500).send("Error fetching MySQL data");
+        res.send(500); //.send("Error fetching MySQL data");
     } finally {
         // promisePool.query: no need for release stmt
     }
@@ -31,7 +31,7 @@ export const run_query_stream_async = async (sql, res) => {
         return queryStream;
     } catch (e) {
         logger.error(`Database Query Error: ${e}`);
-        res.status(500).send("Error fetching MySQL stream");
+        res.send(500); //.send("Error fetching MySQL stream");
     } finally {
         conn.release();
     }
@@ -415,7 +415,28 @@ export const search_sql_stream = (anno, text) => {
         "\"' IN BOOLEAN MODE);";
     return q;
 };
+export const search_sql_stream2 = (anno, text) => {
+    // TABLES DOWNLOAD include length na,aa and JOINs
+    let q =
+        "SELECT a.id,a.genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,a.region,type,start,end,";
+    q += " length_aa as laa,length_na as lna";
+    q += " FROM " + anno + ".gff_fullsearch a";
+    q +=
+        " LEFT JOIN " +
+        anno +
+        ".ffn c on a.genome_id=c.genome_id and c.protein_id=a.attribute_locus_tag";
+    q +=
+        " LEFT JOIN " +
+        anno +
+        ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
+    q +=
+        " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
+        text +
+        "\"' IN BOOLEAN MODE);";
+    return q;
+};
 export const deep_anno_search2 = (anno, gid, search_text) => {
+    // for one genome only -- not used in downloads
     let q =
         "SELECT a.id,a.genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,a.region,type,start,end,";
     q += " length_aa as laa,length_na as lna";
