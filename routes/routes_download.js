@@ -840,7 +840,7 @@ router.post("/anno_search_data", async (req, res) => {
 
     if (type === "browser") {
         //stream_query_to_browser(req,res,q)
-        console.log("MyQuery for plain streaming:", q);
+        console.log("MyQuery for plain streaming:");
         res.render("pages/search/search_stream_results_plain", {
             title: "HOMD :: Search Results",
             pgname: "", // for AboutThisPage
@@ -1379,8 +1379,6 @@ router.get(
             conn,
             stream;
 
-        console.log("IN=> get_download_sql_stream", q);
-
         res.setHeader("Content-Type", "text/event-stream");
         res.setHeader("Cache-Control", "no-cache");
         res.setHeader("Connection", "keep-alive");
@@ -1411,7 +1409,8 @@ router.get(
                 res.write(`data: ${JSON.stringify({ head: "NA FASTA" })}\n\n`);
             } else {
                 //table
-                q = queries.search_sql_stream(anno, search_text);
+                q = queries.search_sql_stream(anno.toUpperCase(), search_text);
+                //q = queries.deep_anno_search2(anno, gid, search_text);
                 conn = await promisePool.getConnection();
                 stream = conn.connection.query(q).stream();
                 res.write(
@@ -1454,6 +1453,7 @@ router.get(
                         `data: ${JSON.stringify({ defline: defline, seq: row.sequence.toString() })}\n\n`,
                     );
                 } else {
+                    // table
                     if (row.gid && Object.hasOwn(C.genome_lookup, row.gid)) {
                         //if(gid){
                         otid = C.genome_lookup[row.gid].otid;
