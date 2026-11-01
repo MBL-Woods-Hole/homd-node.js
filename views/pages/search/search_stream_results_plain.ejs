@@ -57,7 +57,7 @@ table td{
     const outputDiv = document.getElementById('output');
     
     //line 1333 in downloads
-    const eventSource = new EventSource('/download/get_download_sql_stream?search=<%= search_text %>&anno=<%= anno %>&output=<%= type %>&format=<%= format %>');
+    const eventSource = new EventSource('/download/get_download_sql_stream?search=<%= search_text %>&anno=<%= anno %>&output=<%= type %>&format=<%= format %>&hit_source=<%= hit_source %>');
 
 eventSource.onmessage = function(event) {
     const eventData = JSON.parse(event.data);

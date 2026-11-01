@@ -97,10 +97,15 @@ router.post(
         //             req.body.hit_source,
         //             req.body.id_list,
         //         );
+        let partial = false;
+        if (req.body.hit_source === "grep") {
+            partial = true;
+        }
         let q = queries.deep_anno_search2(
             annoUpper,
             req.body.gid,
             req.body.search_text,
+            partial,
         );
         console.log(q);
         let data = {};
@@ -501,7 +506,11 @@ router.post(
         let gid;
         let allowed_max = C.grep_search_max_rows; // died at 73,000
         //prokka\tGCA_030450175.1\tCDS\tCP073095.1\tGCA_030450175.1_00089\tresA_1\tThiol-disulfide oxidoreductase ResA\t80060\t80623
-        let q = queries.search_sql_stream(annoUpper, search_string);
+        let q = queries.search_sql_stream(
+            annoUpper,
+            search_string,
+            C.sql_search_max_rows,
+        );
         // let q =
         //             "SELECT id,genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid FROM " +
         //             annoUpper +
@@ -851,7 +860,7 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
         otid,
         species,
         strain;
-
+    // set no limit here
     let q = queries.search_sql_stream(annoUpper, search_text);
     console.log("IN=> get_sql_stream", q);
 

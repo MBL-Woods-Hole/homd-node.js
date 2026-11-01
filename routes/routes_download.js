@@ -678,6 +678,7 @@ router.post("/anno_search_data", async (req, res) => {
     let anno_cap = anno.toUpperCase();
     let search_text = req.body.search_text;
     let format = req.body.format; // table or fasta
+    let hit_source = req.body.hit_source;
     //let id_list = JSON.parse(req.body.anno_ids);
     //logger.info('id_list length',id_list.length)
     //logger.info('anno',anno)
@@ -706,6 +707,7 @@ router.post("/anno_search_data", async (req, res) => {
             anno: anno,
             type: type,
             format: format,
+            hit_source: hit_source, //grep or sql
         });
         return;
     }
@@ -776,7 +778,12 @@ router.post("/anno_search_data", async (req, res) => {
 
     if (format === "fasta_aa") {
         //type = "text";
-        q = queries.fasta_download("faa", anno_cap, search_text);
+        q = queries.fasta_download(
+            "faa",
+            anno_cap,
+            search_text,
+            C.sql_search_max_rows,
+        );
         // q = "SELECT";
         //             q +=
         //                 " CONCAT('>" +
@@ -798,7 +805,12 @@ router.post("/anno_search_data", async (req, res) => {
         //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
     } else if (format === "fasta_na") {
         //type = "text";
-        q = queries.fasta_download("ffn", anno_cap, search_text);
+        q = queries.fasta_download(
+            "ffn",
+            anno_cap,
+            search_text,
+            C.sql_search_max_rows,
+        );
         // q = "SELECT";
         //             q +=
         //                 " CONCAT('>" +
@@ -822,7 +834,11 @@ router.post("/anno_search_data", async (req, res) => {
         // format == table
         // table  PROKKA and NCBI
         //q = queries.deep_anno_search2(anno_cap, gid, search_text);
-        q = queries.search_sql_stream2(anno_cap, search_text);
+        q = queries.search_sql_stream2(
+            anno_cap,
+            search_text,
+            C.sql_search_max_rows,
+        );
         // q =
         //                 "SELECT genome_id as gid,region as acc,protein_id as pid,start,end,product,gene,length_aa as laa,";
         //             q +=
@@ -1350,8 +1366,12 @@ router.get(
         let anno = req.query.anno;
         let output = req.query.output; // type= browser,text,excel
         let format = req.query.format; // fasta, table
-
+        let hit_source = req.query.hit_source;
         console.log("format", format);
+        let partial = false;
+        if (hit_source === "grep") {
+            partial = true;
+        }
         //const q // = req.query.q;
         //let q = "SELECT genome_id as gid,region as acc,protein_id as pid,start,end,product,gene,length_aa as laa,length_na as lna from PROKKA.orf WHERE protein_id in ('GCA_000158275.2_00154','GCA_000158275.2_00199','GCA_000158275.2_01093','GCA_000158275.2_01104','GCA_000158275.2_01587','GCA_938028245.1_00836','GCA_938028245.1_01095')"
 
@@ -1381,6 +1401,8 @@ router.get(
                     "faa",
                     anno.toUpperCase(),
                     search_text,
+                    C.sql_search_max_rows,
+                    partial,
                 );
 
                 conn = await promisePool.getConnection();
@@ -1391,6 +1413,8 @@ router.get(
                     "ffn",
                     anno.toUpperCase(),
                     search_text,
+                    C.sql_search_max_rows,
+                    partial,
                 );
 
                 conn = await promisePool.getConnection();
@@ -1398,7 +1422,12 @@ router.get(
                 res.write(`data: ${JSON.stringify({ head: "NA FASTA" })}\n\n`);
             } else {
                 //table
-                q = queries.search_sql_stream(anno.toUpperCase(), search_text);
+                q = queries.search_sql_stream(
+                    anno.toUpperCase(),
+                    search_text,
+                    C.sql_search_max_rows,
+                    partial,
+                );
                 //q = queries.deep_anno_search2(anno, gid, search_text);
                 conn = await promisePool.getConnection();
                 stream = conn.connection.query(q).stream();

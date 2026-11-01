@@ -404,19 +404,39 @@ export const get_phage_from_ids_noseqs = (search_id_list) => {
     q += " from phage_search where search_id in (" + search_id_list + ")";
     return q;
 };
-
-export const search_sql_stream = (anno, text) => {
+//
+//
+export const search_sql_stream = (
+    anno,
+    search_text,
+    limit = 0,
+    partial = false,
+) => {
     let q =
         "SELECT id,genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,region,type,start,end";
     q += " FROM " + anno + ".gff_fullsearch";
-    q +=
-        " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
-        text +
-        "\"' IN BOOLEAN MODE) limit " +
-        C.grep_search_max_rows;
+
+    if (partial) {
+        q +=
+            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('+" +
+            search_text +
+            "*' IN BOOLEAN MODE)";
+    } else {
+        q +=
+            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
+            search_text +
+            "\"' IN BOOLEAN MODE)";
+    }
+
+    if (limit) q += " limit " + limit;
     return q;
 };
-export const search_sql_stream2 = (anno, text) => {
+export const search_sql_stream2 = (
+    anno,
+    search_text,
+    limit = 0,
+    partial = false,
+) => {
     // TABLES DOWNLOAD include length na,aa and JOINs
     let q =
         "SELECT a.id,a.genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,a.region,type,start,end,";
@@ -430,14 +450,21 @@ export const search_sql_stream2 = (anno, text) => {
         " LEFT JOIN " +
         anno +
         ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
-    q +=
-        " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
-        text +
-        "\"' IN BOOLEAN MODE) limit " +
-        C.grep_search_max_rows;
+    if (partial) {
+        q +=
+            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('+" +
+            search_text +
+            "*' IN BOOLEAN MODE)";
+    } else {
+        q +=
+            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
+            search_text +
+            "\"' IN BOOLEAN MODE)";
+    }
+    if (limit) q += " limit " + limit;
     return q;
 };
-export const deep_anno_search2 = (anno, gid, search_text) => {
+export const deep_anno_search2 = (anno, gid, search_text, partial = false) => {
     // for one genome only -- not used in downloads
     let q =
         "SELECT a.id,a.genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,a.region,type,start,end,";
@@ -451,17 +478,29 @@ export const deep_anno_search2 = (anno, gid, search_text) => {
         " LEFT JOIN " +
         anno +
         ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
-    q +=
-        " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
-        search_text +
-        "\"' IN BOOLEAN MODE) AND a.genome_id='" +
-        gid +
-        "' limit " +
-        C.grep_search_max_rows;
+    if (partial) {
+        q +=
+            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('+" +
+            search_text +
+            "*' IN BOOLEAN MODE)";
+    } else {
+        q +=
+            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
+            search_text +
+            "\"' IN BOOLEAN MODE)";
+    }
+    q += " AND a.genome_id='" + gid + "'";
+
     return q;
 };
 
-export const fasta_download = (ext, anno, search_text) => {
+export const fasta_download = (
+    ext,
+    anno,
+    search_text,
+    limit = 0,
+    partial = false,
+) => {
     let q =
         "SELECT g.id,g.genome_id as gid,attribute_product as product,attribute_gene as gene,";
     q += " attribute_locus_tag as pid,g.region,type,start,end,";
@@ -473,11 +512,18 @@ export const fasta_download = (ext, anno, search_text) => {
         "." +
         ext +
         " s on (s.protein_id=g.attribute_locus_tag and s.region=g.region)";
-    q +=
-        " WHERE MATCH(attribute_product,attribute_gene) AGAINST('" +
-        search_text +
-        "' IN BOOLEAN MODE) limit " +
-        C.grep_search_max_rows;
+    if (partial) {
+        q +=
+            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('+" +
+            search_text +
+            "*' IN BOOLEAN MODE)";
+    } else {
+        q +=
+            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
+            search_text +
+            "\"' IN BOOLEAN MODE)";
+    }
+    if (limit) q += " limit " + limit;
 
     return q;
 };
