@@ -355,7 +355,12 @@ router.post(
                 );
             });
             //args = ['-iIN', searchText].concat(fpaths);  //, fpaths.join(' ')]
-            args = ["-iIN", "'" + searchText + "'"].concat(fpaths);
+            args = [
+                "--max-count",
+                C.grep_search_max_rows,
+                "-iIN",
+                "'" + searchText + "'",
+            ].concat(fpaths);
             //grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations'
             grep_cmd_base = ENV.RIPGREP_CMD;
 
