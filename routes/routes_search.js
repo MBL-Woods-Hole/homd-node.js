@@ -98,7 +98,7 @@ router.post(
         //             req.body.id_list,
         //         );
         let partial = false;
-        if (req.body.hit_source === "grep") {
+        if (req.body.whole_or_partial === "partial") {
             partial = true;
         }
         let q = queries.deep_anno_search2(
@@ -495,7 +495,7 @@ router.post(
     async function advanced_site_search_anno_mysql(req, res) {
         console.log("advanced_site_search_anno_mysql");
         console.log(req.body);
-        //let search_type = req.body.anno_search_type
+        let whole_or_partial = req.body.whole_or_partial; // whole or partial
         let anno = req.body.anno;
         let annoUpper = anno.toUpperCase();
         let search_string = req.body.search_text;
@@ -511,10 +511,16 @@ router.post(
         let gid;
         let allowed_max = C.grep_search_max_rows; // died at 73,000
         //prokka\tGCA_030450175.1\tCDS\tCP073095.1\tGCA_030450175.1_00089\tresA_1\tThiol-disulfide oxidoreductase ResA\t80060\t80623
+        let partial = false;
+        if (whole_or_partial === "partial") {
+            partial = true;
+        }
+
         let q = queries.search_sql_stream(
             annoUpper,
             search_string,
             C.sql_search_max_rows,
+            partial,
         );
         // let q =
         //             "SELECT id,genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid FROM " +
@@ -624,7 +630,8 @@ router.post(
                 search_params:
                     "(Searches only whole words in `Gene` and `Gene Product`):",
                 gid_count: Object.keys(gid_count).length,
-                hit_source: "mysql",
+                //hit_source: "mysql",
+                whole_or_partial: whole_or_partial,
                 total_hits: total_length,
                 max: helpers.format_long_numbers(allowed_max),
                 form_type: JSON.stringify(["annotations"]),

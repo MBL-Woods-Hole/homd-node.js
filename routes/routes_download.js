@@ -678,7 +678,8 @@ router.post("/anno_search_data", async (req, res) => {
     let anno_cap = anno.toUpperCase();
     let search_text = req.body.search_text;
     let format = req.body.format; // table or fasta
-    let hit_source = req.body.hit_source;
+    let whole_or_partial = req.body.whole_or_partial;
+    console.log("whole_or_partial", whole_or_partial);
     //let id_list = JSON.parse(req.body.anno_ids);
     //logger.info('id_list length',id_list.length)
     //logger.info('anno',anno)
@@ -707,7 +708,7 @@ router.post("/anno_search_data", async (req, res) => {
             anno: anno,
             type: type,
             format: format,
-            hit_source: hit_source, //grep or sql
+            whole_or_partial: whole_or_partial, //grep or sql
         });
         return;
     }
@@ -1366,10 +1367,10 @@ router.get(
         let anno = req.query.anno;
         let output = req.query.output; // type= browser,text,excel
         let format = req.query.format; // fasta, table
-        let hit_source = req.query.hit_source;
-        console.log("format", format);
+        let whole_or_partial = req.query.whole_or_partial;
+        console.log("whole_or_partial", whole_or_partial);
         let partial = false;
-        if (hit_source === "grep") {
+        if (whole_or_partial === "partial") {
             partial = true;
         }
         //const q // = req.query.q;

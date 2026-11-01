@@ -118,11 +118,11 @@ function show_phage_hits(gid, contig, species, predictor, h) {
     el.style.display = "block";
     sorttable.makeSortable(document.getElementById("phage-table2"));
 }
-function show_anno_hits2(anno, gid, search_text, hit_source) {
+function show_anno_hits2(anno, gid, search_text, whole_or_partial) {
     console.log("anno", anno);
     console.log("gid", gid);
     console.log("search_text", search_text);
-    console.log("hit_source", hit_source);
+    console.log("whole_or_partial", whole_or_partial);
     var el = document.getElementById("anno-result");
     el.style.display = "none";
     //console.log('org',org)
@@ -141,14 +141,14 @@ function show_anno_hits2(anno, gid, search_text, hit_source) {
     //             allrows[n].style.background = "lightgreen";
     //         }
     //     }
-    console.log("here1");
+    //console.log("here1");
     // selected_row.style.background = "white";
     //annobox.style.padding = "10px";
     //annobox.style.height = "400px";
     var args = {
         gid: gid,
         anno: anno,
-        hit_source: hit_source,
+        whole_or_partial: whole_or_partial,
         search_text: search_text,
     };
     var xmlhttp = new XMLHttpRequest();

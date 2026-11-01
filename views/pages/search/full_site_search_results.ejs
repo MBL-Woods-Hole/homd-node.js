@@ -258,7 +258,7 @@ table.sortable thead {
                   <!-- obj.map((el) =>  el.pid) -->
                   <input type="hidden" id="anno" name="anno" value='<%= anno %>'>
                   <input type='hidden' name='search_text' value='<%= search_text %>' \>
-                  <input type='hidden' name='hit_source' value='<%= hit_source %>' \>
+                  <input type='hidden' name='whole_or_partial' value='<%= whole_or_partial %>' \>
                   <strong>Format:</strong>
                   <input type="radio" checked name="format" value='table'> [Table]&nbsp;&nbsp;
                   
@@ -297,7 +297,7 @@ table.sortable thead {
                        <%= anno_list2[gid].length %>
                        <% let giddata = anno_list2[gid] %>
                        <!-- in search.js -->
-                       <small>(<a href='#' onclick="show_anno_hits2('<%= anno %>','<%= gid %>','<%= search_text %>','<%= hit_source %>')">view hits</a>)</small>
+                       <small>(<a href='#' onclick="show_anno_hits2('<%= anno %>','<%= gid %>','<%= search_text %>','<%= whole_or_partial %>')">view hits</a>)</small>
                 </td>
                 
                 <td nowrap class='center'>
