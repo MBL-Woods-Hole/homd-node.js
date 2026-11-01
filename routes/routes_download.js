@@ -1593,7 +1593,7 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
         writableObjectMode: true, // Accepts objects
         transform(chunk, encoding, callback) {
             // Convert the object to a string (e.g., JSON string) and push it as a string
-            console.log("chunk", chunk);
+            //console.log("chunk", chunk);
             const arr = helpers.chunkSubstr(chunk.sequence.toString(), 100);
             //logger.info('arr[0]',arr[0])
             // let str += arr.join('\n')
@@ -1804,7 +1804,7 @@ function create_anno_search_table(sql_rows, anno, headers, search_term) {
     //text='anno table: '+anno
 
     for (let n in sql_rows) {
-        console.log("sql_rows", sql_rows[n]);
+        //console.log("sql_rows", sql_rows[n]);
         hmt = helpers.make_otid_display_name(
             C.genome_lookup[sql_rows[n].gid].otid,
         );
