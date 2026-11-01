@@ -412,7 +412,8 @@ export const search_sql_stream = (anno, text) => {
     q +=
         " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
         text +
-        "\"' IN BOOLEAN MODE);";
+        "\"' IN BOOLEAN MODE) limit " +
+        C.grep_search_max_rows;
     return q;
 };
 export const search_sql_stream2 = (anno, text) => {
@@ -432,7 +433,8 @@ export const search_sql_stream2 = (anno, text) => {
     q +=
         " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
         text +
-        "\"' IN BOOLEAN MODE);";
+        "\"' IN BOOLEAN MODE) limit " +
+        C.grep_search_max_rows;
     return q;
 };
 export const deep_anno_search2 = (anno, gid, search_text) => {
@@ -454,7 +456,8 @@ export const deep_anno_search2 = (anno, gid, search_text) => {
         search_text +
         "\"' IN BOOLEAN MODE) AND a.genome_id='" +
         gid +
-        "';";
+        "' limit " +
+        C.grep_search_max_rows;
     return q;
 };
 
@@ -473,7 +476,8 @@ export const fasta_download = (ext, anno, search_text) => {
     q +=
         " WHERE MATCH(attribute_product,attribute_gene) AGAINST('" +
         search_text +
-        "' IN BOOLEAN MODE)";
+        "' IN BOOLEAN MODE) limit " +
+        C.grep_search_max_rows;
 
     return q;
 };
