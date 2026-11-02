@@ -409,9 +409,10 @@ export const get_phage_from_ids_noseqs = (search_id_list) => {
 export const search_sql_stream = (
     anno,
     search_text,
-    limit = 0,
     partial = false,
+    limit = 0,
 ) => {
+    console.log("QUERY", partial);
     let q =
         "SELECT id,genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,region,type,start,end";
     q += " FROM " + anno + ".gff_fullsearch";
@@ -434,8 +435,8 @@ export const search_sql_stream = (
 export const search_sql_stream2 = (
     anno,
     search_text,
-    limit = 0,
     partial = false,
+    limit = 0,
 ) => {
     // TABLES DOWNLOAD include length na,aa and JOINs
     let q =
@@ -498,8 +499,8 @@ export const fasta_download = (
     ext,
     anno,
     search_text,
-    limit = 0,
     partial = false,
+    limit = 0,
 ) => {
     let q =
         "SELECT g.id,g.genome_id as gid,attribute_product as product,attribute_gene as gene,";

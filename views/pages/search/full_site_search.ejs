@@ -133,20 +133,17 @@
       <table id='anno-table-mysql' class='table'>
       <tr><td>
         
-        <input type='radio'  checked       name='anno_search_type' value='flex_search' /> <b>SQL Search</b>
+        <input type='radio'  checked       name='anno_search_type' value='flex_search' /> 
+        <b>Standard Search</b> (Max Hits Allowed: 70,000)
         <br>&nbsp;&nbsp;&nbsp;&nbsp;Searches: Annotation database (choose BAKTA, PROKKA or NCBI below)
         <br>&nbsp;&nbsp;&nbsp;&nbsp;Scope: Gene and Gene Product
         
-        
         </td>
       </tr>
-      
- 
-
     
       <tr><td>
         <input type='radio'  name='anno_search_type' value='stream_sql_search'/>
-        <b>EventSource Streaming</b> (Experimental Search)
+        <b>EventSource Streaming Search</b> (Experimental Search; Max Hits: none)
         </td>
       </tr>
      </table>
@@ -296,10 +293,13 @@
     var cb_count = checkboxes.length
     
     const anno_search_type = document.querySelector('input[name="anno_search_type"]:checked');
+   
     let form = document.getElementById('adv-search-form-anno_mysql')
     //console.log('action',form.action)
     //console.log('search_type',search_type.value)
     var ss = document.getElementById('search_text_anno_mysql').value
+     var wop = document.querySelector('input[name="whole_or_partial"]:checked').value;
+     console.log('wop',wop)
     const anno = document.querySelector('input[name="anno"]:checked').value;
          //var ss = document.querySelector('#search_textx').value;
     if(ss.length <=2){
@@ -308,7 +308,7 @@
     }
     
     if(anno_search_type.value === 'stream_sql_search'){
-        window.open('stream_results_sql?anno='+anno+'&search_text='+ss, '_self');
+        window.open('stream_results_sql?anno='+anno+'&search_text='+ss+'&whole_or_partial='+wop, '_self');
         return
     }else if(anno_search_type.value === 'stream_grep_search'){
         window.open('stream_results_grep?anno='+anno+'&search_text='+ss, '_self');

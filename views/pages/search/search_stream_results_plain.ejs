@@ -17,6 +17,7 @@ table td{
 
 <div id='output'>HOMD <%= anno.toUpperCase() %> Annotation Search:  Text= `<%= search_text %>`</div>
 <br>
+<span style=''><button id='stop-button'>Stop Stream</button></span>
 <div id='fasta-div' style='display:none;'>
   
   <div id="fasta-body">
@@ -55,7 +56,10 @@ table td{
     
     let format = '<%= format %>'
     const outputDiv = document.getElementById('output');
-    
+     document.getElementById('stop-button').addEventListener('click', function() {
+            console.log('Stream ended by User')
+            eventSource.close()
+        })
     //line 1333 in downloads
     const eventSource = new EventSource('/download/get_download_sql_stream?search=<%= search_text %>&anno=<%= anno %>&output=<%= type %>&format=<%= format %>&whole_or_partial=<%= whole_or_partial %>');
 

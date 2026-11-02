@@ -680,6 +680,10 @@ router.post("/anno_search_data", async (req, res) => {
     let format = req.body.format; // table or fasta
     let whole_or_partial = req.body.whole_or_partial;
     console.log("whole_or_partial", whole_or_partial);
+    let partial = false;
+    if (whole_or_partial === "partial") {
+        partial = true;
+    }
     //let id_list = JSON.parse(req.body.anno_ids);
     //logger.info('id_list length',id_list.length)
     //logger.info('anno',anno)
@@ -783,6 +787,7 @@ router.post("/anno_search_data", async (req, res) => {
             "faa",
             anno_cap,
             search_text,
+            partial,
             C.sql_search_max_rows,
         );
         // q = "SELECT";
@@ -810,6 +815,7 @@ router.post("/anno_search_data", async (req, res) => {
             "ffn",
             anno_cap,
             search_text,
+            partial,
             C.sql_search_max_rows,
         );
         // q = "SELECT";
@@ -838,6 +844,7 @@ router.post("/anno_search_data", async (req, res) => {
         q = queries.search_sql_stream2(
             anno_cap,
             search_text,
+            partial,
             C.sql_search_max_rows,
         );
         // q =
@@ -1402,8 +1409,8 @@ router.get(
                     "faa",
                     anno.toUpperCase(),
                     search_text,
-                    C.sql_search_max_rows,
                     partial,
+                    C.sql_search_max_rows,
                 );
 
                 conn = await promisePool.getConnection();
@@ -1414,8 +1421,8 @@ router.get(
                     "ffn",
                     anno.toUpperCase(),
                     search_text,
-                    C.sql_search_max_rows,
                     partial,
+                    C.sql_search_max_rows,
                 );
 
                 conn = await promisePool.getConnection();
@@ -1426,8 +1433,8 @@ router.get(
                 q = queries.search_sql_stream(
                     anno.toUpperCase(),
                     search_text,
-                    C.sql_search_max_rows,
                     partial,
+                    C.sql_search_max_rows,
                 );
                 //q = queries.deep_anno_search2(anno, gid, search_text);
                 conn = await promisePool.getConnection();
