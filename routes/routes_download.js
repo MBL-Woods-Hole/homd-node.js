@@ -822,37 +822,6 @@ router.post("/anno_data_by_gid", async (req, res) => {
     if (format.slice(0, 5) == "fasta") {
         q = queries.fasta_download_per_gid(gid, ext, anno_cap);
         console.log(q);
-        //q += " from NCBI.faa WHERE NCBI.faa.genome_id = '" + gid + "'";
-        //  } else if (format === "fasta_na" && anno === "ncbi") {
-        //         q += " from NCBI.ffn WHERE NCBI.ffn.genome_id = '" + gid + "'";
-        //     } else if (format === "fasta_aa" && anno === "prokka") {
-        //         q += " from PROKKA.faa WHERE PROKKA.faa.genome_id = '" + gid + "'";
-        //
-        //         //GCA_030450175.1| Protein ID: GCA_030450175.1_00001 | Galactan 5-O-arabinofuranosyltransferase | Corynebacterium tuberculostearicum | length: 688 bp
-        //         //SELECT UNCOMPRESS(seq_compressed) as seq FROM `PROKKA`.`faa` WHERE genome_id ='GCA_030450175.1' and protein_id='GCA_030450175.1_00001'
-        //     } else if (format === "fasta_aa" && anno === "bakta") {
-        //         q += " from BAKTA.faa WHERE BAKTA.faa.genome_id = '" + gid + "'";
-        //     } else if (format === "fasta_na" && anno === "prokka") {
-        //         q += " from PROKKA.ffn WHERE PROKKA.ffn.genome_id = '" + gid + "'";
-
-        //GCA_030450175.1| Protein ID: GCA_030450175.1_00001 | Galactan 5-O-arabinofuranosyltransferase | Corynebacterium tuberculostearicum | length: 688 bp
-        //SELECT UNCOMPRESS(seq_compressed) as seq FROM `PROKKA`.`ffn` WHERE genome_id ='GCA_030450175.1' and protein_id='GCA_030450175.1_00001'
-        //} else if (anno === "prokka") {
-        //   q = queries.get_annotation_query(gid, anno_cap);
-        //  q =
-        //             "SELECT region as acc,  gc, protein_id as pid, length_na,length_aa, `start`, `end`,";
-        //         q +=
-        //             " PROKKA.orf.product as product,PROKKA.orf.gene as gene,BAKTA_sub_prokka.orf.Bakta_product as bakta_product,BAKTA_sub_prokka.orf.Bakta_gene as bakta_gene";
-        //         q += " FROM PROKKA.orf";
-        //         q += " LEFT JOIN BAKTA_sub_prokka.orf on(protein_id=core_ID)";
-        //         q += " WHERE PROKKA.orf.genome_id = '" + gid + "'";
-        //} else if (anno === "ncbi") {
-        //    q = queries.get_annotation_query(gid, anno_cap);
-        //  q =
-        //             "SELECT region as acc,  gc, protein_id as pid, product, length_na,length_aa, `start`, `end`, gene";
-        //         q += " FROM NCBI.orf";
-        //         q += " WHERE NCBI.orf.genome_id = '" + gid + "'";
-        //}
     } else {
         console.log("aanocap", anno_cap);
         q = queries.get_annotation_query(gid, anno_cap);
