@@ -854,6 +854,7 @@ router.post("/anno_data_by_gid", async (req, res) => {
         //         q += " WHERE NCBI.orf.genome_id = '" + gid + "'";
         //}
     } else {
+        console.log("aanocap", anno_cap);
         q = queries.get_annotation_query(gid, anno_cap);
     }
     if (format.slice(0, 5) === "fasta") {

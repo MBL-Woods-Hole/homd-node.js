@@ -1306,7 +1306,7 @@ router.get("/explorer", async function explorer_get(req, res) {
     }
 
     //OLD DB
-    const q = queries.get_annotation_query(gid, anno);
+    const q = queries.get_annotation_query(gid, anno.toUpperCase());
 
     // local host:  explorer?gid=SEQF4098.1&anno=ncbi
 
