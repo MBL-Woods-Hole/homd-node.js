@@ -140,42 +140,59 @@ export const get_db_updates_query = () => {
 };
 
 // GENOMES
-export const get_annotation_query = (gid, anno) => {
+export const get_annotation_query = (gid, anno_cap) => {
     let q;
-    if (anno === "prokka") {
-        q =
-            "SELECT a.region, type, gc, a.protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene";
-        q += " FROM PROKKA.orf_gff a";
-        q +=
-            " LEFT JOIN PROKKA.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id ";
-        q +=
-            " LEFT JOIN PROKKA.ffn c on a.genome_id=c.genome_id and a.protein_id=c.protein_id ";
-        q += " WHERE a.genome_id = '" + gid + "'";
-    } else if (anno === "ncbi") {
-        q =
-            "SELECT a.region, type, gc, a.protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene";
-        q += " FROM NCBI.orf_gff a";
-        q +=
-            " LEFT JOIN NCBI.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id ";
-        q +=
-            " LEFT JOIN NCBI.ffn c on a.genome_id=c.genome_id and a.protein_id=c.protein_id ";
-        q += " WHERE a.genome_id = '" + gid + "'";
-    } else {
-        // BAKTA
-        //     SELECT a.region, a.type,  a.attribute_locus_tag as locus_tag,  a.attribute_product as product, 'c.length_na', b.length_aa, a.`start`, a.`end`, a.attribute_gene as gene
-        // FROM BAKTA.gff a
-        // LEFT JOIN BAKTA.faa b on b.protein_id=a.attribute_locus_tag
-        /* using(protein_id)  */
-        /* LEFT JOIN BAKTA.ffn c using(protein_id)  */
-        //WHERE a.genome_id = 'GCA_900105505.1'
-        q =
-            'SELECT a.region, a.type,  a.attribute_locus_tag as protein_id,  a.attribute_product as product, "c.length_na", b.length_aa, a.`start`, a.`end`, a.attribute_gene as gene ';
-        q += " FROM BAKTA.gff a";
-        q +=
-            " LEFT JOIN BAKTA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
-        //qSelectAnno += ' LEFT JOIN BAKTA.ffn c using(protein_id)'
-        q += " WHERE a.genome_id = '" + gid + "'";
-    }
+    //if (anno === "prokka") {
+
+    q =
+        "SELECT a.region, type, a.attribute_locus_tag as protein_id, attribute_product as product, c.length_na, b.length_aa,";
+    q += " `start`, `end`, attribute_gene as gene";
+    q += " FROM " + anno_cap + ".gff_fullsearch a";
+    q +=
+        " LEFT JOIN " +
+        anno_cap +
+        ".faa b on a.genome_id=b.genome_id and a.attribute_locus_tag=b.protein_id";
+    q +=
+        " LEFT JOIN " +
+        anno_cap +
+        ".ffn c on a.genome_id=c.genome_id and a.attribute_locus_tag=c.protein_id";
+    q += " WHERE a.genome_id='" + gid + "'";
+
+    //       q =
+    //             "SELECT a.region, type, gc, a.protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene";
+    //         q += " FROM "+anno_cap+".orf_gff a";
+    //         q +=
+    //             " LEFT JOIN "+anno_cap+".faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id ";
+    //         q +=
+    //             " LEFT JOIN "+anno_cap+".ffn c on a.genome_id=c.genome_id and a.protein_id=c.protein_id ";
+    //         q += " WHERE a.genome_id = '" + gid + "'";
+    //
+
+    //  } else if (anno === "ncbi") {
+    //         q =
+    //             "SELECT a.region, type, gc, a.protein_id, product, c.length_na, b.length_aa, `start`, `end`, gene";
+    //         q += " FROM NCBI.orf_gff a";
+    //         q +=
+    //             " LEFT JOIN NCBI.faa b on a.genome_id=b.genome_id and a.protein_id=b.protein_id ";
+    //         q +=
+    //             " LEFT JOIN NCBI.ffn c on a.genome_id=c.genome_id and a.protein_id=c.protein_id ";
+    //         q += " WHERE a.genome_id = '" + gid + "'";
+    //     } else {
+    //         // BAKTA
+    //         //     SELECT a.region, a.type,  a.attribute_locus_tag as locus_tag,  a.attribute_product as product, 'c.length_na', b.length_aa, a.`start`, a.`end`, a.attribute_gene as gene
+    //         // FROM BAKTA.gff a
+    //         // LEFT JOIN BAKTA.faa b on b.protein_id=a.attribute_locus_tag
+    //         /* using(protein_id)  */
+    //         /* LEFT JOIN BAKTA.ffn c using(protein_id)  */
+    //         //WHERE a.genome_id = 'GCA_900105505.1'
+    //         q =
+    //             'SELECT a.region, a.type,  a.attribute_locus_tag as protein_id,  a.attribute_product as product, "c.length_na", b.length_aa, a.`start`, a.`end`, a.attribute_gene as gene ';
+    //         q += " FROM BAKTA.gff a";
+    //         q +=
+    //             " LEFT JOIN BAKTA.faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
+    //         //qSelectAnno += ' LEFT JOIN BAKTA.ffn c using(protein_id)'
+    //         q += " WHERE a.genome_id = '" + gid + "'";
+    //     }
 
     // const db = anno.toUpperCase() + '_' + gid  // ie: NCBI_SEF10000
     //   let qSelectAnno = 'SELECT accession, GC, protein_id, product,length,`start`,`stop`,length(seq_na) as len_na,length(seq_aa) as len_aa FROM ' + db + '.ORF_seq'
@@ -432,7 +449,7 @@ export const search_sql_stream = (
     if (limit) q += " limit " + limit;
     return q;
 };
-export const search_sql_stream2 = (
+export const search_sql_stream_with_lengths = (
     anno,
     search_text,
     partial = false,
@@ -465,7 +482,7 @@ export const search_sql_stream2 = (
     if (limit) q += " limit " + limit;
     return q;
 };
-export const deep_anno_search2 = (anno, gid, search_text, partial = false) => {
+export const deep_anno_search = (anno, gid, search_text, partial = false) => {
     // for one genome only -- not used in downloads
     let q =
         "SELECT a.id,a.genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,a.region,type,start,end,";
@@ -494,8 +511,26 @@ export const deep_anno_search2 = (anno, gid, search_text, partial = false) => {
 
     return q;
 };
+export const fasta_download_per_gid = (gid, ext, anno) => {
+    //  let q = "SELECT";
+    //     q += " protein_id as pid,genome_id,region,"
+    //     q += " UNCOMPRESS(seq_compressed) AS sequence";
+    //     q += " from "+anno+"."+ext+" WHERE "+anno+"."+ext+".genome_id = '" + gid + "'";
+    let q =
+        "SELECT protein_id as pid,a.genome_id,a.region, attribute_product as product,attribute_gene as gene,type,";
+    q += " UNCOMPRESS(seq_compressed) AS sequence";
+    q += " FROM " + anno + ".gff_fullsearch a";
+    q +=
+        " JOIN " +
+        anno +
+        "." +
+        ext +
+        " b on (b.protein_id=a.attribute_locus_tag and b.region=a.region)";
+    q += " WHERE a.genome_id = '" + gid + "'";
 
-export const fasta_download = (
+    return q;
+};
+export const fasta_download_search = (
     ext,
     anno,
     search_text,

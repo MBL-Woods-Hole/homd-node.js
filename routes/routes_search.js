@@ -92,16 +92,11 @@ router.post(
 
         let annoUpper = req.body.anno.toUpperCase();
 
-        // let q = queries.deep_anno_search(
-        //             annoUpper,
-        //             req.body.hit_source,
-        //             req.body.id_list,
-        //         );
         let partial = false;
         if (req.body.whole_or_partial === "partial") {
             partial = true;
         }
-        let q = queries.deep_anno_search2(
+        let q = queries.deep_anno_search(
             annoUpper,
             req.body.gid,
             req.body.search_text,

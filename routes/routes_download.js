@@ -649,25 +649,6 @@ router.get(
         return;
     },
 );
-// router.get('/dnld_pangenome',(req, res) => {
-//     logger.info('req query',req.query)
-//     let pg = req.query.pg
-//     let ver = req.query.V
-//     let fn
-//     let obj = C.pangenomes.find(o => o.name === pg);
-//
-//     if(ver === '7'){
-//        fn = obj.dnld_v7
-//     }else{
-//        fn = obj.dnld_v8
-//     }
-//
-//     let fullpath = path.join(ENV.PATH_TO_PANGENOMES, req.query.pg, fn)
-//
-//     helpers.print('file path: '+fullpath)
-//     res.download(fullpath)
-//
-// });
 
 router.post("/anno_search_data", async (req, res) => {
     // Download all Annotation Hits/ table and fasta
@@ -716,147 +697,36 @@ router.post("/anno_search_data", async (req, res) => {
         });
         return;
     }
-    //     for (let n in selected_gids) {
-    //         lst = id_list[selected_gids[n]].map((el) => "'" + el.pid + "'");
-    //
-    //         pid_list = pid_list.concat(lst);
-    //     }
-    //     unique_pidlst = [...new Set(pid_list)];
-    //unique_pidlst = id_list.map((el) => "'" + el + "'");
-    //logger.info('unique_lst',unique_pidlst)
-    // if (anno.toUpperCase() === "BAKTA") {
-    //         if (format === "fasta_aa") {
-    //             //type = "text";
-    //             q = "SELECT CONCAT('>BAKTA | ',a.region,' | ', a.genome_id,' | ',";
-    //             q +=
-    //                 " a.attribute_locus_tag,' | ',start,'..',end,' | length:',b.length_aa) AS defline,";
-    //             q += " UNCOMPRESS(seq_compressed) as sequence";
-    //             q += " FROM BAKTA.gff a";
-    //             q +=
-    //                 " JOIN BAKTA.faa b  on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
-    //             q += " WHERE a.attribute_locus_tag in (" + unique_pidlst + ")";
-    //             //head_text_array = ['core_ID','Genome_ID','Contig','BAKTA','seq_length']
-    //         } else if (format === "fasta_na") {
-    //             // error  there is no bakta na seqs
-    //             res.send("Error::BAKTA doesn't have nucleotide (na) sequences.");
-    //             res.end();
-    //             return;
-    //         } else {
-    //             // bakta table (everthing except seqs)
-    //             q =
-    //                 "SELECT genome_id as gid,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as end,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,";
-    //             q +=
-    //                 " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef";
-    //             q +=
-    //                 " from `BAKTA_sub_prokka`.orf WHERE core_ID in (" +
-    //                 unique_pidlst +
-    //                 ")";
-    //             head_text_array = [
-    //                 "Genome_ID",
-    //                 "HMT-ID",
-    //                 "Domain",
-    //                 "Phylum",
-    //                 "Class",
-    //                 "Order",
-    //                 "Family",
-    //                 "Genus",
-    //                 "Species",
-    //                 "Subspecies",
-    //                 "Strain",
-    //                 "Contig",
-    //                 "Protein_ID",
-    //                 "seq_length",
-    //                 "start",
-    //                 "end",
-    //                 "Product",
-    //                 "Gene",
-    //                 "bakta_EC",
-    //                 "bakta_GO",
-    //                 "bakta_COG",
-    //                 "bakta_RefSeq",
-    //                 "bakta_UniParc",
-    //                 "bakta_UniRef",
-    //             ];
-    //         }
-    //     } else {
-    // PROKKA and NCBI
 
     if (format === "fasta_aa") {
         //type = "text";
-        q = queries.fasta_download(
+        q = queries.fasta_download_search(
             "faa",
             anno_cap,
             search_text,
             partial,
             C.sql_search_max_rows,
         );
-        // q = "SELECT";
-        //             q +=
-        //                 " CONCAT('>" +
-        //                 anno_cap +
-        //                 " | '," +
-        //                 anno_cap +
-        //                 ".orf.genome_id,' | '," +
-        //                 anno_cap +
-        //                 ".orf.region,' | ',protein_id) AS defline,";
-        //             q += " UNCOMPRESS(seq_compressed) AS sequence";
-        //             q +=
-        //                 " from " +
-        //                 anno_cap +
-        //                 ".orf JOIN " +
-        //                 anno_cap +
-        //                 ".faa using(protein_id) WHERE protein_id in (" +
-        //                 unique_pidlst +
-        //                 ")";
-        //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
     } else if (format === "fasta_na") {
         //type = "text";
-        q = queries.fasta_download(
+        q = queries.fasta_download_search(
             "ffn",
             anno_cap,
             search_text,
             partial,
             C.sql_search_max_rows,
         );
-        // q = "SELECT";
-        //             q +=
-        //                 " CONCAT('>" +
-        //                 anno_cap +
-        //                 " | '," +
-        //                 anno_cap +
-        //                 ".orf.genome_id,' | '," +
-        //                 anno_cap +
-        //                 ".orf.region,' | ',protein_id) AS defline,";
-        //             q += " UNCOMPRESS(seq_compressed) AS sequence";
-        //             q +=
-        //                 " from " +
-        //                 anno_cap +
-        //                 ".orf JOIN " +
-        //                 anno_cap +
-        //                 ".ffn using(protein_id) WHERE protein_id in (" +
-        //                 unique_pidlst +
-        //                 ")";
-        //q += " from "+anno_cap+".orf JOIN "+anno_cap+".ffn using(protein_id) WHERE protein_id in ('WKE52996.1','WKE52997.1','WKE52998.1')"
     } else {
         // format == table
         // table  PROKKA and NCBI
-        //q = queries.deep_anno_search2(anno_cap, gid, search_text);
-        q = queries.search_sql_stream2(
+
+        q = queries.search_sql_stream_with_lengths(
             anno_cap,
             search_text,
             partial,
             C.sql_search_max_rows,
         );
-        // q =
-        //                 "SELECT genome_id as gid,region as acc,protein_id as pid,start,end,product,gene,length_aa as laa,";
-        //             q +=
-        //                 "length_na as lna from " +
-        //                 anno_cap +
-        //                 ".orf WHERE protein_id in (" +
-        //                 unique_pidlst +
-        //                 ")";
-        //head_text_array = ['Genome_ID','Contig','Protein_ID','seq_length_na','seq_length_aa','start','end','Product','Gene']
-        // add HMT,taxonomy(inc.subsp),strain
+
         head_text_array = [
             "Genome_ID",
             "HMT-ID",
@@ -923,7 +793,7 @@ router.post("/anno_search_data", async (req, res) => {
 ////
 router.post("/anno_data_by_gid", async (req, res) => {
     // Download all Annotation Hits By gid/ table and fasta
-    logger.info(req.body, "anno_data_by_gid req body");
+    console.log(req.body, "anno_data_by_gid req body");
     let type = req.body.type; // browser, text or excel
     let anno = req.body.anno; // ncbi prokka or bakta
     let gid = req.body.gid;
@@ -941,40 +811,51 @@ router.post("/anno_data_by_gid", async (req, res) => {
 
     let anno_cap = anno.toUpperCase();
 
-    q = "SELECT";
-    q += " CONCAT('>',protein_id,' | ',genome_id,' | ',region) AS defline,";
-    q += " UNCOMPRESS(seq_compressed) AS sequence";
-    if (format === "fasta_aa" && anno === "ncbi") {
-        q += " from NCBI.faa WHERE NCBI.faa.genome_id = '" + gid + "'";
-    } else if (format === "fasta_na" && anno === "ncbi") {
-        q += " from NCBI.ffn WHERE NCBI.ffn.genome_id = '" + gid + "'";
-    } else if (format === "fasta_aa" && anno === "prokka") {
-        q += " from PROKKA.faa WHERE PROKKA.faa.genome_id = '" + gid + "'";
-
-        //GCA_030450175.1| Protein ID: GCA_030450175.1_00001 | Galactan 5-O-arabinofuranosyltransferase | Corynebacterium tuberculostearicum | length: 688 bp
-        //SELECT UNCOMPRESS(seq_compressed) as seq FROM `PROKKA`.`faa` WHERE genome_id ='GCA_030450175.1' and protein_id='GCA_030450175.1_00001'
-    } else if (format === "fasta_aa" && anno === "bakta") {
-        q += " from BAKTA.faa WHERE BAKTA.faa.genome_id = '" + gid + "'";
-    } else if (format === "fasta_na" && anno === "prokka") {
-        q += " from PROKKA.ffn WHERE PROKKA.ffn.genome_id = '" + gid + "'";
+    // q = "SELECT";
+    //     q += " CONCAT('>',protein_id,' | ',genome_id,' | ',region) AS defline,";
+    //     q += " UNCOMPRESS(seq_compressed) AS sequence";
+    if (format === "fasta_aa") {
+        ext = "faa";
+    } else {
+        ext = "ffn";
+    }
+    if (format.slice(0, 5) == "fasta") {
+        q = queries.fasta_download_per_gid(gid, ext, anno_cap);
+        console.log(q);
+        //q += " from NCBI.faa WHERE NCBI.faa.genome_id = '" + gid + "'";
+        //  } else if (format === "fasta_na" && anno === "ncbi") {
+        //         q += " from NCBI.ffn WHERE NCBI.ffn.genome_id = '" + gid + "'";
+        //     } else if (format === "fasta_aa" && anno === "prokka") {
+        //         q += " from PROKKA.faa WHERE PROKKA.faa.genome_id = '" + gid + "'";
+        //
+        //         //GCA_030450175.1| Protein ID: GCA_030450175.1_00001 | Galactan 5-O-arabinofuranosyltransferase | Corynebacterium tuberculostearicum | length: 688 bp
+        //         //SELECT UNCOMPRESS(seq_compressed) as seq FROM `PROKKA`.`faa` WHERE genome_id ='GCA_030450175.1' and protein_id='GCA_030450175.1_00001'
+        //     } else if (format === "fasta_aa" && anno === "bakta") {
+        //         q += " from BAKTA.faa WHERE BAKTA.faa.genome_id = '" + gid + "'";
+        //     } else if (format === "fasta_na" && anno === "prokka") {
+        //         q += " from PROKKA.ffn WHERE PROKKA.ffn.genome_id = '" + gid + "'";
 
         //GCA_030450175.1| Protein ID: GCA_030450175.1_00001 | Galactan 5-O-arabinofuranosyltransferase | Corynebacterium tuberculostearicum | length: 688 bp
         //SELECT UNCOMPRESS(seq_compressed) as seq FROM `PROKKA`.`ffn` WHERE genome_id ='GCA_030450175.1' and protein_id='GCA_030450175.1_00001'
-    } else if (anno === "prokka") {
-        q =
-            "SELECT region as acc,  gc, protein_id as pid, length_na,length_aa, `start`, `end`,";
-        q +=
-            " PROKKA.orf.product as product,PROKKA.orf.gene as gene,BAKTA_sub_prokka.orf.Bakta_product as bakta_product,BAKTA_sub_prokka.orf.Bakta_gene as bakta_gene";
-        q += " FROM PROKKA.orf";
-        q += " LEFT JOIN BAKTA_sub_prokka.orf on(protein_id=core_ID)";
-        q += " WHERE PROKKA.orf.genome_id = '" + gid + "'";
-    } else if (anno === "ncbi") {
-        q =
-            "SELECT region as acc,  gc, protein_id as pid, product, length_na,length_aa, `start`, `end`, gene";
-        q += " FROM NCBI.orf";
-        q += " WHERE NCBI.orf.genome_id = '" + gid + "'";
+        //} else if (anno === "prokka") {
+        //   q = queries.get_annotation_query(gid, anno_cap);
+        //  q =
+        //             "SELECT region as acc,  gc, protein_id as pid, length_na,length_aa, `start`, `end`,";
+        //         q +=
+        //             " PROKKA.orf.product as product,PROKKA.orf.gene as gene,BAKTA_sub_prokka.orf.Bakta_product as bakta_product,BAKTA_sub_prokka.orf.Bakta_gene as bakta_gene";
+        //         q += " FROM PROKKA.orf";
+        //         q += " LEFT JOIN BAKTA_sub_prokka.orf on(protein_id=core_ID)";
+        //         q += " WHERE PROKKA.orf.genome_id = '" + gid + "'";
+        //} else if (anno === "ncbi") {
+        //    q = queries.get_annotation_query(gid, anno_cap);
+        //  q =
+        //             "SELECT region as acc,  gc, protein_id as pid, product, length_na,length_aa, `start`, `end`, gene";
+        //         q += " FROM NCBI.orf";
+        //         q += " WHERE NCBI.orf.genome_id = '" + gid + "'";
+        //}
+    } else {
+        q = queries.get_annotation_query(gid, anno_cap);
     }
-
     if (format.slice(0, 5) === "fasta") {
         // Set response headers for file download
         //res.setHeader('Content-Type', 'text/plain');
@@ -1405,7 +1286,7 @@ router.get(
         try {
             let cnt = 0;
             if (format == "fasta_aa") {
-                q = queries.fasta_download(
+                q = queries.fasta_download_search(
                     "faa",
                     anno.toUpperCase(),
                     search_text,
@@ -1417,7 +1298,7 @@ router.get(
                 stream = conn.connection.query(q).stream();
                 res.write(`data: ${JSON.stringify({ head: "AA FASTA" })}\n\n`);
             } else if (format == "fasta_na") {
-                q = queries.fasta_download(
+                q = queries.fasta_download_search(
                     "ffn",
                     anno.toUpperCase(),
                     search_text,
@@ -1436,7 +1317,7 @@ router.get(
                     partial,
                     C.sql_search_max_rows,
                 );
-                //q = queries.deep_anno_search2(anno, gid, search_text);
+
                 conn = await promisePool.getConnection();
                 stream = conn.connection.query(q).stream();
                 res.write(
@@ -1544,23 +1425,6 @@ router.get(
     },
 );
 
-///////////////////////////////////////////
-
-// function stream_query_to_browser(req, res, query) {
-//     console.log("IN /download/stream_query_to_browser");
-//     console.log(query);
-//
-//
-//     res.render("pages/search/search_stream_results_plain", {
-//         title: "HOMD :: Search Results",
-//         pgname: "", // for AboutThisPage
-//         config: JSON.stringify(ENV),
-//         ver_info: JSON.stringify(C.version_information),
-//         q: JSON.stringify(query)
-//
-//     });
-// };
-//
 //
 function create_phage_search_table(sql_rows, header_array, search_term) {
     let gid, otid, hmt, lineage, strain;
@@ -1603,7 +1467,7 @@ function create_phage_search_table(sql_rows, header_array, search_term) {
 ////
 async function stream_sqlquery_download(q, fname, res, format, type) {
     console.log(`in stream_sqlquery_download ${format} ${type}`);
-    // IMPORTANT: q must have defline and sequence elements
+
     // format is fasta or table
     if (format === "fasta" && type === "excel") {
         type = "text";
@@ -1654,7 +1518,7 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
     });
 
     const stream = await queries.run_query_stream_async(q, res);
-    console.log("stream", stream);
+    //console.log("stream", stream);
     console.log(q);
     if (format === "table") {
         //transformerStream = tableObjectToStringStream
@@ -1689,89 +1553,55 @@ async function stream_sqlquery_download(q, fname, res, format, type) {
 function create_anno_table(sql_rows, anno, gid) {
     let text = "Annotation Table: " + anno.toUpperCase() + "\n";
     let headers;
+    console.log(anno, gid);
+    // console.log(sql_rows)
+    //     row: {
+    //     region: 'ACFU01000001.1',
+    //     type: 'CDS',
+    //     protein_id: 'GCA_000174175.1_02269',
+    //     product: '50S ribosomal protein L16',
+    //     length_na: '426',
+    //     length_aa: '141',
+    //     start: 85700,
+    //     end: 86125,
+    //     gene: 'rplP'
+    //   },
 
-    if (anno === "prokka") {
-        //'Bakta' as anno,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
-        //        q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef
-        // ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
-        headers = [
-            "Genome_ID",
-            "Accession",
-            "Protein_ID",
-            "seq_length_na",
-            "seq_length_aa",
-            "start",
-            "end",
-            "Product",
-            "Gene",
-            "BAKTA_Product",
-            "BAKTA_Gene",
-        ];
-        text += headers.join("\t") + "\n";
-        for (let n in sql_rows) {
-            text +=
-                gid +
-                "\t" +
-                sql_rows[n].acc +
-                "\t" +
-                sql_rows[n].pid +
-                "\t" +
-                sql_rows[n].length_na +
-                "\t" +
-                sql_rows[n].length_aa;
-            text +=
-                "\t" +
-                sql_rows[n].start +
-                "\t" +
-                sql_rows[n].end +
-                "\t" +
-                sql_rows[n].product +
-                "\t" +
-                sql_rows[n].gene;
-            text +=
-                "\t" +
-                sql_rows[n].bakta_product +
-                "\t" +
-                sql_rows[n].bakta_gene;
-            text += "\n";
-        }
-    } else {
-        // anno === ncbi
-        //text='anno table: '+anno
-        headers = [
-            "Genome_ID",
-            "Accession",
-            "Protein_ID",
-            "seq_length_na",
-            "seq_length_aa",
-            "start",
-            "end",
-            "Product",
-            "Gene",
-        ];
-        text += headers.join("\t") + "\n";
-        for (let n in sql_rows) {
-            text +=
-                gid +
-                "\t" +
-                sql_rows[n].acc +
-                "\t" +
-                sql_rows[n].pid +
-                "\t" +
-                sql_rows[n].length_na +
-                "\t" +
-                sql_rows[n].length_aa;
-            text +=
-                "\t" +
-                sql_rows[n].start +
-                "\t" +
-                sql_rows[n].end +
-                "\t" +
-                sql_rows[n].product +
-                "\t" +
-                sql_rows[n].gene;
-            text += "\n";
-        }
+    // ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
+    headers = [
+        "Genome_ID",
+        "Region",
+        "Protein_ID",
+        "seq_length_na",
+        "seq_length_aa",
+        "start",
+        "end",
+        "Gene",
+        "Product",
+    ];
+    text += headers.join("\t") + "\n";
+    for (let n in sql_rows) {
+        text +=
+            gid +
+            "\t" +
+            sql_rows[n].region +
+            "\t" +
+            sql_rows[n].protein_id +
+            "\t" +
+            sql_rows[n].length_na +
+            "\t" +
+            sql_rows[n].length_aa;
+        text +=
+            "\t" +
+            sql_rows[n].start +
+            "\t" +
+            sql_rows[n].end +
+            "\t" +
+            sql_rows[n].gene +
+            "\t" +
+            sql_rows[n].product;
+
+        text += "\n";
     }
 
     return text;
@@ -1781,64 +1611,6 @@ function create_anno_search_table(sql_rows, anno, headers, search_term) {
     let hmt, strain, lineage;
     let text = anno.toUpperCase() + ' ::Search String: "' + search_term + '"\n';
     text += headers.join("\t") + "\n";
-
-    // if (anno === "bakta") {
-    //         //'Bakta' as anno,core_contig_acc as contig,core_ID as pid,core_start as start,core_end as stop,bakta_Product as product,bakta_Gene as gene,bakta_Length as length,"
-    //         //        q += " bakta_EC,bakta_GO,bakta_COG,bakta_RefSeq,bakta_UniParc,bakta_UniRef
-    //         // ['Genome_ID','Contig','Protein_ID','seq_length','start','end','Product','Gene','bakta_EC','bakta_GO','bakta_COG','bakta_RefSeq','bakta_UniParc','bakta_UniRef']
-    //
-    //         for (let n in sql_rows) {
-    //             hmt = helpers.make_otid_display_name(
-    //                 C.genome_lookup[sql_rows[n].gid].otid,
-    //             );
-    //             strain = C.genome_lookup[sql_rows[n].gid].strain;
-    //             lineage =
-    //                 C.taxon_lineage_lookup[C.genome_lookup[sql_rows[n].gid].otid];
-    //             text += sql_rows[n].gid;
-    //             text += "\t" + hmt;
-    //             text += "\t" + lineage.domain;
-    //             text += "\t" + lineage.phylum;
-    //             text += "\t" + lineage.klass;
-    //             text += "\t" + lineage.order;
-    //             text += "\t" + lineage.family;
-    //             text += "\t" + lineage.genus;
-    //             text += "\t" + lineage.species;
-    //             text += "\t" + lineage.subspecies;
-    //             text += "\t" + strain;
-    //             text +=
-    //                 "\t" +
-    //                 sql_rows[n].region +
-    //                 "\t" +
-    //                 sql_rows[n].pid +
-    //                 "\t" +
-    //                 sql_rows[n].length;
-    //             text +=
-    //                 "\t" +
-    //                 sql_rows[n].start +
-    //                 "\t" +
-    //                 sql_rows[n].end +
-    //                 "\t" +
-    //                 sql_rows[n].product +
-    //                 "\t" +
-    //                 sql_rows[n].gene;
-    //             text +=
-    //                 "\t" +
-    //                 sql_rows[n].bakta_EC +
-    //                 "\t" +
-    //                 sql_rows[n].bakta_GO +
-    //                 "\t" +
-    //                 sql_rows[n].bakta_COG;
-    //             text +=
-    //                 "\t" +
-    //                 sql_rows[n].bakta_RefSeq +
-    //                 "\t" +
-    //                 sql_rows[n].bakta_UniParc +
-    //                 "\t" +
-    //                 sql_rows[n].bakta_UniRef;
-    //             text += "\n";
-    //         }
-    //     } else {
-    //text='anno table: '+anno
 
     for (let n in sql_rows) {
         //console.log("sql_rows", sql_rows[n]);
