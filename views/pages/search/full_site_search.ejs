@@ -135,7 +135,7 @@
         
         <input type='radio'  checked       name='anno_search_type' value='flex_search' /> 
         <b>Standard Search</b> (Max Hits Allowed: 70,000)
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;Searches: Annotation database (choose BAKTA, PROKKA or NCBI below)
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;Search: Annotation databases (choose BAKTA, PROKKA or NCBI below)
         <br>&nbsp;&nbsp;&nbsp;&nbsp;Scope: Gene and Gene Product
         
         </td>
@@ -149,12 +149,14 @@
      </table>
      
       <div class='form-control-box'>Select an Annotation Method:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_mysql' checked id='prokka_cb_anno_mysql' name='anno' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_mysql' checked id='bakta_cb_mysql' name='anno' value='bakta'  > 
+        <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>
         &nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_mysql' id='ncbi_cb_mysql' name='anno' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_mysql'  id='prokka_cb_anno_mysql' name='anno' value='prokka'  > PROKKA
         &nbsp;&nbsp;&nbsp;
-        <input type='radio' class='anno_cb_mysql' id='bakta_cb_mysql' name='anno' value='bakta'  > 
-        <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>&nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_mysql' id='ncbi_cb_mysql' name='anno' value='ncbi'  > NCBI
+        &nbsp;&nbsp;&nbsp;
+        
       <hr>
       Select a Search Type:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <input type='radio' checked name='whole_or_partial' value='whole' /> Whole Word Search&nbsp;&nbsp;&nbsp;&nbsp;
@@ -162,7 +164,7 @@
       
       <hr>
           Enter Search Text: 
-          <input type="text" class='search_text' placeholder="Search Site.." name='search_text' id='search_text_anno_mysql' value='' maxlength='80' size='50' /> 
+          <input type="text" class='search_text' placeholder="Search Annotations..." name='search_text' id='search_text_anno_mysql' value='' maxlength='80' size='50' /> 
           <button id="submit-button-mysql" type="button" class='submit-button'>Submit</button>
         </div>
       
@@ -194,7 +196,7 @@
       </table>
       <div class='form-control-box'>
           Enter Search Text: 
-          <input type="text" class='search_text' placeholder="Search Site.." name='search_text_phage_grep' id='search_text_phage_grep' value='' maxlength='80' size='50' /> 
+          <input type="text" class='search_text' placeholder="Search Phage Data..." name='search_text_phage_grep' id='search_text_phage_grep' value='' maxlength='80' size='50' /> 
           <!-- <input type='button' class='submit-button' id='submit-button-phage' name='submit-button-phage' value='Submit' onclick="validate_search_form('phage_grep')" \> -->
            <button id="submit-button-phage" type="button" class='submit-button'>Submit</button>
         </div>
