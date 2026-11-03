@@ -293,34 +293,13 @@ const promises = [
     ),
 
     helpers.readFromFile(
-        path.join(ENV.PATH_TO_DATA, C.genome_lookup_fn),
-        "json",
-    ),
-    helpers.readFromFile(
-        path.join(ENV.PATH_TO_DATA, C.refseq_lookup_fn),
-        "json",
-    ),
-    helpers.readFromFile(
-        path.join(ENV.PATH_TO_DATA, C.references_lookup_fn),
-        "json",
-    ),
-
-    helpers.readFromFile(path.join(ENV.PATH_TO_DATA, C.taxcounts_fn), "json"),
-    helpers.readFromFile(
-        path.join(ENV.PATH_TO_DATA, C.annotation_lookup_fn),
-        "json",
-    ),
-
-    helpers.readFromFile(
-        // image name and text # #7
         path.join("public", "data", C.image_location_locfn),
         "json",
-    ),
+    ), // image name and text
     helpers.readFromFile(
-        // match image w/ otid or tax rank  #8
         path.join("public", "data", C.image_location_taxfn),
         "json",
-    ),
+    ), // match image w/ otid or tax rank
     helpers.readFromFile(
         path.join(ENV.PATH_TO_DATA, C.contig_lookup_fn),
         "json",
@@ -328,7 +307,7 @@ const promises = [
 
     //2024-Sept  // #10,11,12
     helpers.readFromFile(path.join(ENV.PATH_TO_DATA, C.site_lookup_fn), "json"),
-
+    //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, 'GCA_ID_no_gff.txt'),'csv'),
     helpers.readFromFile(
         path.join(ENV.PATH_TO_DATA, C.missing_ncbi_genomes_fn),
         "json",

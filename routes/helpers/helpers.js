@@ -489,6 +489,7 @@ export const get_has_abundance = () => {
     for (let n in domain_obj) {
         lineage_list = helpers_taxa.make_lineage(domain_obj[n]);
         tc = C.abundance_lookup[lineage_list[0]];
+
         data.domain[domain_obj[n].taxon] = tc.ecology;
     }
     for (let n in phyla_obj) {

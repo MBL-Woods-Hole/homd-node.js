@@ -248,7 +248,8 @@ router.post(
                 search_params:
                     "(Searches only whole words in `Gene` and `Gene Product`):",
                 gid_count: Object.keys(gid_count).length,
-
+                //hit_source: "mysql",
+                whole_or_partial: whole_or_partial,
                 total_hits: total_length,
                 max: helpers.format_long_numbers(allowed_max),
                 form_type: JSON.stringify(["annotations"]),
