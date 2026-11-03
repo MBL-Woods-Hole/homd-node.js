@@ -86,398 +86,41 @@ function execPromise(cmd, args, max) {
 router.post(
     "/deep_anno_sql_search",
     async function deep_anno_sql_searchPOST(req, res) {
+        console.log("IN=> deep_anno_sql_searchPOST");
         console.log("body", req.body);
         //logger.info('pidlist',req.body.pid_list)
-        console.log("id.list", req.body.id_list);
+
         let annoUpper = req.body.anno.toUpperCase();
 
+        let partial = false;
+        if (req.body.whole_or_partial === "partial") {
+            partial = true;
+        }
         let q = queries.deep_anno_search(
             annoUpper,
-            req.body.hit_source,
-            req.body.id_list,
+            req.body.gid,
+            req.body.search_text,
+            partial,
         );
-
-        console.log("IN=> deep_anno_sql_searchPOST", q);
+        console.log(q);
+        let data = {};
+        data.species = C.genome_lookup[req.body.gid].organism;
+        data.strain = C.genome_lookup[req.body.gid].strain;
+        data.gid = req.body.gid;
 
         const rows = await queries.run_query(q, req, res);
-
-        res.send(JSON.stringify(rows));
+        data.rows = rows;
+        res.send(JSON.stringify(data));
     },
 );
 //
-router.post(
-    "/advanced_site_search_phage_grep",
-    async function advanced_site_search_phagePOST(req, res) {
-        logger.info("in advanced_site_search_phage_grep");
-        logger.info(req.body);
-        const searchText = req.body.search_text_phage_grep.toLowerCase();
-        //let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
-        //let grep_fields = ['predictor','genome_id','accession']  // MUST BE order from file
-
-        let obj2 = {},
-            species,
-            gid,
-            otid,
-            hmt,
-            strain,
-            contig,
-            predictor;
-        let search_id,
-            lookup = {},
-            gid_collector = {},
-            gid_count = {},
-            all_phage_search_ids_lookup = [];
-
-        try {
-            let datapath = path.join(ENV.PATH_TO_SEARCH, "homd_GREP_PHAGE*");
-
-            let max_rows = C.grep_search_max_rows; //50000
-
-            //let split_length = 6
-            //let args = ['-ih','-m 5000','"'+searchText+'"',datapath,'>',filepath]
-            let args = [
-                "-h",
-                "-m " + max_rows.toString(),
-                '"' + searchText + '"',
-                datapath,
-            ];
-            //let args = ['-h','"'+searchText+'"',datapath]
-            let grep_cmd = ENV.GREP_CMD + " " + args.join(" ");
-            logger.info(grep_cmd);
-            //const rows = await get_grep_rows(grep_cmd);
-            // [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
-            const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
-            //logger.info('rows_lst length',row_array.length)
-
-            let total_length = row_array.length - 1;
-            //logger.info('total_length',total_length)
-            //rows = rows_lst.join('')
-
-            if (row_array[0] == "too_long") {
-                obj2 = { too_long: "too_long" };
-            } else {
-                //logger.info('row_array[0]',row_array[0])
-                //row_array = rows.split('\n')
-                for (let n in row_array) {
-                    if (row_array[n] != "") {
-                        let pts = row_array[n].split("|");
-                        //logger.info('pts',pts)
-                        let pts_clean = [];
-                        for (let n in pts) {
-                            //pts_clean.push(decodeURIComponent(pts[n].replace("5'", "5").replace("3'", "3").replace(",", ";").replace("2'", "2").replace("n'", "n")))
-                            //logger.info('pts[n]',pts[n])
-                            //pts_clean.push(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";").replace("%", "pct")))
-                            pts_clean.push(
-                                decodeURIComponent(encodeURIComponent(pts[n])),
-                            );
-                            //logger.info(decodeURIComponent(pts[n].replace(/[']+/g, "").replace(",", ";")))
-                        }
-                        //logger.info('pts',pts)
-                        if (["genomad", "cenote"].indexOf(pts[1]) != -1) {
-                            //logger.info('pts',pts)
-                            search_id = pts[0];
-                            all_phage_search_ids_lookup[search_id] = 1; // for downloads
-                            predictor = pts[1];
-                            gid = pts[2].toUpperCase();
-                            gid_count[gid] = 1;
-                            contig = pts[3].toUpperCase();
-                            if (gid && Object.hasOwn(C.genome_lookup, gid)) {
-                                otid = C.genome_lookup[gid]["otid"];
-                                strain = C.genome_lookup[gid]["strain"];
-                                species =
-                                    C.taxon_lookup[otid]["genus"] +
-                                    " " +
-                                    C.taxon_lookup[otid]["species"];
-                            }
-                            if (!Object.hasOwn(gid_collector, gid)) {
-                                gid_collector[gid] = {
-                                    species: species,
-                                    strain: strain,
-                                    otid: otid,
-                                };
-                            }
-
-                            if (gid in lookup) {
-                                if (contig in lookup[gid]) {
-                                    if (predictor in lookup[gid][contig]) {
-                                        lookup[gid][contig][predictor].push(
-                                            pts_clean,
-                                        );
-                                    } else {
-                                        lookup[gid][contig][predictor] = [];
-                                        lookup[gid][contig][predictor].push(
-                                            pts_clean,
-                                        );
-                                    }
-                                } else {
-                                    lookup[gid][contig] = {};
-                                    lookup[gid][contig][predictor] = [];
-                                    lookup[gid][contig][predictor].push(
-                                        pts_clean,
-                                    );
-                                }
-                            } else {
-                                lookup[gid] = {};
-                                lookup[gid][contig] = {};
-                                lookup[gid][contig][predictor] = [];
-                                lookup[gid][contig][predictor].push(pts_clean);
-                            }
-                        }
-                    }
-                }
-            }
-            //logger.info('lookup',lookup['GCA_000008065.1']['AE017198.1'].bakta)
-            //logger.info(gid_collector)
-            let sendlist = [];
-            for (gid in lookup) {
-                for (contig in lookup[gid]) {
-                    for (predictor in lookup[gid][contig]) {
-                        otid = C.genome_lookup[gid].otid;
-                        hmt = helpers.make_otid_display_name(otid);
-                        sendlist.push({
-                            hitlist: lookup[gid][contig][predictor],
-                            gid: gid,
-                            otid: otid,
-                            hmt: hmt,
-                            contig: contig,
-                            predictor: predictor,
-                            species: gid_collector[gid].species,
-                            strain: gid_collector[gid].strain,
-                        });
-                    }
-                }
-            }
-
-            //logger.info('sendlist',sendlist)
-            sendlist.sort(function (a, b) {
-                //logger.info('a',a)
-                return helpers.compareStrings_alpha(a.species, b.species);
-            });
-            //logger.info('sort_lst2',Object.keys(all_phage_search_ids_lookup))
-            res.render("pages/search/full_site_search_results", {
-                title: "HOMD :: Search Results",
-                pgname: "", // for AboutThisPage
-                config: JSON.stringify(ENV),
-                ver_info: JSON.stringify(C.version_information),
-
-                anno: "",
-                search_text: req.body.search_text_phage_grep,
-                otid_list: JSON.stringify([]),
-                gid_list: JSON.stringify([]),
-                taxon_otid_obj: JSON.stringify({}),
-                //annotationList: JSON.stringify(obj_array),
-                annotationList2: JSON.stringify({}),
-                anno_sort_list: JSON.stringify([]),
-
-                phageList: JSON.stringify(obj2), // only if too long
-                phage_sort_list: JSON.stringify(sendlist),
-                phage_lookup: JSON.stringify(lookup),
-                phage_id_list: JSON.stringify(
-                    Object.keys(all_phage_search_ids_lookup),
-                ),
-
-                gid_count: Object.keys(gid_count).length,
-                total_hits: total_length,
-                max: helpers.format_long_numbers(max_rows),
-                form_type: JSON.stringify(["phage"]),
-                no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes),
-            });
-        } catch (e) {
-            logger.error(e);
-        }
-
-        return;
-    },
-);
-//
-//
-router.post(
-    "/advanced_site_search_anno_grep",
-    async function advanced_site_search_anno_grep(req, res) {
-        logger.info("in advanced_site_search_grep - routes_search.js");
-        // anno now includes prokka, ncbi and bakta
-        console.log(req.body, "body");
-        const searchText = req.body.search_text.toLowerCase();
-        const annoLower = req.body.anno;
-        let allowed_max = C.grep_search_max_rows; // died at 73,000
-        //const annoUpper = req.body.anno.toUpperCase()
-        //let sql_fields = ['genome_id', 'accession', 'gene', 'protein_id', 'product','length_aa','length_na','start','stop']
-        //let grep_fields = ['anno','genome_id','accession','protein_id','gene','product']  // MUST BE order from file
-
-        let sort_lst = [],
-            obj2 = {},
-            species,
-            gid,
-            otid,
-            hmt,
-            strain,
-            gid_count = {},
-            pid,
-            prod,
-            gene,
-            dbid,
-            region,
-            type;
-        let tmp_obj;
-
-        try {
-            let split_length = 6; // longer okay too
-
-            let args,
-                grep_cmd_base,
-                fpaths = [];
-            //args = ['-type','f','-name','"'+filenames+'"','|','parallel','-j 8','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
-            //let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
-            const files = fs.readdirSync(
-                ENV.PATH_TO_SEARCH + "/" + annoLower + "_annotations/",
-            );
-            files.forEach((file) => {
-                //console.log(file);
-                fpaths.push(
-                    ENV.PATH_TO_SEARCH +
-                        "/" +
-                        annoLower +
-                        "_annotations/" +
-                        file,
-                );
-            });
-            //args = ['-iIN', searchText].concat(fpaths);  //, fpaths.join(' ')]
-            args = ["-iIN", "'" + searchText + "'"].concat(fpaths);
-            //grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations'
-            grep_cmd_base = ENV.RIPGREP_CMD;
-
-            const row_array = await execPromise(
-                grep_cmd_base,
-                args,
-                allowed_max,
-            );
-            //logger.info(row_array)
-            //logger.info(row_array.length)
-            let total_length = row_array.length - 1;
-            //rows = rows_lst.join('')
-            if (row_array[0] == "too_long") {
-                obj2 = { too_long: "too_long" };
-            } else {
-                //logger.info('row_array[0]',row_array[0])
-                //row_array = rows.split('\n')
-                for (let n in row_array) {
-                    if (row_array[n] != "") {
-                        // SEE grep_database_create.py in homd-data/search
-                        // ncbi|21|GCA_030450175.1|WKE53005.1|CDS|CP073095.1||ABC transporter ATP-binding protein|8475|9278
-
-                        let pts = row_array[n].split("|");
-                        //console.log('grep pts',pts)
-                        if (
-                            pts.length >= split_length &&
-                            ["prokka", "ncbi", "bakta"].indexOf(pts[0]) != -1
-                        ) {
-                            //logger.info('pts',pts)
-                            //                      if(pts[0] == 'bakta' || pts[0] == 'prokka'){
-                            dbid = pts[1];
-                            gid = pts[2].toUpperCase();
-                            region = pts[3];
-                            type = pts[4];
-                            pid = pts[5].toUpperCase();
-                            gene = pts[6];
-                            prod = pts[7];
-
-                            gid_count[gid] = 1;
-                            //logger.info('LOOKup',C.genome_lookup[gid])
-
-                            tmp_obj = {
-                                dbid: dbid,
-                                gid: gid,
-                                otid: "",
-                                hmt: "",
-                                species: "=>Genome Not Found in db<=",
-                                strain: "",
-                                region: region,
-                                gene: gene,
-                                pid: pid,
-
-                                prod: prod,
-                                type: type,
-                                start: pts[8],
-                                end: pts[9],
-                            };
-                            if (gid && Object.hasOwn(C.genome_lookup, gid)) {
-                                //if(gid){
-                                otid = C.genome_lookup[gid]["otid"];
-                                ((hmt = helpers.make_otid_display_name(otid)),
-                                    (strain = C.genome_lookup[gid]["strain"]));
-                                species =
-                                    C.taxon_lookup[otid]["genus"] +
-                                    " " +
-                                    C.taxon_lookup[otid]["species"];
-                                tmp_obj.species = species;
-                                tmp_obj.strain = strain;
-                                tmp_obj.otid = otid;
-                                tmp_obj.hmt = hmt;
-                            }
-                            //logger.info('tmp_obj',tmp_obj)
-                            if (Object.hasOwn(obj2, gid)) {
-                                obj2[gid].push(tmp_obj);
-                            } else {
-                                sort_lst.push({
-                                    gid: gid,
-                                    species: species,
-                                    strain: strain,
-                                });
-                                obj2[gid] = [tmp_obj];
-                            }
-                        }
-                    }
-                }
-            }
-            //logger.info('sort_lst1',sort_lst)
-            sort_lst.sort(function (a, b) {
-                return helpers.compareStrings_alpha(
-                    a.species + a.strain,
-                    b.species + b.strain,
-                );
-            });
-            //logger.info('obj2',obj2)
-            res.render("pages/search/full_site_search_results", {
-                title: "HOMD :: Search Results",
-                pgname: "", // for AboutThisPage
-                config: JSON.stringify(ENV),
-                ver_info: JSON.stringify(C.version_information),
-
-                anno: annoLower,
-                search_text: req.body.search_text,
-                otid_list: JSON.stringify([]),
-                gid_list: JSON.stringify([]),
-                taxon_otid_obj: JSON.stringify({}),
-                //annotationList: JSON.stringify(obj_array),
-                search_params:
-                    "(Searches `Genome-ID`s, `Accession`(Region), `Protein-ID`s, `Gene` and `Gene Product`):",
-                annotationList2: JSON.stringify(obj2),
-                anno_sort_list: JSON.stringify(sort_lst),
-
-                phageList: JSON.stringify({}),
-                phage_sort_list: JSON.stringify([]),
-                phage_lookup: JSON.stringify({}),
-                phage_id_list: JSON.stringify([]),
-
-                hit_source: "grep",
-                gid_count: Object.keys(gid_count).length,
-                total_hits: total_length,
-                max: helpers.format_long_numbers(allowed_max),
-                form_type: JSON.stringify(["annotations"]),
-                no_ncbi_annot: JSON.stringify(C.no_ncbi_genomes),
-            });
-        } catch (e) {
-            logger.error(e);
-        }
-    },
-);
 
 router.post(
     "/advanced_site_search_anno_mysql",
     async function advanced_site_search_anno_mysql(req, res) {
         console.log("advanced_site_search_anno_mysql");
         console.log(req.body);
-        //let search_type = req.body.anno_search_type
+        let whole_or_partial = req.body.whole_or_partial; // whole or partial
         let anno = req.body.anno;
         let annoUpper = anno.toUpperCase();
         let search_string = req.body.search_text;
@@ -493,15 +136,18 @@ router.post(
         let gid;
         let allowed_max = C.grep_search_max_rows; // died at 73,000
         //prokka\tGCA_030450175.1\tCDS\tCP073095.1\tGCA_030450175.1_00089\tresA_1\tThiol-disulfide oxidoreductase ResA\t80060\t80623
-        let q = queries.search_sql_stream(annoUpper, search_string);
-        // let q =
-        //             "SELECT id,genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid FROM " +
-        //             annoUpper +
-        //             ".gff_fullsearch";
-        //         q +=
-        //             " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
-        //             search_string +
-        //             "\"' IN BOOLEAN MODE);";
+
+        let partial = false;
+        if (whole_or_partial === "partial") {
+            partial = true;
+        }
+
+        let q = queries.search_sql_stream(
+            annoUpper,
+            search_string,
+            partial,
+            C.sql_search_max_rows,
+        );
 
         //try{
         console.log("IN=> advanced_site_search_anno_mysql", q);
@@ -602,7 +248,7 @@ router.post(
                 search_params:
                     "(Searches only whole words in `Gene` and `Gene Product`):",
                 gid_count: Object.keys(gid_count).length,
-                hit_source: "mysql",
+
                 total_hits: total_length,
                 max: helpers.format_long_numbers(allowed_max),
                 form_type: JSON.stringify(["annotations"]),
@@ -615,27 +261,15 @@ router.post(
     },
 );
 
-router.get("/stream_results_grep", function stream_results_grep(req, res) {
-    console.log("IN grep_stream_result");
-    console.log(req.query);
-    const annoLower = req.query.anno;
-    //const annoUpper = annoLower.toUpperCase()
-    const search_text = req.query.search_text.toLowerCase();
-    res.render("pages/search/search_stream_results_grep", {
-        title: "HOMD :: Search Results",
-        pgname: "", // for AboutThisPage
-        config: JSON.stringify(ENV),
-        ver_info: JSON.stringify(C.version_information),
-        anno: annoLower,
-        search_text: search_text,
-    });
-});
 router.get("/stream_results_sql", function stream_results_sql(req, res) {
-    console.log("IN SQL_stream_result");
+    console.log("IN stream_results_sql");
+
     console.log(req.query);
     const annoLower = req.query.anno;
     //const annoUpper = annoLower.toUpperCase()
     const search_text = req.query.search_text.toLowerCase();
+
+    const whole_or_partial = req.query.whole_or_partial; // whole or partial
     res.render("pages/search/search_stream_results_sql", {
         title: "HOMD :: Search Results",
         pgname: "", // for AboutThisPage
@@ -643,190 +277,16 @@ router.get("/stream_results_sql", function stream_results_sql(req, res) {
         ver_info: JSON.stringify(C.version_information),
         anno: annoLower,
         search_text: search_text,
+
+        whole_or_partial: whole_or_partial,
     });
 });
 //
 //
-router.get("/get_grep_stream", async function get_grep_stream(req, res) {
-    console.log("IN get_grep_stream");
-    console.log("req.query", req.query);
-    const annoLower = req.query.anno.toLowerCase();
-    const annoUpper = req.query.anno.toUpperCase();
-    const search_text = req.query.search_text
-        .toLowerCase()
-        .replace(/\|/g, "\\|");
-    const download = req.query.download;
-    let dt = helpers.get_today_obj();
-    let args,
-        grep_cmd_base,
-        full_cmd_str,
-        fpaths = [],
-        gid,
-        dbid,
-        payload,
-        start,
-        end,
-        region,
-        type,
-        url,
-        hmt,
-        org,
-        pid,
-        gene,
-        prod,
-        otid;
-    //args = ['-type','f','-name','"'+filenames+'"','|','parallel','-j 8','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
-    //let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
-    const files = fs.readdirSync(
-        ENV.PATH_TO_SEARCH + "/" + annoLower + "_annotations/",
-    );
-    files.forEach((file) => {
-        //console.log(file);
-        fpaths.push(
-            ENV.PATH_TO_SEARCH + "/" + annoLower + "_annotations/" + file,
-        );
-    });
-    if (download === "1") {
-        console.log("DOWNLOAD");
-        let fname =
-            "HOMD_" +
-            annoLower +
-            "_search" +
-            dt.today +
-            "_" +
-            dt.seconds +
-            ".csv";
-        res.setHeader("Content-Disposition", "attachment; filename=" + fname);
-        res.setHeader("Content-Type", "text/plain");
-        res.setHeader("Transfer-Encoding", "chunked");
-        res.write(
-            "HOMD Annotation Search\t" +
-                annoUpper +
-                "\tSearchText:" +
-                search_text +
-                "\n",
-        );
-        res.write("Genome-ID\tHMT-ID\tOrganism\tProtein-ID\tGene\tProduct\n");
-    } else {
-        res.setHeader("Content-Type", "text/event-stream");
-        res.setHeader("Cache-Control", "no-cache");
-        res.setHeader("Connection", "keep-alive");
-    }
-    res.flushHeaders();
-
-    args = ["--line-buffered", "-iIN", '"' + search_text + '"'].concat(fpaths);
-    //grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations'
-    grep_cmd_base = ENV.RIPGREP_CMD;
-    //let grep_cmd = grep_cmd_base + ' ' + args
-    full_cmd_str = grep_cmd_base + " " + args.join(" ");
-    logger.info("GREP CMD: " + full_cmd_str);
-    //const rows = await get_grep_rows(grep_cmd);
-    //const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
-    const process = await spawn(full_cmd_str, { shell: true }); // shell:true need expand wildcard '*'
-    let count = 0;
-
-    //res.write(`<a href='javascript:history.back()'>back</a><br>`);
-    //res.write(`data: <table class='table'>\n\n`);
-    //res.write(`data: <tr><th>GID</th><th>PID</th><th>Gene</th><th>Product</th></tr>\n\n`);
-    process.stdout.on("data", (data) => {
-        if (count >= 100000) {
-            console.log("Destroying stream");
-            process.stdout.destroy();
-
-            return;
-        }
-        //console.log('DATA',data.toString(),'END DATA')
-        const lines = data.toString().split("\n");
-        //console.log('line count',lines.length)
-        let grep_search_line_length = 8;
-        lines.forEach((line) => {
-            if (line.startsWith(annoLower) && line.trim() !== "") {
-                // SSE format requires "data: " prefix and two newlines at the end
-                count += 1;
-                let line_pts = line.split("|");
-                // SEE grep_database_create.py in homd-data/search
-                // anno/db-id/gid/region/type/pid/gene/product/start/end   LENGTH:10
-                if (line_pts.length >= grep_search_line_length) {
-                    //console.log("line", line);
-                    //res.write(`data: ${line}\n\n`);
-                    dbid = line_pts[1];
-                    gid = line_pts[2].toUpperCase();
-                    otid = C.genome_lookup[gid].otid;
-                    hmt = helpers.make_otid_display_name(otid);
-                    org = C.genome_lookup[gid].organism;
-                    region = line_pts[3].toUpperCase();
-                    type = line_pts[4];
-                    pid = line_pts[5].toUpperCase();
-                    gene = line_pts[6];
-
-                    prod = line_pts[7];
-                    start = line_pts[8];
-                    end = line_pts[9];
-                    url = helpers.create_jbrowse_url(gid, region, start, end);
-                    //console.log('gid',C.genome_lookup[gid])
-                    payload = {
-                        gid: gid,
-                        hmt: hmt,
-                        otid: otid,
-                        org: org,
-                        pid: pid,
-                        type: type,
-                        prod: prod,
-                        gene: gene,
-                        jburl: url,
-                    };
-                    if (download === "1") {
-                        let text =
-                            gid +
-                            "\t" +
-                            hmt +
-                            "\t" +
-                            org +
-                            "\t" +
-                            type +
-                            "\t" +
-                            pid +
-                            "\t" +
-                            gene +
-                            "\t" +
-                            prod +
-                            "\n";
-                        res.write(text);
-                    } else {
-                        res.write(`data: ${JSON.stringify(payload)}\n\n`);
-                    }
-                }
-            }
-        });
-        //res.write(`data: </table>\n\n`);
-    });
-    // Handle standard error output
-    process.stderr.on("data", (data) => {
-        res.write(`data: ERROR: ${data.toString()}\n\n`);
-    });
-
-    // Clean up when the grep process finishes
-    process.on("close", (code) => {
-        //res.write(`data: [PROCESS COMPLETED WITH CODE ${code}]\n\n`);
-        //res.write(`data: Count: ${count.toString()}\n\n`);
-        const endpayload = {
-            notice: "END-OF-STREAM",
-            count: count,
-        };
-        res.write(`data: ${JSON.stringify(endpayload)}\n\n`);
-        console.log("DONE", code);
-        res.end();
-    });
-
-    // Clean up if the user closes the browser tab before grep finishes
-    req.on("close", () => {
-        process.kill();
-    });
-});
 //
 //
 router.get("/get_sql_stream", async function get_sql_stream(req, res) {
-    console.log("IN get_sql_stream");
+    console.log("IN get_sql_stream line:860");
     console.log(req.query);
     //const annoLower = req.query.anno
     const annoUpper = req.query.anno.toUpperCase();
@@ -834,6 +294,12 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
     const search_text = req.query.search_text
         .toLowerCase()
         .replace(/\|/g, "\\|");
+    const whole_or_partial = req.query.whole_or_partial;
+    let partial = false;
+    if (whole_or_partial == "partial") {
+        partial = true;
+    }
+    console.log("partial", partial);
     const download = req.query.download;
     let dt = helpers.get_today_obj();
     let allowed_max = C.grep_search_max_rows;
@@ -843,9 +309,10 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
         otid,
         species,
         strain;
+    // set no limit here
 
-    let q = queries.search_sql_stream(annoUpper, search_text);
-    console.log("IN=> get_sql_stream", q);
+    let q = queries.search_sql_stream(annoUpper, search_text, partial);
+    console.log(q);
 
     if (download === "1") {
         console.log("DOWNLOAD");
@@ -957,23 +424,6 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
         }
         //logger.info('tmp_obj',tmp_obj)
     });
-    stream.on("error", (err) => {
-        res.write(`data: ERROR: ${err.toString()}\n\n`);
-    });
-
-    stream.on("end", () => {
-        const endpayload = {
-            notice: "END-OF-STREAM",
-            count: cnt,
-        };
-        res.write(`data: ${JSON.stringify(endpayload)}\n\n`);
-        console.log("DONE");
-        res.end();
-    });
-
-    //}catch(e){
-    //      logger.error(e);
-    //}
 });
 
 //
@@ -983,7 +433,7 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
 //  Global Site Search
 //
 router.post("/basic_site_search", function basic_site_search(req, res) {
-    logger.info("index.js::in basic POST -Search");
+    console.log("index.js::in basic POST -Search");
     logger.info(req.body);
     const searchText = req.body.adv_search_text;
     const searchTextLower = req.body.adv_search_text.toLowerCase();
@@ -1004,17 +454,6 @@ router.post("/basic_site_search", function basic_site_search(req, res) {
         gidLst = search_genomes(searchTextLower);
         form_type.push("genomes");
     }
-    ////////////// TAXON NAMES ////////////////////////////////////////////////////////////////////////////
-    //let taxonOtidObj = search_taxonomy(searchTextLower, 'names')
-
-    ///////////// OTIDs /////////////////////////////////////////////////////////////////////////////
-    //let otidLst = search_taxonomy(searchTextLower, 'otids')
-
-    ///////////// GENOMES ////////////////////////////////////////////////////////////////////////////////
-
-    //logger.info('gidObjList',gidObjList)
-
-    ///////////// CONTIGS /////////////////////////////////////////////////////////////////////////////
 
     let contigObj_list = search_contigs(searchTextLower);
     ///////////// PHAGE /////////////////////////////////////////////////////////////////////////////
@@ -1048,15 +487,15 @@ router.post("/basic_site_search", function basic_site_search(req, res) {
     // help pages uses grep
     let helpLst = [];
     let help_trunk = path.join(ENV.PROCESS_DIR, "views", "partials", "help");
-    const grep_cmd =
+    const grep_help_cmd =
         ENV.GREP_CMD +
         " -liR " +
         help_trunk +
         " -e '" +
         helpers.addslashes(searchText) +
         "'";
-
-    exec(grep_cmd, (err, stdout, stderr) => {
+    console.log(grep_help_cmd);
+    exec(grep_help_cmd, (err, stdout, stderr) => {
         if (stderr) {
             logger.error(stderr);
             return;
@@ -1076,15 +515,12 @@ router.post("/basic_site_search", function basic_site_search(req, res) {
                 helpLst.push(cleanfinal);
             }
         }
-        //if(ENV.ENV == 'productionX'){
+
         let prokka_genome_count = 0;
         let prokka_gene_count = 0;
         let ncbi_genome_count = 0;
         let ncbi_gene_count = 0;
-        // set req.session.site_search_result = {} here before annotation collection
-        //req.session.site_search_result_prokka = {}
-        //req.session.site_search_result_ncbi = {}
-        //logger.info('st',searchText)
+
         res.render("pages/search/basic_search_result", {
             title: "HOMD :: Site Search",
             pgname: "", // for AbountThisPage

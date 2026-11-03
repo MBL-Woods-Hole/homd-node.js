@@ -13,7 +13,7 @@
   <center>
   <div class='body-div' style='background:white;width:1250px;'>
     <div style='text-align:left;background-color:#004080;'>
-       <!-- <img src="/images/homd_banner_dbhelix_4.2_devel.png"> -->
+
        <img src="/images/homd_banner_dbhelix_4.3_devel.png">
        <%- include("../partials/navbar"); %>
     </div>
@@ -213,7 +213,10 @@
         </div>
       </div>
     </div>
-    <% const ipAddress = cfg.WEB_HOST %>
+
+        
+   <% const ipAddress = cfg.WEB_HOST %>
+
     <% const dbAddress = cfg.DB_HOST %>
     <% const ipoctets = ipAddress.split(".") %>
     <% const dboctets = dbAddress.split(".") %>
@@ -224,7 +227,7 @@
         AWS EC2 <%= ipoctets[2] %>.<%= ipoctets[3] %>/<%= dboctets[2] %>.<%= dboctets[3] %>
     <% } %>
     </span>
-        
+
 </div>
 </center>
 

@@ -2,7 +2,7 @@
 #table-div{
     background:steelblue;
     border:1px solid black;
-    padding:100px;
+    padding:50px 0;
     height:700px;
     overflow:auto;
 }
@@ -25,12 +25,13 @@ tr:nth-child(odd) { background-color: lightblue; }
     width: 100%;
     z-index: 9999999;
 }
+
 </style>
 <%- include('../../partials/header_html'); %>
 
 
 <body>
-    <div id="loader" class="center-loader" style='z-index:1'></div>
+    <!-- <div id="loader" class="center-loader" style='z-index:1'></div> -->
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
     <%- include('../../partials/navbar'); %>
@@ -38,6 +39,7 @@ tr:nth-child(odd) { background-color: lightblue; }
     <p class='h3 title'><%= anno.toUpperCase() %> Annotations SQL Streaming Search Results for: '<%= search_text %>'</p>
     <center><span id='end-notice'>Streaming Search Results...</span></center>
     <div id='table-div'>
+    <span style='float:right;'><button id='stop-button'>Stop Stream</button></span>
     <table class='sortable'>
         <thead>
             <tr>
@@ -62,7 +64,12 @@ tr:nth-child(odd) { background-color: lightblue; }
         //outputDiv.textContent = ''; 
          //outputDiv.innerHTML = "";
         // Connect to the SSE endpoint
-        const eventSource = new EventSource('/search/get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>&download=0');
+        
+        document.getElementById('stop-button').addEventListener('click', function() {
+            console.log('Stream ended by User')
+            eventSource.close()
+        })
+        const eventSource = new EventSource('/search/get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>&whole_or_partial=<%= whole_or_partial %>&download=0');
 
         eventSource.onmessage = function(event) {
             const eventData = JSON.parse(event.data);
@@ -72,11 +79,11 @@ tr:nth-child(odd) { background-color: lightblue; }
                 
                 const notification = document.getElementById('end-notice');
                 var notify = "DONE (row count: "+eventData.count.toString()+") - Click on table headers to sort."
-                notify += "<span style='float:right;'><a class='link' href='get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>&download=1'>Download Results</a></span>"
+                notify += "<span style='float:right;'><a class='link' href='get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>&whole_or_partial=<%= whole_or_partial %>&download=1'>Download Results</a></span>"
                 notification.innerHTML = notify
                 console.log('Stream ended by server.');
                 //document.querySelector('#table-div').style.display = "none";
-                document.querySelector("#loader").style.visibility = "hidden";
+               //  document.querySelector("#loader").style.visibility = "hidden";
                 return;
             }
             // Append the new line

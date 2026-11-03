@@ -48,7 +48,7 @@ html, body { min-height: 100%; }
    overflow:auto;
    margin:0px 0px;
    padding:10px 10px;
-   background:lightgreen;
+   background:#CEE5ED;
    border:1px solid black;
    
 }
@@ -127,8 +127,9 @@ html, body { min-height: 100%; }
 #close_btn{
    color:red;
    background:ivory;
+   
    padding:5px;
-   border:1px solid grey;
+   border:1px solid black;
    text-decoration:underline;
    letter-spacing: 1px; 
 }
@@ -183,6 +184,17 @@ table.sortable thead {
 <% anno_sort_lst = JSON.parse(anno_sort_list)  %>
 <% no_ncbi_annotation = JSON.parse(no_ncbi_annot) %>
 <% anno_list2 = JSON.parse(annotationList2)  %>
+
+<%
+ let pid_obj = {}
+ for(let gid in anno_list2) {
+     for(let n in anno_list2[gid]){
+        pid_obj[anno_list2[gid][n].pid] = 1
+    }
+ }
+ let pid_list = Object.keys(pid_obj)
+%>
+
 
 <% phage_sort_lst = JSON.parse(phage_sort_list)  %>
 <% phage_list = JSON.parse(phageList)  %>
@@ -242,23 +254,27 @@ table.sortable thead {
                <center><div class='outlier-zero'>Zero Hits (Selected Annotation: <%= anno.toUpperCase() %>)</div></center>
          <% }else{ %>
             <div id='download-options' style='float:right;font-size:12px;'>
-                  <form name='' method='POST' action='/download/anno_search_data'>
-                  <input type="hidden" id="anno_ids" name="anno_ids" value='<%= annotationList2 %>'>
+              <form name='' method='POST' action='/download/anno_search_data'>
+                  
+                  <!-- obj.map((el) =>  el.pid) -->
                   <input type="hidden" id="anno" name="anno" value='<%= anno %>'>
                   <input type='hidden' name='search_text' value='<%= search_text %>' \>
+                  <input type='hidden' name='whole_or_partial' value='<%= whole_or_partial %>' \>
+                  <strong>Format:</strong>
+                  <input type="radio" checked name="format" value='table'> [Table]&nbsp;&nbsp;
                   
+                  <input type="radio"         name="format" value='fasta_na'> [NA Fasta File]&nbsp;&nbsp;
                   
-                  <% if(anno != 'bakta'){ %>
-                    <input type="radio"         name="format" value='fasta_na'> [NA Fasta File]&nbsp;&nbsp;
-                  <% } %>
                   <input type="radio"         name="format" value='fasta_aa'> [AA Fasta File]&nbsp;&nbsp;
+                  
                   <input class='pill pill-brown' type="submit" id="submit" name="submit" value='Download all Hits' >&nbsp;&nbsp;
-                  <input type="radio" checked name="format" value='csv'> [Table]&nbsp;&nbsp;
+                  
+                  <strong>Output:</strong>
                   <input type="radio" checked name="type" value='browser'> [Browser]&nbsp;&nbsp;
                   <input type="radio"         name="type" value='text'> [Text]&nbsp;&nbsp;
                   <input type="radio"         name="type" value='excel'> [Excel]&nbsp;&nbsp;
                   
-                  </form>
+              </form>
             </div>
              <div id='anno-div' class='search-box'>
              <span class='search-text-div'>Selected Annotation: <%= anno.toUpperCase() %></span>
@@ -282,7 +298,9 @@ table.sortable thead {
                        <%= anno_list2[gid].length %>
                        <% let giddata = anno_list2[gid] %>
                        <!-- in search.js -->
-                       <small>(<a href='#' onclick="show_anno_hits('<%= JSON.stringify(anno_list2[gid]) %>','<%= anno %>','<%= gid %>','<%= hit_source %>')">view hits</a>)</small>
+
+                       <small>(<a href='#' onclick="show_anno_hits2('<%= anno %>','<%= gid %>','<%= search_text %>','<%= whole_or_partial %>')">view hits</a>)</small>
+
                 </td>
                 
                 <td nowrap class='center'>

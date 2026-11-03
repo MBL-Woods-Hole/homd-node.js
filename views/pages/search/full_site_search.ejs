@@ -132,46 +132,40 @@
       <br><span id='srch-anno' class='mid-title'>Search Genome Annotations</span>
       <table id='anno-table-mysql' class='table'>
       <tr><td>
-        <input type='radio' checked name='anno_search_type' value='mysql_fullsearch' />
-        Searches: Whole Words Only
+        
+        <input type='radio'  checked       name='anno_search_type' value='flex_search' /> 
+        <b>Standard Search</b> (Max Hits Allowed: 70,000)
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;Search: Annotation databases (choose BAKTA, PROKKA or NCBI below)
         <br>&nbsp;&nbsp;&nbsp;&nbsp;Scope: Gene and Gene Product
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;[Faster]
         
         </td>
       </tr>
-      <tr><td>
-        <input type='radio'  name='anno_search_type' value='grep_search'/>
-        Searches: Whole and Partial Words<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;Scope: Genome-ID, Accession (Region), Protein-ID, Gene and Gene Product
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;[Slower]
-        
-        </td>
-      </tr>
-      
-      <tr><td>
-        <input type='radio'  name='anno_search_type' value='stream_grep_search'/>
-        <b>(Grep) EventSource Streaming</b> (Experimental Search - substrings okay)
-        </td>
-      </tr>
-
     
       <tr><td>
         <input type='radio'  name='anno_search_type' value='stream_sql_search'/>
-        <b>(SQL) EventSource Streaming</b> (Experimental Search - whole word only)
+        <b>EventSource Streaming Search</b> (Experimental Search; Max Hits: none)
         </td>
       </tr>
      </table>
      
-      <div class='form-control-box'>Select One:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_mysql' checked id='prokka_cb_anno_mysql' name='anno' value='prokka'  > PROKKA&nbsp;&nbsp;&nbsp;
+
+      <div class='form-control-box'>Select an Annotation Method:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_mysql' checked id='bakta_cb_mysql' name='anno' value='bakta'  > 
+        <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>
         &nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_mysql' id='ncbi_cb_mysql' name='anno' value='ncbi'  > NCBI&nbsp;&nbsp;&nbsp;
+      <input type='radio' class='anno_cb_mysql'  id='prokka_cb_anno_mysql' name='anno' value='prokka'  > PROKKA
         &nbsp;&nbsp;&nbsp;
-        <input type='radio' class='anno_cb_mysql' id='bakta_cb_mysql' name='anno' value='bakta'  > 
-        <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>&nbsp;&nbsp;&nbsp;
-      <br>
+      <input type='radio' class='anno_cb_mysql' id='ncbi_cb_mysql' name='anno' value='ncbi'  > NCBI
+        &nbsp;&nbsp;&nbsp;
+        
+      <hr>
+      Select a Search Type:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type='radio' checked name='whole_or_partial' value='whole' /> Whole Word Search&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type='radio'         name='whole_or_partial' value='partial' /> Partial Word Search (may be slower)
+      
+      <hr>
           Enter Search Text: 
-          <input type="text" class='search_text' placeholder="Search Site.." name='search_text' id='search_text_anno_mysql' value='' maxlength='80' size='50' /> 
+          <input type="text" class='search_text' placeholder="Search Annotations..." name='search_text' id='search_text_anno_mysql' value='' maxlength='80' size='50' /> 
           <button id="submit-button-mysql" type="button" class='submit-button'>Submit</button>
         </div>
       
@@ -203,7 +197,7 @@
       </table>
       <div class='form-control-box'>
           Enter Search Text: 
-          <input type="text" class='search_text' placeholder="Search Site.." name='search_text_phage_grep' id='search_text_phage_grep' value='' maxlength='80' size='50' /> 
+          <input type="text" class='search_text' placeholder="Search Phage Data..." name='search_text_phage_grep' id='search_text_phage_grep' value='' maxlength='80' size='50' /> 
           <!-- <input type='button' class='submit-button' id='submit-button-phage' name='submit-button-phage' value='Submit' onclick="validate_search_form('phage_grep')" \> -->
            <button id="submit-button-phage" type="button" class='submit-button'>Submit</button>
         </div>
@@ -300,28 +294,31 @@
   submit_button_mysql.addEventListener('click', function() {
     const checkboxes = document.getElementsByClassName('anno_cb_mysql');
     var cb_count = checkboxes.length
-    const search_type = document.querySelector('input[name="anno_search_type"]:checked');
+    
+    const anno_search_type = document.querySelector('input[name="anno_search_type"]:checked');
+   
     let form = document.getElementById('adv-search-form-anno_mysql')
     //console.log('action',form.action)
     //console.log('search_type',search_type.value)
     var ss = document.getElementById('search_text_anno_mysql').value
+     var wop = document.querySelector('input[name="whole_or_partial"]:checked').value;
+     console.log('wop',wop)
     const anno = document.querySelector('input[name="anno"]:checked').value;
          //var ss = document.querySelector('#search_textx').value;
     if(ss.length <=2){
              alert('Search string is too short (must be at least 3 characters)!')
              return
     }
-    console.log('search_type.value',search_type.value)
-    if(search_type.value === 'stream_sql_search'){
-        window.open('stream_results_sql?anno='+anno+'&search_text='+ss, '_self');
+    
+    if(anno_search_type.value === 'stream_sql_search'){
+        window.open('stream_results_sql?anno='+anno+'&search_text='+ss+'&whole_or_partial='+wop, '_self');
         return
-    }else if(search_type.value === 'stream_grep_search'){
+    }else if(anno_search_type.value === 'stream_grep_search'){
         window.open('stream_results_grep?anno='+anno+'&search_text='+ss, '_self');
         return
-    }else if(search_type.value === 'mysql_fullsearch'){
-        form.action = "advanced_site_search_anno_mysql";
+    
     }else{
-        form.action = "advanced_site_search_anno_grep";
+        form.action = "advanced_site_search_anno_mysql";
     }
     form.submit()
     //f_mysql.requestSubmit();

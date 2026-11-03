@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MySQL Stream</title>
+</head>
+<style>
+table{
+   border-collapse:collapse;
+}
+table td{
+   border:1px solid black;
+   padding: 3px;
+}
+</style>
+<body>
+
+<div id='output'>HOMD <%= anno.toUpperCase() %> Annotation Search:  Text= `<%= search_text %>`</div>
+<br>
+<span style=''><button id='stop-button'>Stop Stream</button></span>
+<div id='fasta-div' style='display:none;'>
+  
+  <div id="fasta-body">
+            <!-- Real-time data rows will append here -->
+    </div>
+</div>
+<div id='table-div' style='display:none;'>
+    
+    <table class='table sortable' border='1'>
+        <thead>
+            <tr>
+                <th>Genome-ID</th>
+                <th class='nowrap'>HMT-ID</th>
+                <th class='nowrap'>Organism</th>
+                <th>Protein-ID</th>
+                <th>Type</th>
+                <th>Gene</th>
+                <th>Product</th>
+                <th class="sorttable_nosort">GenomeViewer</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            <!-- Real-time data rows will append here -->
+        </tbody>
+    </table>
+    </div>
+    <!-- <script type="module" src="/js/script.js"></script> -->
+    <script>
+            //import { fetchEventSource } from '@microsoft/fetch-event-source';
+        //import { fetchEventSource } from 'https://esm.sh';
+    function decodeHtmlEntities(text) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      return doc.documentElement.textContent;
+    }
+    
+    let format = '<%= format %>'
+    const outputDiv = document.getElementById('output');
+     document.getElementById('stop-button').addEventListener('click', function() {
+            console.log('Stream ended by User')
+            eventSource.close()
+        })
+    //line 1333 in downloads
+    const eventSource = new EventSource('/download/get_download_sql_stream?search=<%= search_text %>&anno=<%= anno %>&output=<%= type %>&format=<%= format %>&whole_or_partial=<%= whole_or_partial %>');
+
+eventSource.onmessage = function(event) {
+    const eventData = JSON.parse(event.data);
+    
+    if (eventData.notice === 'END-OF-STREAM') {
+        eventSource.close();
+        
+       //  const notification = document.getElementById('end-notice');
+//         var notify = "DONE (row count: "+eventData.count.toString()+") - Click on table headers to sort."
+//         notify += "<span style='float:right;'><a class='link' href='get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>&download=1'>Download Results</a></span>"
+//         notification.innerHTML = notify
+//         console.log('Stream ended by server.');
+//         //document.querySelector('#table-div').style.display = "none";
+//         document.querySelector("#loader").style.visibility = "hidden";
+        return;
+    }
+    // Append the new line
+    //console.log('e.data',event.data)
+    //outputDiv.textContent += event.data + '<br>';
+    console.log('format',format)
+    //outputDiv.innerHTML += event.data +"<br>";
+    // Auto-scroll to the bottom:
+    //outputDiv.scrollTop = outputDiv.scrollHeight;
+        
+            // Parse incoming JSON data from the event stream
+            //const eventData = JSON.parse(event.data);
+    if(format === 'fasta_na' || format === 'fasta_aa'){
+        document.getElementById('fasta-div').style.display = 'block';
+        const fastaBody = document.getElementById('fasta-body');
+            
+        
+        if(eventData.defline){
+            const item = document.createElement('li');
+            item.textContent = eventData.defline
+            fastaBody.appendChild(item);
+            const item2 = document.createElement('li');
+            item2.textContent = eventData.seq
+            fastaBody.appendChild(item2);
+        }
+    }else if(format === 'table'){
+            document.getElementById('table-div').style.display = 'block';
+            const tableBody = document.getElementById('table-body');
+            if(eventData.gid){
+            // 3. Create a new table row element
+            const row = document.createElement('tr');
+           
+            // 4. Create and populate cells
+            const gidCell = document.createElement('td');
+            gidCell.innerHTML = "<a href='/genome/genome_description?gid="+eventData.gid+"'>"+eventData.gid+"</a>";
+
+            const hmtCell = document.createElement('td');
+            hmtCell.setAttribute('style', 'white-space: nowrap;');
+            hmtCell.innerHTML = "<a href='/taxa/tax_description?otid="+eventData.otid+"'>"+eventData.hmt+"</a>";
+            
+            const orgCell = document.createElement('td');
+            orgCell.setAttribute('style', 'white-space: nowrap;');
+            orgCell.innerHTML =  "<i>"+eventData.org+"</i>"
+            
+            const pidCell = document.createElement('td');
+            pidCell.textContent = eventData.pid || "";
+
+            const typeCell = document.createElement('td');
+            typeCell.textContent = eventData.type || "";
+
+            const geneCell = document.createElement('td');
+            geneCell.textContent = eventData.gene || "";
+            
+            const prodCell = document.createElement('td');
+            prodCell.textContent = eventData.prod || "";
+            
+            const urlCell = document.createElement('td');
+            urlCell.innerHTML = "<a href='"+eventData.jburl+"' target='_blank'>link</a>";
+            
+            // 5. Append cells to the row
+            row.appendChild(gidCell);
+            row.appendChild(hmtCell);
+            row.appendChild(orgCell);
+            row.appendChild(pidCell);
+            row.appendChild(typeCell);
+            row.appendChild(geneCell);
+            row.appendChild(prodCell);
+            row.appendChild(urlCell);
+            
+            // 6. Insert row into the table body
+            // prepend() puts new events at the top. Use append() to put them at the bottom.
+            tableBody.prepend(row); 
+            }
+        }
+}
+       
+
+        eventSource.onerror = function(err) {
+            console.log("Stream closed or ended ERROR.",err);
+            
+            eventSource.close();
+        };
+
+    
+    </script>
+    
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/sorttable.js"></script> <!-- https://www.kryogenix.org/code/browser/sorttable -->
+<script type="text/javascript" src="/js/menu.js"></script>
+<script>
+
+</script>

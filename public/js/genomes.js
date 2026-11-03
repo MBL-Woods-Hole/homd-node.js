@@ -185,7 +185,6 @@ function open_jbrowse(
     } else {
         console.log("error");
     }
-    console.log("URL1", url);
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "/genome/jbrowse_ajax", true);
@@ -533,18 +532,16 @@ function update_sb() {
 }
 function adv_update_sb() {
     btn = document.getElementById("adv_form_btn");
-    btn.style.color = "black";
-    btn.style.background = "lightgreen";
-    btn.style.border = "1px solid black";
+
+    btn.style.color = "orange";
+    btn.style.background = "black";
     btn.style.cursor = "pointer";
     btn.style.fontSize = "14px";
-    // btn.style.display = "inline-block";
-    btn.style.visibility = "visible";
-    btn.innerHTML = "** Apply Updated Filter to Table **";
+    btn.style.display = "inline-block";
+    btn.innerHTML = "** APPLY **";
 }
 function adv_clear_search_txt() {
     txt = document.getElementById("adv_gene_srch_text");
-    //console.log('txt',txt)
 
     if (txt.value !== "") {
         adv_update_sb();

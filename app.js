@@ -1,11 +1,9 @@
 "use strict";
 
-//import "dotenv/config";
-//const ENV = process.env;
+//import process.env from './config/config.js';
 import "./config/load-env.js";
-//import * as dotenv from 'dotenv';
-//import dotenvExpand from 'dotenv-expand';
-// 1. Initialize dotenv and grab the parsed object
+//const process
+
 const ENV = process.env;
 
 // 2. Pass the parsed object into dotenv-expand
@@ -18,17 +16,19 @@ console.log("ENV.DATABASE_URL", ENV.DATABASE_URL);
 import path from "path";
 
 //=============================================================
-//ENV.PROCESS_DIR = path.join(ENV.BASE_DIR, ENV.PROCESS_DIR_BASENAME);
+
+// ENV.PROCESS_DIR = path.join(ENV.BASE_DIR, ENV.PROCESS_DIR_BASENAME);
 // ENV.PATH_TO_STATIC_DOWNLOADS = path.join(
 //     ENV.BASE_DIR,
 //     ENV.PATH_TO_STATIC_DOWNLOADS_BASENAME,
 // );
-//ENV.PATH_TO_DATA = path.join(ENV.BASE_DIR, ENV.PATH_TO_DATA_BASENAME);
-//ENV.PATH_TO_SEARCH = path.join(ENV.BASE_DIR, ENV.PATH_TO_SEARCH_BASENAME);
-//ENV.PATH_TO_SCRIPTS = path.join(ENV.PROCESS_DIR, ENV.PATH_TO_SCRIPTS_BASENAME);
-
-//ENV.PATH_TO_TMP = path.join(ENV.BASE_DIR, ENV.PATH_TO_TMP_BASENAME);
-//ENV.PATH_TO_IMAGES = path.join(ENV.BASE_DIR, ENV.PATH_TO_IMAGES_BASENAME);
+// ENV.PATH_TO_DATA = path.join(ENV.BASE_DIR, ENV.PATH_TO_DATA_BASENAME);
+// ENV.PATH_TO_SEARCH = path.join(ENV.BASE_DIR, ENV.PATH_TO_SEARCH_BASENAME);
+// ENV.PATH_TO_SCRIPTS = path.join(ENV.PROCESS_DIR, ENV.PATH_TO_SCRIPTS_BASENAME);
+//
+// ENV.PATH_TO_TMP = path.join(ENV.BASE_DIR, ENV.PATH_TO_TMP_BASENAME);
+// ENV.PATH_TO_IMAGES = path.join(ENV.BASE_DIR, ENV.PATH_TO_IMAGES_BASENAME);
+// ENV.access_logfile = path.join(ENV.LOGGING_DIR, "logs", "homd-access.log");
 
 //=============================================================
 import logger from "./config/app_config.js";
@@ -39,8 +39,9 @@ import logger from "./config/app_config.js";
 // see helpers.pino_conf()
 //
 logger.info("ENV:Base Dir: " + ENV.BASE_DIR);
-logger.info("ENV.PATH_TO_STATIC_DOWNLOADS: " + ENV.PATH_TO_STATIC_DOWNLOADS);
+
 logger.info("ENV.PATH_TO_SCRIPTS: " + ENV.PATH_TO_SCRIPTS);
+
 logger.info("Pino logger.info Testing! Pino is working with ES Modules.");
 logger.warn("Pino logger.warn Testing! Pino is working with ES Modules.");
 logger.error("Pino logger.error Testing! Pino is working with ES Modules.");
@@ -260,6 +261,7 @@ import CustomTaxa from "./routes/helpers/taxa_class.js";
 // Each Promise reads the file, then calls resolve with the result.
 // This array is passed to Promise.all(), which then calls the callback,
 // passing the array of results in the same order.
+console.log("ENV.PATH_TO_DATA", ENV.PATH_TO_DATA);
 const promises = [
     helpers.readFromFile(
         path.join(ENV.PATH_TO_DATA, C.taxon_lookup_fn),
@@ -267,6 +269,26 @@ const promises = [
     ),
     helpers.readFromFile(
         path.join(ENV.PATH_TO_DATA, C.lineage_lookup_fn),
+        "json",
+    ),
+    //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.tax_hierarchy_fn),'json'),  // gives you taxonomy lineage
+
+    helpers.readFromFile(
+        path.join(ENV.PATH_TO_DATA, C.genome_lookup_fn),
+        "json",
+    ),
+    helpers.readFromFile(
+        path.join(ENV.PATH_TO_DATA, C.refseq_lookup_fn),
+        "json",
+    ),
+    helpers.readFromFile(
+        path.join(ENV.PATH_TO_DATA, C.references_lookup_fn),
+        "json",
+    ),
+    //helpers.readFromFile(path.join(process.env.PATH_TO_DATA, C.info_lookup_fn),'json'),
+    helpers.readFromFile(path.join(ENV.PATH_TO_DATA, C.taxcounts_fn), "json"),
+    helpers.readFromFile(
+        path.join(ENV.PATH_TO_DATA, C.annotation_lookup_fn),
         "json",
     ),
 
@@ -300,7 +322,6 @@ const promises = [
         "json",
     ),
     helpers.readFromFile(
-        // #9
         path.join(ENV.PATH_TO_DATA, C.contig_lookup_fn),
         "json",
     ),
