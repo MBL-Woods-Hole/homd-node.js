@@ -118,14 +118,14 @@ router.post(
         }
 
         let data = {};
-        console.log("qqr");
+
         data.species = C.genome_lookup[req.body.gid].organism;
         data.strain = C.genome_lookup[req.body.gid].strain;
         data.gid = req.body.gid;
-        console.log("qqt");
+
         const rows = await queries.run_query(q, req, res);
         data.rows = rows;
-        console.log("qq");
+
         res.send(JSON.stringify(data));
     },
 );
@@ -487,7 +487,7 @@ router.get("/stream_results_sql", function stream_results_sql(req, res) {
     //const annoUpper = annoLower.toUpperCase()
     const search_text = req.query.search_text.toLowerCase();
     const whole_or_partial = req.query.whole_or_partial; // whole or partial
-    res.render("pages/search/search_stream_results_sql", {
+    res.render("pages/search/search_stream_results", {
         title: "HOMD :: Search Results",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
@@ -500,6 +500,183 @@ router.get("/stream_results_sql", function stream_results_sql(req, res) {
 //
 //
 //
+//
+router.get("/get_grep_stream", async function get_grep_stream(req, res) {
+    console.log("IN get_grep_stream");
+    console.log("req.query", req.query);
+    const annoLower = req.query.anno.toLowerCase();
+    const annoUpper = req.query.anno.toUpperCase();
+    const search_text = req.query.search_text
+        .toLowerCase()
+        .replace(/\|/g, "\\|");
+    const download = req.query.download;
+    let dt = helpers.get_today_obj();
+    let args,
+        grep_cmd_base,
+        full_cmd_str,
+        fpaths = [],
+        gid,
+        payload,
+        start,
+        end,
+        region,
+        type,
+        url,
+        hmt,
+        org,
+        pid,
+        gene,
+        prod,
+        otid,
+        sql_id;
+    //args = ['-type','f','-name','"'+filenames+'"','|','parallel','-j 8','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
+    //let args = ['-type','f','-name','"'+filenames+'"','|','parallel','LC_ALL=C',ENV.GREP_CMD,'-Fh','"'+searchText+'"','{}']
+    const files = fs.readdirSync(
+        ENV.PATH_TO_SEARCH + "/" + annoLower + "_annotations/",
+    );
+    files.forEach((file) => {
+        //console.log(file);
+        fpaths.push(
+            ENV.PATH_TO_SEARCH + "/" + annoLower + "_annotations/" + file,
+        );
+    });
+    if (download === "1") {
+        console.log("DOWNLOAD");
+        let fname =
+            "HOMD_" +
+            annoLower +
+            "_search" +
+            dt.today +
+            "_" +
+            dt.seconds +
+            ".csv";
+        res.setHeader("Content-Disposition", "attachment; filename=" + fname);
+        res.setHeader("Content-Type", "text/plain");
+        res.setHeader("Transfer-Encoding", "chunked");
+        res.write(
+            "HOMD Annotation Search\t" +
+                annoUpper +
+                "\tSearchText:" +
+                search_text +
+                "\n",
+        );
+        res.write("Genome-ID\tHMT-ID\tOrganism\tProtein-ID\tGene\tProduct\n");
+    } else {
+        res.setHeader("Content-Type", "text/event-stream");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Connection", "keep-alive");
+    }
+    res.flushHeaders();
+
+    args = ["--line-buffered", "-iIN", '"' + search_text + '"'].concat(fpaths);
+    //grep_cmd_base = ENV.FIND_CMD+' '+ENV.PATH_TO_SEARCH+'/'+annoLower+'_annotations'
+    grep_cmd_base = ENV.RIPGREP_CMD;
+    //let grep_cmd = grep_cmd_base + ' ' + args
+    full_cmd_str = grep_cmd_base + " " + args.join(" ");
+    logger.info("GREP CMD: " + full_cmd_str);
+    //const rows = await get_grep_rows(grep_cmd);
+    //const row_array = await execPromise(ENV.GREP_CMD, args, max_rows);
+    const process = await spawn(full_cmd_str, { shell: true }); // shell:true need expand wildcard '*'
+    let count = 0;
+
+    //res.write(`<a href='javascript:history.back()'>back</a><br>`);
+    //res.write(`data: <table class='table'>\n\n`);
+    //res.write(`data: <tr><th>GID</th><th>PID</th><th>Gene</th><th>Product</th></tr>\n\n`);
+    process.stdout.on("data", (data) => {
+        if (count >= 100000) {
+            console.log("Destroying stream");
+            process.stdout.destroy();
+
+            return;
+        }
+        //console.log('DATA',data.toString(),'END DATA')
+        const lines = data.toString().split("\n");
+        //console.log('line count',lines.length)
+        let grep_search_line_length = 9;
+        lines.forEach((line) => {
+            if (line.startsWith(annoLower) && line.trim() !== "") {
+                // SSE format requires "data: " prefix and two newlines at the end
+                count += 1;
+                console.log(line);
+                //bakta|19530|gca_000008345.1|ae017283.1|cds|gca000008345_00710|nanh|exo-alpha-sialidase|752060|754375
+                let line_pts = line.split("|");
+                if (line_pts.length >= grep_search_line_length) {
+                    console.log("line", line);
+                    //res.write(`data: ${line}\n\n`);
+                    sql_id = line_pts[1];
+                    gid = line_pts[2].toUpperCase();
+                    otid = C.genome_lookup[gid].otid;
+                    hmt = helpers.make_otid_display_name(otid);
+                    org = C.genome_lookup[gid].organism;
+                    region = line_pts[3].toUpperCase();
+                    type = line_pts[4];
+                    pid = line_pts[5].toUpperCase();
+                    gene = line_pts[6];
+
+                    prod = line_pts[7];
+                    start = line_pts[8];
+                    end = line_pts[9];
+                    url = helpers.create_jbrowse_url(gid, region, start, end);
+                    //console.log('gid',C.genome_lookup[gid])
+                    payload = {
+                        gid: gid,
+                        hmt: hmt,
+                        otid: otid,
+                        org: org,
+                        pid: pid,
+                        type: type,
+                        prod: prod,
+                        gene: gene,
+                        jburl: url,
+                    };
+                    if (download === "1") {
+                        let text =
+                            gid +
+                            "\t" +
+                            hmt +
+                            "\t" +
+                            org +
+                            "\t" +
+                            type +
+                            "\t" +
+                            pid +
+                            "\t" +
+                            gene +
+                            "\t" +
+                            prod +
+                            "\n";
+                        res.write(text);
+                    } else {
+                        res.write(`data: ${JSON.stringify(payload)}\n\n`);
+                    }
+                }
+            }
+        });
+        //res.write(`data: </table>\n\n`);
+    });
+    // Handle standard error output
+    process.stderr.on("data", (data) => {
+        res.write(`data: ERROR: ${data.toString()}\n\n`);
+    });
+
+    // Clean up when the grep process finishes
+    process.on("close", (code) => {
+        //res.write(`data: [PROCESS COMPLETED WITH CODE ${code}]\n\n`);
+        //res.write(`data: Count: ${count.toString()}\n\n`);
+        const endpayload = {
+            notice: "END-OF-STREAM",
+            count: count,
+        };
+        res.write(`data: ${JSON.stringify(endpayload)}\n\n`);
+        console.log("DONE", code);
+        res.end();
+    });
+
+    // Clean up if the user closes the browser tab before grep finishes
+    req.on("close", () => {
+        process.kill();
+    });
+});
 //
 router.get("/get_sql_stream", async function get_sql_stream(req, res) {
     console.log("IN get_sql_stream line:860");
@@ -526,7 +703,6 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
         species,
         strain;
     // set no limit here
-
     let q = queries.search_sql_stream(annoUpper, search_text, partial);
     console.log(q);
 

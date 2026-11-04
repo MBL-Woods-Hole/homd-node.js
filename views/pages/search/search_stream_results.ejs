@@ -64,13 +64,20 @@ tr:nth-child(odd) { background-color: lightblue; }
         //outputDiv.textContent = ''; 
          //outputDiv.innerHTML = "";
         // Connect to the SSE endpoint
-        
+        wop = '<%= whole_or_partial %>'
         document.getElementById('stop-button').addEventListener('click', function() {
             console.log('Stream ended by User')
             eventSource.close()
         })
-        const eventSource = new EventSource('/search/get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>&whole_or_partial=<%= whole_or_partial %>&download=0');
-
+        let url = ''
+        if(wop === 'grep'){
+            url = '/search/get_grep_stream?anno=<%= anno %>&search_text=<%= search_text %>&whole_or_partial=<%= whole_or_partial %>&download=0'
+            
+        }else{
+            url = '/search/get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>&whole_or_partial=<%= whole_or_partial %>&download=0'
+            
+        }
+        const eventSource = new EventSource(url)
         eventSource.onmessage = function(event) {
             const eventData = JSON.parse(event.data);
             
