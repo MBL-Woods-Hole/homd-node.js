@@ -36,8 +36,9 @@ router.get("/download/:q", function download(req, res) {
 router.get("/download", function download(req, res) {
     res.redirect("download/all");
 });
-router.get("/download_file", function search(req, res) {
+router.get("/download_file", function download_file(req, res) {
     //let page = req.params.pagecode
+    console.log("IN download_file");
     let fullpath = req.query.filename;
     logger.info(`file path: ${fullpath}`);
     res.download(fullpath);

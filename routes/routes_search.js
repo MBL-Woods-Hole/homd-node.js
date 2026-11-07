@@ -18,7 +18,8 @@ import logger from "../config/app_config.js";
 ////
 router.get("/full_site_search", function full_site_search_GET(req, res) {
     //logger.info('full_site_searchGET')
-    req.session.sql_idlist = [];
+    req.session.sql_idlist = []; // zero array
+    req.session.sql_idlist_stream = []; // zero array
     res.render("pages/search/full_site_search", {
         title: "HOMD :: Human Oral Microbiome Database",
         pgname: "", // for AbountThisPage
@@ -511,6 +512,7 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
         .replace(/\|/g, "\\|");
     const download = req.query.download;
     let dt = helpers.get_today_obj();
+    req.session.sql_idlist_stream = [];
     let args,
         grep_cmd_base,
         full_cmd_str,
@@ -597,13 +599,11 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
             if (line.startsWith(annoLower) && line.trim() !== "") {
                 // SSE format requires "data: " prefix and two newlines at the end
                 count += 1;
-                console.log(line);
+
                 //bakta|19530|gca_000008345.1|ae017283.1|cds|gca000008345_00710|nanh|exo-alpha-sialidase|752060|754375
                 let line_pts = line.split("|");
                 if (line_pts.length >= grep_search_line_length) {
-                    console.log("line", line);
-                    //res.write(`data: ${line}\n\n`);
-                    sql_id = line_pts[1];
+                    req.session.sql_idlist_stream.push(line_pts[1]);
                     gid = line_pts[2].toUpperCase();
                     otid = C.genome_lookup[gid].otid;
                     hmt = helpers.make_otid_display_name(otid);
@@ -627,6 +627,7 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
                         type: type,
                         prod: prod,
                         gene: gene,
+                        sqlid: sql_id,
                         jburl: url,
                     };
                     if (download === "1") {
@@ -679,7 +680,7 @@ router.get("/get_grep_stream", async function get_grep_stream(req, res) {
 });
 //
 router.get("/get_sql_stream", async function get_sql_stream(req, res) {
-    console.log("IN get_sql_stream line:860");
+    console.log("IN get_sql_stream line:680");
     console.log(req.query);
     //const annoLower = req.query.anno
     const annoUpper = req.query.anno.toUpperCase();
@@ -697,13 +698,24 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
     let dt = helpers.get_today_obj();
     let allowed_max = C.grep_search_max_rows;
     let gid, payload, start, end, region, url, hmt;
-    let gid_count = {},
+    let q,
+        gid_count = {},
         tmp_obj = {},
         otid,
         species,
         strain;
     // set no limit here
-    let q = queries.search_sql_stream(annoUpper, search_text, partial);
+    if (whole_or_partial == "grep") {
+        let sql_idlist = req.session.sql_idlist_stream;
+        q = queries.search_sql_stream_by_id(
+            annoUpper,
+            search_text,
+            sql_idlist,
+            partial,
+        );
+    } else {
+        q = queries.search_sql_stream(annoUpper, search_text, partial);
+    }
     console.log(q);
 
     if (download === "1") {
@@ -726,7 +738,9 @@ router.get("/get_sql_stream", async function get_sql_stream(req, res) {
                 search_text +
                 "\n",
         );
-        res.write("Genome-ID\tHMT-ID\tOrganism\tProtein-ID\tGene\tProduct\n");
+        res.write(
+            "Genome-ID\tHMT-ID\tOrganism\tProtein-ID\tType\tGene\tProduct\n",
+        );
     } else {
         res.setHeader("Content-Type", "text/event-stream");
         res.setHeader("Cache-Control", "no-cache");

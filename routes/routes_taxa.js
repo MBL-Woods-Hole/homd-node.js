@@ -806,7 +806,33 @@ function renderTaxonDescription(req, res, args) {
 }
 function renderTaxonDescriptionTEMP(req, res, args) {
     logger.info("IN TEMP");
-    res.render("pages/taxa/taxdescWORKING", {
+    res.render("pages/taxa/taxdescORIGINAL", {
+        title: "HOMD :: Taxon Info",
+        pgname: "taxon/description", // for AbountThisPage
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
+
+        otid: args.otid,
+        image_array: JSON.stringify(args.image_array),
+        data1: JSON.stringify(args.data1),
+        msg: args.msg,
+        text_file: args.text_file, // only 666 so far
+        tinfo: JSON.stringify(args.tinfo), // description
+        lin: JSON.stringify(args.lin), // lineage domain=>subspecies
+        data4: JSON.stringify(args.data4), // publications
+        refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
+        links: JSON.stringify(args.links),
+        sites: JSON.stringify(args.sites),
+        sites2: JSON.stringify(args.sites2),
+        gtdb: JSON.stringify(args.gtdbtax),
+        strains: JSON.stringify(args.gstrains),
+        otid_has_abundance: args.otid_has_abundance,
+        //lineage: args.lineage_string,
+    });
+}
+function renderTaxonDescriptionTEMP2(req, res, args) {
+    logger.info("IN TEMP");
+    res.render("pages/taxa/taxdescWORKING2", {
         title: "HOMD :: Taxon Info",
         pgname: "taxon/description", // for AbountThisPage
         config: JSON.stringify(ENV),
@@ -889,6 +915,7 @@ router.get("/tax_description", async function TaxDescription(req, res) {
     let lineage;
 
     let text_file = get_rank_text("species", "", otid);
+    console.log(C.taxon_lookup["209"]);
     if (C.dropped_taxids.indexOf(otid) !== -1) {
         lookup_data = C.taxon_lookup[otid];
         let hmt = helpers.make_otid_display_name(otid);
@@ -1108,12 +1135,14 @@ router.get("/tax_description", async function TaxDescription(req, res) {
     args.sites2 = sites2;
     args.otid_has_abundance = otid_has_abundance;
     args.gstrains = gstrains;
-
+    console.log(sites2);
     //args.lineage = lineage_string
     args.lin = lineage;
 
     if (req.query.TMP == "1") {
         renderTaxonDescriptionTEMP(req, res, args);
+    } else if (req.query.TMP == "2") {
+        renderTaxonDescriptionTEMP2(req, res, args);
     } else {
         renderTaxonDescription(req, res, args);
     }

@@ -449,6 +449,23 @@ export const search_sql_stream = (
     if (limit) q += " limit " + limit;
     return q;
 };
+export const search_sql_stream_by_id = (
+    //for grep download
+    anno,
+    search_text,
+    id_list,
+    partial = false,
+    limit = 0,
+) => {
+    let q =
+        "SELECT id,genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,region,type,start,end";
+    q += " FROM " + anno + ".gff_fullsearch";
+
+    q += " WHERE id in (" + id_list + ")";
+
+    if (limit) q += " limit " + limit;
+    return q;
+};
 export const search_sql_stream_with_lengths = (
     anno,
     search_text,
