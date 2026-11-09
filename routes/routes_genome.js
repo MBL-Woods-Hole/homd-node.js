@@ -39,7 +39,17 @@ function renderGenomeTable(req, res, args) {
     for (let n in alltax_list) {
         gcount += alltax_list[n].genomes.length;
     }
-
+    //console.log('args.send_list',args.send_list[494])
+    // need to sort on genus+species+subspecies NOT organism
+    // big_g_list.sort(function (b, a) {
+    //                 return helpers.compareStrings_alpha(a.organism, b.organism);
+    //             });
+    //  let data_keys = Object.keys(org_list).sort((a, b) => {
+    //                     return helpers.compareStrings_alpha(
+    //                         org_list[a],
+    //                         org_list[b],
+    //                     );
+    //                 });
     //logger.info('args.send_list',args.send_list)
     res.render("pages/genome/genometable", {
         title: C.page_title + " :: Genome Table",

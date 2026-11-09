@@ -17,7 +17,8 @@ constants.version_information = {
     gtdb_ver: constants.GTDB_version,
 };
 constants.page_title = "HOMD V" + constants.homd_taxonomy_version;
-constants.page_title += ENV.NODE_ENV === "development" ? "DEV" : "";
+constants.page_title += ENV.ENV === "localhost" ? "Local" : "";
+constants.page_title += ENV.NODE_ENV === "development" ? "Dev" : "";
 constants.homd_stats = {}; // SEE helpers.calculate_homd_stats()
 
 constants.grep_search_max_rows = 70000; //500000  //100000 // up from 50000 on 2025-07-28

@@ -247,8 +247,9 @@ export const apply_pages = (glist, fltr, pd) => {
 };
 
 export const apply_gtable_filter = (req) => {
+    let asort, bsort;
     let big_g_list = Object.values(C.genome_lookup);
-    //logger.info('big_g_list-0',big_g_list[0])
+    //console.log('big_g_list-0',big_g_list[0])
 
     let vals;
     if (req.session.gtable_filter) {
@@ -276,7 +277,7 @@ export const apply_gtable_filter = (req) => {
         //helpers.print(['FILTER::GOT a TaxLetter: ',vals.letter])
         // COOL.... filter the whole list
         big_g_list = big_g_list.filter(
-            (item) => item.organism.toUpperCase().charAt(0) === vals.letter,
+            (item) => item.genus.toUpperCase().charAt(0) === vals.letter,
         );
     }
     //phylum
@@ -332,9 +333,16 @@ export const apply_gtable_filter = (req) => {
                 );
             });
         } else {
-            // default: sort by organism
             big_g_list.sort(function (b, a) {
-                return helpers.compareStrings_alpha(a.organism, b.organism);
+                asort =
+                    C.taxon_lineage_lookup[a.otid].genus +
+                    C.taxon_lineage_lookup[a.otid].species +
+                    C.taxon_lineage_lookup[a.otid].subspecies;
+                bsort =
+                    C.taxon_lineage_lookup[b.otid].genus +
+                    C.taxon_lineage_lookup[b.otid].species +
+                    C.taxon_lineage_lookup[b.otid].subspecies;
+                return helpers.compareStrings_alpha(asort, bsort);
             });
         }
     } else {
@@ -384,9 +392,18 @@ export const apply_gtable_filter = (req) => {
             });
             //logger.info('sortgc2',big_g_list[0],big_g_list[1],big_g_list[2],big_g_list[3])
         } else {
-            // default: sort by organism
             big_g_list.sort(function (a, b) {
-                return helpers.compareStrings_alpha(a.organism, b.organism);
+                //console.log('C.taxon_lineage_lookup[a.otid]',C.taxon_lineage_lookup[a.otid])
+                asort =
+                    C.taxon_lineage_lookup[a.otid].genus +
+                    C.taxon_lineage_lookup[a.otid].species +
+                    C.taxon_lineage_lookup[a.otid].subspecies;
+                bsort =
+                    C.taxon_lineage_lookup[b.otid].genus +
+                    C.taxon_lineage_lookup[b.otid].species +
+                    C.taxon_lineage_lookup[b.otid].subspecies;
+                return helpers.compareStrings_alpha(asort, bsort);
+                //return helpers.compareStrings_alpha(a.genus+a.species, b.genus+b.species);
             });
         }
     }
@@ -563,11 +580,6 @@ export const get_filtered_genome_list = (
             item.strain.toLowerCase().includes(searchText),
         );
     } else {
-        // tmpSendList = gidObjList.filter(item => item.gb_asmbly.toLowerCase().includes(searchText))
-        //     for (let n in tmpSendList) {
-        //       tempObj[tmpSendList[n].gid] = tmpSendList[n]
-        //     }
-
         // gid
         //logger.info('searchText',searchText)
         tmpSendList = gidObjList.filter((item) =>
@@ -600,9 +612,16 @@ export const get_filtered_genome_list = (
         }
 
         //Species
-        tmpSendList = gidObjList.filter((item) =>
-            item.organism.toLowerCase().includes(searchText),
-        );
+        tmpSendList = gidObjList.filter((item) => {
+            console.log("item", item);
+            asort = C.taxon_lineage_lookup[item.otid].genus;
+            asort += C.taxon_lineage_lookup[item.otid].species;
+            asort += C.taxon_lineage_lookup[item.otid].subspecies;
+
+            asort.toLowerCase().includes(searchText);
+            //item.organism.toLowerCase().includes(searchText),
+        });
+
         // for uniqueness convert to object::gid
         for (let n in tmpSendList) {
             tempObj[tmpSendList[n].gid] = tmpSendList[n];
