@@ -277,7 +277,10 @@ export const apply_gtable_filter = (req) => {
         //helpers.print(['FILTER::GOT a TaxLetter: ',vals.letter])
         // COOL.... filter the whole list
         big_g_list = big_g_list.filter(
-            (item) => item.genus.toUpperCase().charAt(0) === vals.letter,
+            (item) =>
+                C.taxon_lineage_lookup[item.otid].genus
+                    .toUpperCase()
+                    .charAt(0) === vals.letter,
         );
     }
     //phylum
