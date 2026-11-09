@@ -31,7 +31,7 @@ router.get("/refseq_table", function refseq_table(req, res) {
         return helpers.compareStrings_alpha(a.species, b.species);
     });
     res.render("pages/refseq/refseq_table", {
-        title: "HOMD :: 16S RefSeq Table",
+        title: C.page_title + " :: 16S RefSeq Table",
         pgname: "", // for AbountThisPage
         refseq: JSON.stringify(refseq_array),
         config: JSON.stringify(ENV),
@@ -41,7 +41,7 @@ router.get("/refseq_table", function refseq_table(req, res) {
 //
 router.get("/blast_server", function refseq_blast_server(req, res) {
     res.render("pages/blast/blast_server", {
-        title: "HOMD :: Blast Server",
+        title: C.page_title + " :: Blast Server",
         pgname: "", // for AbountThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -55,7 +55,7 @@ router.get("/refseq_blastn", function refseq_blastn(req, res) {
     //helpers.accesslog(req, res)
 
     res.render("pages/refseq/blastn", {
-        title: "HOMD :: 16S RefSeq Blast",
+        title: C.page_title + " :: 16S RefSeq Blast",
         pgname: "blast/blast",
         config: JSON.stringify(ENV),
         hostname: ENV.hostname,
@@ -105,7 +105,7 @@ router.get("/refseq_tree", function refseq_tree(req, res) {
                 "<center><H1 style='color:red;'>LOCALHOST</H1></center>" + data;
         }
         res.render("pages/refseq/refseq_tree", {
-            title: "HOMD :: Conserved Protein Tree",
+            title: C.page_title + " :: Conserved Protein Tree",
             pgname: "refseq/tree", // for AbountThisPage,
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
@@ -123,7 +123,7 @@ router.get("/download", function download(req, res) {
     //logger.info(req.body)
     //helpers.accesslog(req, res)
     res.render("pages/refseq/download", {
-        title: "HOMD :: Phylo Tree",
+        title: C.page_title + " :: Phylo Tree",
         pgname: "download", // for AbountThisPage
         config: JSON.stringify(ENV),
         hostname: ENV.HOSTNAME,

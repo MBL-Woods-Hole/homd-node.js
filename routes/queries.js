@@ -340,6 +340,7 @@ function genome_query() {
     q += ` JOIN body_sites using(otid)`;
     q += ` LEFT JOIN \`${ptbl}\` using(genome_id)`;
     q += ` LEFT JOIN \`${ntbl}\` using(genome_id)`;
+    // WARNING the follong LEFT JOINs will duplicate GIDs in the result
     q += ` LEFT JOIN pangenome_genome using(genome_id)`;
     q += ` LEFT JOIN pangenomes using(pangenome_id)`;
 

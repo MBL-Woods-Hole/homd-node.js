@@ -26,7 +26,7 @@ router.get("/download/:q", function download(req, res) {
     // renders the overall downlads page
     let q = req.params.q;
     res.render("pages/download", {
-        title: "HOMD :: Downloads",
+        title: C.page_title + " :: Downloads",
         pgname: "download", // for AbountThisPage
         section: q,
         config: JSON.stringify(ENV),
@@ -685,7 +685,7 @@ router.post("/anno_search_data", async (req, res) => {
         //stream_query_to_browser(req,res,q)
         console.log("MyQuery for plain streaming:");
         res.render("pages/search/search_stream_results_plain", {
-            title: "HOMD :: Search Results",
+            title: C.page_title + " :: Search Results",
             pgname: "", // for AboutThisPage
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
@@ -1116,7 +1116,7 @@ router.get("/version/:index", function dld_pg(req, res) {
 });
 router.get("/download_fasta", function dld_fasta_get(req, res) {
     res.render("pages/download_fasta", {
-        title: "HOMD :: Download FASTA",
+        title: C.page_title + " :: Download FASTA",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),

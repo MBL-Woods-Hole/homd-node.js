@@ -30,6 +30,9 @@ a{
   text-align:left;
   font-weight:bold;
 }
+.indent{
+    text-indent: 60px;
+}
 .download-table{
   width:auto;
   text-align:center;
@@ -104,7 +107,6 @@ a{
 #downloadMenu li{
     padding:5px 2px;
    /*  text-decoration:underline; */
-    
 }
 </style>
 <a name='topx' id='topx'></a>
@@ -144,7 +146,7 @@ a{
 <div id='taxon' class='dnld-block'>
   
   <center>
-  <div class='subtitle'>
+  <div class='subtitle indent'>
     Taxonomic Data::Batch Downloads
   </div>
   
@@ -223,7 +225,7 @@ a{
 
 <div id='abundance' class='dnld-block'>
   <center>
-  <div class='subtitle'>
+  <div class='subtitle indent'>
     Abundance Data::Batch Downloads <small>[<a href='/taxa/ecology_home'>Visit Abundance Page</a>]</small>
   </div>
   <table class='download-table'>
@@ -292,7 +294,7 @@ a{
 
 <div id='genome' class='dnld-block'>
   <center>
-  <div class='subtitle'>
+  <div class='subtitle indent'>
     Genomic Meta Information::Batch Downloads
   </div>
   
@@ -310,7 +312,7 @@ a{
 
 <div id='phylo' class='dnld-block'>
   <center>
-  <div class='subtitle'>
+  <div class='subtitle indent'>
     Phylogenetics
   </div>
   <table class='download-table' >
@@ -350,7 +352,7 @@ a{
 
 <div id='pangenome' class='dnld-block'>
   <center>
-  <div class='subtitle'>
+  <div class='subtitle indent'>
     Pangenomes <small>[<a href='/genome/pangenomes'>Visit Pangenomes Table</a>]</small>
   </div>
   <table class='download-table' >
@@ -372,7 +374,7 @@ a{
 
 <div id='peptide' class='dnld-block'>
   <center>
-  <div class='subtitle'>
+  <div class='subtitle indent'>
     Protein/Peptide
   </div>
   <table class='download-table' >
@@ -390,7 +392,7 @@ a{
 
 <div id='phage' class='dnld-block'>
   <center>
-  <div class='subtitle'>Phage Data::Batch Downloads <small>[<a href='/phage/phage_table'>Visit Phage Table</a>]</small></div>
+  <div class='subtitle indent'>Phage Data::Batch Downloads <small>[<a href='/phage/phage_table'>Visit Phage Table</a>]</small></div>
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
     <tr>
@@ -408,7 +410,7 @@ a{
 
 <div id='crispr' class='dnld-block'>
   <center>
-  <div class='subtitle'>Crispr-Cas and AMR Data::Batch Downloads <small>[<a href='/genome/crispr'>Visit Crispr-Cas Table</a>]</small></div>
+  <div class='subtitle indent'>Crispr-Cas and AMR Data::Batch Downloads <small>[<a href='/genome/crispr'>Visit Crispr-Cas Table</a>]</small></div>
   <table class='download-table'>
     
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th></tr>
@@ -435,7 +437,7 @@ a{
 <a name='refseq'></a>
 
 <div id='refseq' class='dnld-block'>
-  <div class='subtitle'>
+  <div class='subtitle indent'>
     Download HOMD 16S rRNA Gene Sequences
   </div>
   <div class='refseq-text'>
@@ -604,7 +606,7 @@ a{
 
 <div id='schema' class='dnld-block'>
   <center>
-  <div class='subtitle'>
+  <div class='subtitle indent'>
     HOMD Database Schema (updated 2026-06-01)
   </div>
   <table class='download-table'>
@@ -652,12 +654,12 @@ a{
         group = document.getElementById(all_groups[g]).getElementsByClassName("subtitle")[0]
         if(all_groups[g] == item){
           group.style.background = 'orange';
-          document.getElementById(all_groups[g]).style.background = 'LemonChiffon'
-          document.getElementById('menu-'+all_groups[g]).style.background = 'LemonChiffon'
+          //document.getElementById(all_groups[g]).style.background = 'LemonChiffon'
+          //document.getElementById('menu-'+all_groups[g]).style.background = 'LemonChiffon'
         }else{
           group.style.background = 'lightgrey';
-          document.getElementById(all_groups[g]).style.background = 'white'
-          document.getElementById('menu-'+all_groups[g]).style.background = 'lightblue'
+          //document.getElementById(all_groups[g]).style.background = 'white'
+          //document.getElementById('menu-'+all_groups[g]).style.background = 'lightblue'
         }
       }else{
           //groupx = document.getElementById('topx')
@@ -669,7 +671,7 @@ a{
     const targetRow = document.getElementById(item);
       targetRow.scrollIntoView({ 
         behavior: 'smooth', // Optional: for smooth scrolling animation
-        block: 'center'    // Optional: aligns the row to the center of the viewport
+        block: 'start'    // Optional: aligns the row to the center of the viewport
       });
 }
 </script>

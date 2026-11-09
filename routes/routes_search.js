@@ -21,7 +21,7 @@ router.get("/full_site_search", function full_site_search_GET(req, res) {
     req.session.sql_idlist = []; // zero array
     req.session.sql_idlist_stream = []; // zero array
     res.render("pages/search/full_site_search", {
-        title: "HOMD :: Human Oral Microbiome Database",
+        title: C.page_title + " :: Human Oral Microbiome Database",
         pgname: "", // for AbountThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -302,7 +302,7 @@ router.post(
             });
             //logger.info('obj2',obj2)
             res.render("pages/search/full_site_search_results", {
-                title: "HOMD :: Search Results",
+                title: C.page_title + " :: Search Results",
                 pgname: "", // for AboutThisPage
                 config: JSON.stringify(ENV),
                 ver_info: JSON.stringify(C.version_information),
@@ -445,7 +445,7 @@ router.post(
                 );
             });
             res.render("pages/search/full_site_search_results", {
-                title: "HOMD :: Search Results",
+                title: C.page_title + " :: Search Results",
                 pgname: "", // for AboutThisPage
                 config: JSON.stringify(ENV),
                 ver_info: JSON.stringify(C.version_information),
@@ -489,7 +489,7 @@ router.get("/stream_results_sql", function stream_results_sql(req, res) {
     const search_text = req.query.search_text.toLowerCase();
     const whole_or_partial = req.query.whole_or_partial; // whole or partial
     res.render("pages/search/search_stream_results", {
-        title: "HOMD :: Search Results",
+        title: C.page_title + " :: Search Results",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -945,7 +945,7 @@ router.post("/basic_site_search", function basic_site_search(req, res) {
         let ncbi_gene_count = 0;
 
         res.render("pages/search/basic_search_result", {
-            title: "HOMD :: Site Search",
+            title: C.page_title + " :: Site Search",
             pgname: "", // for AbountThisPage
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
