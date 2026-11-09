@@ -19,7 +19,7 @@ import logger from "../config/app_config.js";
 router.get("/full_site_search", function full_site_search_GET(req, res) {
     //logger.info('full_site_searchGET')
     res.render("pages/search/full_site_search", {
-        title: "HOMD :: Human Oral Microbiome Database",
+        title: C.page_title + " :: Human Oral Microbiome Database",
         pgname: "", // for AbountThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -255,7 +255,7 @@ router.post(
             });
             //logger.info('sort_lst2',Object.keys(all_phage_search_ids_lookup))
             res.render("pages/search/full_site_search_results", {
-                title: "HOMD :: Search Results",
+                title: C.page_title + " :: Search Results",
                 pgname: "", // for AboutThisPage
                 config: JSON.stringify(ENV),
                 ver_info: JSON.stringify(C.version_information),
@@ -438,7 +438,7 @@ router.post(
             });
             //logger.info('obj2',obj2)
             res.render("pages/search/full_site_search_results", {
-                title: "HOMD :: Search Results",
+                title: C.page_title + " :: Search Results",
                 pgname: "", // for AboutThisPage
                 config: JSON.stringify(ENV),
                 ver_info: JSON.stringify(C.version_information),
@@ -580,7 +580,7 @@ router.post(
                 );
             });
             res.render("pages/search/full_site_search_results", {
-                title: "HOMD :: Search Results",
+                title: C.page_title + " :: Search Results",
                 pgname: "", // for AboutThisPage
                 config: JSON.stringify(ENV),
                 ver_info: JSON.stringify(C.version_information),
@@ -622,7 +622,7 @@ router.get("/stream_results_grep", function stream_results_grep(req, res) {
     //const annoUpper = annoLower.toUpperCase()
     const search_text = req.query.search_text.toLowerCase();
     res.render("pages/search/search_stream_results_grep", {
-        title: "HOMD :: Search Results",
+        title: C.page_title + " :: Search Results",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -637,7 +637,7 @@ router.get("/stream_results_sql", function stream_results_sql(req, res) {
     //const annoUpper = annoLower.toUpperCase()
     const search_text = req.query.search_text.toLowerCase();
     res.render("pages/search/search_stream_results_sql", {
-        title: "HOMD :: Search Results",
+        title: C.page_title + " :: Search Results",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -1086,7 +1086,7 @@ router.post("/basic_site_search", function basic_site_search(req, res) {
         //req.session.site_search_result_ncbi = {}
         //logger.info('st',searchText)
         res.render("pages/search/basic_search_result", {
-            title: "HOMD :: Site Search",
+            title: C.page_title + " :: Site Search",
             pgname: "", // for AbountThisPage
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
