@@ -572,7 +572,7 @@ export const get_filtered_genome_list = (
     searchField,
 ) => {
     logger.info("in get_filtered_genome_list");
-    let sendList, tmpSendList;
+    let asort, sendList, tmpSendList;
     const tempObj = {};
 
     if (searchField === "strain") {
@@ -613,7 +613,6 @@ export const get_filtered_genome_list = (
 
         //Species
         tmpSendList = gidObjList.filter((item) => {
-            console.log("item", item);
             asort = C.taxon_lineage_lookup[item.otid].genus;
             asort += C.taxon_lineage_lookup[item.otid].species;
             asort += C.taxon_lineage_lookup[item.otid].subspecies;
