@@ -86,7 +86,8 @@ table td a{
 <% orders = JSON.parse(orders) %>
 <% families = JSON.parse(families) %>
 <% genera = JSON.parse(genera) %>
-<% has_abund_data =JSON.parse(has_data) %>
+<% has_abund_data = JSON.parse(has_data) %>
+<% ver = JSON.parse(ver_info) %>
 
 <%- include('../../partials/header_html'); %>
 
@@ -99,8 +100,9 @@ table td a{
     <div class='page-content' >
 
         <p class='title h3'>Ecology / Abundance Pages</p>
-        <a class='download_browser_text_excel'  href='/download/download/abundance' >Download Options</a> 
-<br><span id='top-10-link'><a href='abundance_by_site/phylum'>Most abundant taxa for each oral sub-habitat</a>.
+        <span>Ecology Version: <%= ver.eco_ver %></span>
+        <br><a class='download_browser_text_excel'  href='/download/download/abundance' >Download Options</a> 
+        <br><span id='top-10-link'><a href='abundance_by_site/phylum'>Most abundant taxa for each oral sub-habitat</a>.
        </span> 
         <div id='info'>
             The following abundance pages show available data with bar charts for the ranks in each taxon name (from domain to species) in the HOMD database.
