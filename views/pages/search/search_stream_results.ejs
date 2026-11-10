@@ -64,13 +64,21 @@ tr:nth-child(odd) { background-color: lightblue; }
         //outputDiv.textContent = ''; 
          //outputDiv.innerHTML = "";
         // Connect to the SSE endpoint
-        
+        wop = '<%= whole_or_partial %>'
         document.getElementById('stop-button').addEventListener('click', function() {
             console.log('Stream ended by User')
             eventSource.close()
         })
-        const eventSource = new EventSource('/search/get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>&whole_or_partial=<%= whole_or_partial %>&download=0');
-
+        let url = ''
+        let id_list = []
+        if(wop === 'grep'){
+            url = '/search/get_grep_stream?anno=<%= anno %>&search_text=<%= search_text %>&whole_or_partial=<%= whole_or_partial %>&download=0'
+            
+        }else{
+            url = '/search/get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>&whole_or_partial=<%= whole_or_partial %>&download=0'
+            
+        }
+        const eventSource = new EventSource(url)
         eventSource.onmessage = function(event) {
             const eventData = JSON.parse(event.data);
             
@@ -79,7 +87,9 @@ tr:nth-child(odd) { background-color: lightblue; }
                 
                 const notification = document.getElementById('end-notice');
                 var notify = "DONE (row count: "+eventData.count.toString()+") - Click on table headers to sort."
+                
                 notify += "<span style='float:right;'><a class='link' href='get_sql_stream?anno=<%= anno %>&search_text=<%= search_text %>&whole_or_partial=<%= whole_or_partial %>&download=1'>Download Results</a></span>"
+                
                 notification.innerHTML = notify
                 console.log('Stream ended by server.');
                 //document.querySelector('#table-div').style.display = "none";
@@ -96,6 +106,9 @@ tr:nth-child(odd) { background-color: lightblue; }
             try {
                 // Parse incoming JSON data from the event stream
                 //const eventData = JSON.parse(event.data);
+                if(wop ==='grep'){
+                    id_list.push(eventData.sqlid)
+                }
                 const tableBody = document.getElementById('table-body');
                 // 3. Create a new table row element
                 const row = document.createElement('tr');

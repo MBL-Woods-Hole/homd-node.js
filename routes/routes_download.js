@@ -2,7 +2,7 @@
 import express from "express";
 let router = express.Router();
 
-//import fs from 'fs-extra';
+import fs from "fs-extra";
 //import fileUpload from 'express-fileupload';
 //const app = express();
 //app.use(fileUpload());
@@ -26,7 +26,7 @@ router.get("/download/:q", function download(req, res) {
     // renders the overall downlads page
     let q = req.params.q;
     res.render("pages/download", {
-        title: "HOMD :: Downloads",
+        title: C.page_title + " :: Downloads",
         pgname: "download", // for AbountThisPage
         section: q,
         config: JSON.stringify(ENV),
@@ -36,8 +36,9 @@ router.get("/download/:q", function download(req, res) {
 router.get("/download", function download(req, res) {
     res.redirect("download/all");
 });
-router.get("/download_file", function search(req, res) {
+router.get("/download_file", function download_file(req, res) {
     //let page = req.params.pagecode
+    console.log("IN download_file");
     let fullpath = req.query.filename;
     logger.info(`file path: ${fullpath}`);
     res.download(fullpath);
@@ -684,7 +685,7 @@ router.post("/anno_search_data", async (req, res) => {
         //stream_query_to_browser(req,res,q)
         console.log("MyQuery for plain streaming:");
         res.render("pages/search/search_stream_results_plain", {
-            title: "HOMD :: Search Results",
+            title: C.page_title + " :: Search Results",
             pgname: "", // for AboutThisPage
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
@@ -811,9 +812,6 @@ router.post("/anno_data_by_gid", async (req, res) => {
 
     let anno_cap = anno.toUpperCase();
 
-    // q = "SELECT";
-    //     q += " CONCAT('>',protein_id,' | ',genome_id,' | ',region) AS defline,";
-    //     q += " UNCOMPRESS(seq_compressed) AS sequence";
     if (format === "fasta_aa") {
         ext = "faa";
     } else {
@@ -1118,7 +1116,7 @@ router.get("/version/:index", function dld_pg(req, res) {
 });
 router.get("/download_fasta", function dld_fasta_get(req, res) {
     res.render("pages/download_fasta", {
-        title: "HOMD :: Download FASTA",
+        title: C.page_title + " :: Download FASTA",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -1133,37 +1131,42 @@ router.post(
         logger.info(`req.file ${req.file}`);
         let dt = helpers.get_today_obj();
         //logger.info('str',req.file.buffer.toString())
-        //logger.info('body',req.body)
-        let data, line;
+        console.log("body", req.body);
+        let data,
+            line,
+            tmp = [],
+            tmp2 = [];
         if (req.file) {
-            data = req.file.buffer.toString().split("\n");
+            console.log(req.file);
+            data = await fs.readFile(req.file.path, "utf8");
+            data = data.split("\n");
+
+            //data = req.file.buffer.toString('utf8').split("\n");
             if (data.length > 1000) {
                 res.send("Data input is too long (>1000 IDs)");
                 return;
             }
+            const clean_data = data.flatMap((str) => {
+                // Checks for both null and undefined
+                if (str == null) return [];
+                return str;
+            });
         } else {
             res.redirect("download_fasta");
             return;
         }
-
-        let table = "faa",
-            db = "PROKKA",
-            ext = ".faa",
-            tmp = [];
-        if (req.body.anno === "ncbi") {
-            db = "NCBI";
+        console.log(data);
+        const us_count = data[0].split("_").length - 1;
+        console.log("us_count", us_count);
+        let table = req.body.table;
+        let anno = req.body.anno.toUpperCase();
+        if (us_count == 2) {
+            anno = "PROKKA";
+        } else if (us_count == 1) {
+            anno = "BAKTA";
+        } else {
+            anno = "NCBI";
         }
-        if (req.body.fa_type === "nucleotide") {
-            table = "ffn";
-            ext = ".fna";
-        }
-        let q =
-            "SELECT genome_id as gid,protein_id as pid, UNCOMPRESS(seq_compressed) as seq from " +
-            db +
-            "." +
-            table +
-            " WHERE protein_id in (";
-        logger.info(data, "data");
 
         for (let n in data) {
             //logger.info('n',data[n])
@@ -1178,8 +1181,17 @@ router.post(
             }
             tmp.push("'" + line.trim() + "'");
         }
-        q += tmp.join(",");
-        q += ")";
+        let q = queries.fasta_download_per_pid(table, anno, tmp);
+        console.log(q);
+        // let q =
+        //             "SELECT genome_id as gid,protein_id as pid, UNCOMPRESS(seq_compressed) as seq from " +
+        //             db +
+        //             "." +
+        //             table +
+        //             " WHERE protein_id in (";
+        //
+        //         q += tmp.join(",");
+        //         q += ")";
 
         let defline,
             seq,
@@ -1192,7 +1204,8 @@ router.post(
             return;
         } else {
             for (let n in rows) {
-                defline = ">" + rows[n].pid + "|" + rows[n].gid;
+                defline =
+                    ">" + rows[n].pid + "|" + rows[n].gid + " | HOMD | " + anno;
                 seq = rows[n].seq.toString();
                 const arr = helpers.chunkSubstr(seq, 80);
                 //arr.join('<br>')
@@ -1204,12 +1217,11 @@ router.post(
             "HOMD_FASTA_" +
             req.body.anno +
             "_" +
-            req.body.fa_type +
+            req.body.table +
             "_" +
             dt.today +
             "_" +
-            dt.seconds +
-            ext;
+            dt.seconds;
         res.set({ "Content-Disposition": "attachment; filename=" + fname });
         res.send(outfile_txt);
         res.end();

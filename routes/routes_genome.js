@@ -39,10 +39,20 @@ function renderGenomeTable(req, res, args) {
     for (let n in alltax_list) {
         gcount += alltax_list[n].genomes.length;
     }
-
+    //console.log('args.send_list',args.send_list[494])
+    // need to sort on genus+species+subspecies NOT organism
+    // big_g_list.sort(function (b, a) {
+    //                 return helpers.compareStrings_alpha(a.organism, b.organism);
+    //             });
+    //  let data_keys = Object.keys(org_list).sort((a, b) => {
+    //                     return helpers.compareStrings_alpha(
+    //                         org_list[a],
+    //                         org_list[b],
+    //                     );
+    //                 });
     //logger.info('args.send_list',args.send_list)
     res.render("pages/genome/genometable", {
-        title: "HOMD :: Genome Table",
+        title: C.page_title + " :: Genome Table",
         pgname: "genome/genome_table", // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -270,7 +280,7 @@ router.get("/jbrowse", function jbrowse(req, res) {
             };
         });
     res.render("pages/genome/genome_select", {
-        title: "HOMD :: JBrowse",
+        title: C.page_title + " :: JBrowse",
         pgname: "genome/jbrowse", // for AboutThisPage
         config: JSON.stringify(ENV),
         gid: gid, // default
@@ -358,7 +368,7 @@ router.get("/genome_description", async function Description(req, res) {
     let checkm_status_obj = helpers_genomes.get_checkm_status(data);
 
     res.render("pages/genome/genomedesc", {
-        title: "HOMD :: Genome",
+        title: C.page_title + " :: Genome",
         pgname: "genome/description", // for AboutThisPage
         config: JSON.stringify(ENV),
         // taxonid: otid,
@@ -459,7 +469,7 @@ router.post("/get_AA_NA_seq", async function get_AA_NA_SeqPost(req, res) {
 });
 function render_explorer(req, res, args) {
     res.render("pages/genome/explorer", {
-        title: "HOMD :: Genome Explorer",
+        title: C.page_title + " :: Genome Explorer",
         pgname: "genome/explorer", // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -804,7 +814,7 @@ router.post("/orf_search_sql", function orf_search_full(req, res) {
                 //logger.info('data_keys[0]',data_keys[0])
                 //logger.info('site_search_result[data_keys[0]]',site_search_result[data_keys[0]])
                 res.render("pages/genome/annotation_keyword", {
-                    title: "HOMD :: Search",
+                    title: C.page_title + " :: Search",
                     pgname: "genome/explorer", // for AboutThisPage
                     config: JSON.stringify(ENV),
                     ver_info: JSON.stringify(C.version_information),
@@ -895,7 +905,7 @@ router.post("/orf_search", function orf_search(req, res) {
 
                 //logger.info('data',site_search_result)
                 res.render("pages/genome/annotation_keyword", {
-                    title: "HOMD :: Search",
+                    title: C.page_title + " :: Search",
                     pgname: "genome/explorer", // for AboutThisPage
                     config: JSON.stringify(ENV),
                     ver_info: JSON.stringify(C.version_information),
@@ -1393,7 +1403,7 @@ router.get("/blast_select_genome", function blast_select_genome(req, res) {
         });
 
     res.render("pages/genome/genome_select", {
-        title: "HOMD :: BLAST",
+        title: C.page_title + " :: BLAST",
         pgname: "genome/BLAST", // for AboutThisPage
         config: JSON.stringify(ENV),
         gid: gid, // default
@@ -1483,7 +1493,7 @@ router.get("/conserved_protein_tree", function conservedProteinTree(req, res) {
         }
         //logger.info('data',data);
         res.render("pages/genome/conserved_protein_tree", {
-            title: "HOMD :: Conserved Protein Tree",
+            title: C.page_title + " :: Conserved Protein Tree",
             pgname: "genome/tree", // for AboutThisPage
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
@@ -1550,7 +1560,7 @@ router.get("/ribosomal_protein_tree", function ribosomalProteinTree(req, res) {
                 "<center><H1 style='color:red;'>LOCALHOST</H1></center>" + data;
         }
         res.render("pages/genome/ribosomal_protein_tree", {
-            title: "HOMD :: Ribosomal Protein Tree",
+            title: C.page_title + " :: Ribosomal Protein Tree",
             pgname: "genome/tree", // for AboutThisPage
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
@@ -1616,7 +1626,7 @@ router.get("/rRNA_gene_tree", function rRNAGeneTree(req, res) {
                 "<center><H1 style='color:red;'>LOCALHOST</H1></center>" + data;
         }
         res.render("pages/genome/rRNA_gene_tree", {
-            title: "HOMD :: rRNA Gene Tree",
+            title: C.page_title + " :: rRNA Gene Tree",
             pgname: "genome/tree", // for AboutThisPage
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
@@ -1646,7 +1656,7 @@ router.get("/pangenomes", function pangenomes_GET(req, res) {
     pg_list.sort();
     //logger.info(C.pangenome_lookup[pg_list[2]])
     res.render("pages/genome/pangenomes", {
-        title: "HOMD :: Pangenomes",
+        title: C.page_title + " :: Pangenomes",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -1823,7 +1833,7 @@ router.get("/anvio", (req, res) => {
     //     }
     //logger.info('env',ENV)
     res.render("pages/genome/anvi_server", {
-        title: "HOMD :: Pangenomes",
+        title: C.page_title + " :: Pangenomes",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -1946,7 +1956,7 @@ async function deleteElementById(svgString, targetId) {
 //
 router.get("/oralgen", function oralgen(req, res) {
     res.render("pages/genome/oralgen", {
-        title: "HOMD :: ORALGEN",
+        title: C.page_title + " :: ORALGEN",
         pgname: "", // for AbountThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -1995,7 +2005,7 @@ router.get("/peptide_table", async function peptide_table_get(req, res) {
     }
     //logger.info(send_list[0])
     res.render("pages/genome/protein_peptide", {
-        title: "HOMD :: Human Oral Microbiome Database",
+        title: C.page_title + " :: Human Oral Microbiome Database",
         pgname: "", // for AbountThisPage
         pgtitle: "Protein Peptide Table",
         config: JSON.stringify(ENV),
@@ -2061,7 +2071,7 @@ router.post("/peptide_table", async function peptide_table_post(req, res) {
         });
     }
     res.render("pages/genome/protein_peptide", {
-        title: "HOMD :: Human Oral Microbiome Database",
+        title: C.page_title + " :: Human Oral Microbiome Database",
         pgname: "", // for AbountThisPage
         pgtitle: "Protein Peptide Table",
         config: JSON.stringify(ENV),
@@ -2115,7 +2125,7 @@ router.get("/peptide_table2", async function peptide_table2_get(req, res) {
     let send_list = full_send_list;
 
     res.render("pages/genome/protein_peptide2", {
-        title: "HOMD :: Human Oral Microbiome Database",
+        title: C.page_title + " :: Human Oral Microbiome Database",
         pgname: "", // for AbountThisPage
         pgtitle: "Protein Peptide Table",
         config: JSON.stringify(ENV),
@@ -2189,7 +2199,7 @@ router.post("/peptide_table2", async function peptide_table2_post(req, res) {
         });
     }
     res.render("pages/genome/protein_peptide2", {
-        title: "HOMD :: Human Oral Microbiome Database",
+        title: C.page_title + " :: Human Oral Microbiome Database",
         pgname: "", // for AbountThisPage
         pgtitle: "Protein Peptide Table",
         config: JSON.stringify(ENV),
@@ -2254,7 +2264,7 @@ router.get("/peptide_table3", async function protein_peptide(req, res) {
     }
 
     res.render("pages/genome/protein_peptide3", {
-        title: "HOMD :: Human Oral Microbiome Database",
+        title: C.page_title + " :: Human Oral Microbiome Database",
         pgname: "", // for AbountThisPage
         pgtitle: "Protein Peptide Table",
         config: JSON.stringify(ENV),
@@ -2296,7 +2306,7 @@ router.get("/amr_table", function amr_table_GET(req, res) {
         return helpers.compareStrings_alpha(a.org, b.org);
     });
     res.render("pages/genome/amr_table", {
-        title: "HOMD :: AMR Table",
+        title: C.page_title + " :: AMR Table",
         pgtitle: "AMR Genomes",
         pgname: "", //for AbountThisPage
         config: JSON.stringify(ENV),
@@ -2348,7 +2358,7 @@ router.post("/amr_table", function amr_table_POST(req, res) {
         return helpers.compareStrings_alpha(a.org, b.org);
     });
     res.render("pages/genome/amr_table", {
-        title: "HOMD :: AMR Table",
+        title: C.page_title + " :: AMR Table",
         pgtitle: "AMR Genomes",
         pgname: "", //for AbountThisPage
         config: JSON.stringify(ENV),
@@ -2507,7 +2517,7 @@ router.get("/crispr_table", function crispr_table_GET(req, res) {
     });
 
     res.render("pages/genome/crispr_cas", {
-        title: "HOMD :: CRISPR-Cas",
+        title: C.page_title + " :: CRISPR-Cas",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -2562,7 +2572,7 @@ router.post("/crispr_table", function crispr_table_POST(req, res) {
     });
 
     res.render("pages/genome/crispr_cas", {
-        title: "HOMD :: CRISPR-Cas",
+        title: C.page_title + " :: CRISPR-Cas",
         pgname: "", // for AboutThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),

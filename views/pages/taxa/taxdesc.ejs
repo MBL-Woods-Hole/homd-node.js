@@ -1,6 +1,11 @@
 <style>
 
-
+/* 
+td, th {
+  vertical-align: top;
+  text-align: left;
+}
+ */
 .taxon-data{
    /* font-family: "Lucida Console", "Courier New", monospace; */
    font-weight:normal;
@@ -37,9 +42,23 @@
 }
 
 
-.tbl-title{
-  background:lightblue;
-  
+.tbl-taxonomy{
+  background:#deebf6;
+}
+.tbl-genomics{
+  background:#fff1cd;
+}
+.tbl-pangenomics{
+  background:#e3efda;
+}
+.tbl-rrna16s{
+  background:#f9d2ba;
+}
+.tbl-ecology{
+  background:#fec6ef;
+}
+.tbl-phage{
+  background:#dedbf6;
 }
 #left-tbl td{
   padding:4px;
@@ -84,7 +103,13 @@
 .rs-span-2{
   float:right;
 }
-
+/* 
+.sub-menu li{
+  text-indent:1.7em;
+  font-weight:normal;
+  text-decoration:underline;
+}
+ */
 
 
 #myImg0:hover {opacity: 0.7;cursor:pointer;}
@@ -199,7 +224,7 @@
     border:1px solid darkgrey;
 }
 .link{
-   text-decoration: underline;
+   /* text-decoration: underline; */
    
    padding:3px;
    margin:1px;
@@ -228,9 +253,11 @@
 <% data_pubs = JSON.parse(data4) %>
 <% data_info = JSON.parse(tinfo) %>
 <% data_lineage = JSON.parse(lin) %>
+<% gstrains = JSON.parse(strains) %>
 <% data_refseq = JSON.parse(refseq_info) %>
 <% links = JSON.parse(links) //refseq  %>
 <% sites = JSON.parse(sites) %>
+<% sites2 = JSON.parse(sites2) %>
 
 <% taxidfullnameplus = "HMT-"+("0000" + otid).slice(-4); %>
 
@@ -283,9 +310,9 @@
         </div>
 
   </td></tr>
-  
+  <tr><td  class='taxon-bold tbl-taxonomy' colspan='2'><center>TAXONOMY</center></td></tr>
   <tr>
-    <td class='taxon-bold tbl-title'>Classification:</td>
+    <td class='taxon-bold tbl-taxonomy'>Classification:</td>
     <td class='taxon-data'>
     <table id='tax_lineage'>
       <tr><td class='taxon-bold'>Domain:</td>
@@ -341,12 +368,12 @@
       </table>
     </td>
   </tr>
-  <tr><td class='taxon-bold tbl-title'>Bacterial Name:</td>
+  <tr><td class='taxon-bold tbl-taxonomy'>Bacterial Name:</td>
         <td class='taxon-data'><i><%= data_lineage.species %></i></td>
   </tr>
   
   <tr>
-    <td class='taxon-bold tbl-title'>Naming Status:</td>
+    <td class='taxon-bold tbl-taxonomy'>Naming Status:</td>
     
     <td class='taxon-data'>
         
@@ -364,13 +391,13 @@
     
   </tr>
   <tr>
-    <td class='taxon-bold tbl-title'>Cultivation Status:</td>
+    <td class='taxon-bold tbl-taxonomy'>Cultivation Status:</td>
     
     <td class='taxon-data'><%= data_lookup.cultivation_status %></td>
   </tr>
   
   <% if(msg){ %>
-     <tr><td class='taxon-bold tbl-title'>Notes:</td>
+     <tr><td class='taxon-bold tbl-taxonomy'>Notes:</td>
         
         <% pts = msg.split(";;")%>
         <td class='red-text'>
@@ -390,17 +417,8 @@
         
      </tr>
   <% } %>
-  
   <tr>
-    <td class='taxon-bold tbl-title'> Body Site (or Source):
-      <br>&nbsp;&nbsp;<small>[<a href='body_sites?otid=<%= otid %>'>View in Body Sites Table</a>]</small>
-    </td>
-    <td class='taxon-data'><%- sites %></td>
-    
-  </tr>
-  
-  <tr>
-    <td class='taxon-bold tbl-title'> Type/Reference Strain:</td>
+    <td class='taxon-bold tbl-taxonomy'> Type/Reference Strain:</td>
     <% if(data_lookup.status === 'Named') { %>
         <!-- USE type strains -->
        
@@ -426,7 +444,7 @@
         </td>
   </tr>
   <tr>
-    <td class='taxon-bold tbl-title'>Former Names or Synonyms:</td>
+    <td class='taxon-bold tbl-taxonomy'>Former Names or Synonyms:</td>
     <td>
        <table class='' border='0'>
        <% for(n=0;n<data_lookup.synonyms.length;n++){ %>
@@ -436,62 +454,69 @@
     
     </td>
   </tr>
-  
-  <tr>
-    <td class='taxon-bold tbl-title'>16S rRNA RefSeq Tree:</td>
-    <td>
-       
-       <span class='link'><a href='/refseq/refseq_tree?otid=<%= otid %>' target='_blank'>View Taxon in RefSeq Tree
-        </a>
-       </span>
-    </td>
-  </tr>
-  
-  <tr>
-    <td class='taxon-bold tbl-title'>16S rRNA Reference Sequences:</td>
+   <tr>
+    <td class='taxon-bold tbl-taxonomy'>NCBI Taxon ID:</td>
     <td class='taxon-data'>
-    
-      <% if(data_lookup.naming_status != "Dropped"){ %>
+    <% if(!data_lookup.ncbi_taxid || parseInt(data_lookup.ncbi_taxid) == 0){ %>
+        <small>Not Available</small>
+    <% }else{ %>
+      
+        <%= data_lookup.ncbi_taxid %> 
+        <span class='link'>
+        [<a href='https://www.ncbi.nlm.nih.gov/datasets/taxonomy/<%= data_lookup.ncbi_taxid %>/' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]
+        </span>
+      
+      <% } %>
+      </td>
+  </tr>
+  
+  <tr>
+    <td class='taxon-bold tbl-taxonomy' title='List of Prokaryotic names with Standing in Nomenclature'>LPSN.dsmz.de:</td>
+    <td class='taxon-data'>
+      <% link = "https://lpsn.dsmz.de/"+links["lpsnlink"] %>
+      <% show = data_lineage.species %>
+      
+        <span>
+        <a class='link' href='<%- link %>' target='_blank' rel="noopener noreferrer"><em><%- link %></em>
         
-        
-
-        <!-- OLD: >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
-        <!-- NEW: >81531021 | Methanobrevibacter oralis | HMT-815 | Strain: DSM 7256 | PROKKA: SEQF3102_01675 | Status: Named | Genomes: 5 -->
-        
-        <% if(data_refseq.length > 10){ %>
-            <div id='refseq-table'>
-        <% }else{ %>
-            <div id='refseq-table-no-scroll'>
-        <% } %>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RefSeq-ID(s)
-        <table class='' border='0'>
-        <% for(n in data_refseq){ %>
-            <% refseqid   = data_refseq[n].refseq_id %>
-            <% species    = data_refseq[n].species %>
-            <% seqids    = data_refseq[n].seqids %>
-            <!-- We also have seqids,seqid_count,seq_length -->
-            <tr>
-               <td class='' style='border:none;padding:0 1px;'>
-                 <span class='rs-span-1 taxon-data'><%= refseqid %></span>
-               </td><td>
-                  <a href='#' class='td-button' onclick="get_refseqV16('<%= taxidfullnameplus %>','<%= refseqid %>','<%= species %>','<%= seqids %>')">
-                    Show Sequence
-                  </a>
-               </td>
-            </tr>
-        <% } %>
-        </table>
-        </div>
-        <br>
-        
-    <% } %>
-    
-    
-    <a class='link' href='/download/download/refseq'>Download latest 16S rRNA reference gene sequences.</a>
-    
-    
+                      </a>
+        </span>
+      
+      </td>
+  </tr>
+  
+  
+  
+  <tr>
+    <td class='taxon-bold tbl-taxonomy'>PubMed Searches:</td>
+    <td class='taxon-data'>
+      <% if(data_lookup.naming_status === 'Named') { %>
+         
+       <table class='' border='0'>
+         
+            <tr><td></td><td class='link'><a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link
+              
+            </a></td></tr>
+            <!-- nuccore/?term="genus+species"   -->
+            <!-- nucleotide?cmd=search&term="data_lookup.genus data_lookup.species" -->
+            <tr><td></td><td class='link'><a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link
+            
+                      </a></td></tr>
+            <tr><td></td><td class='link'><a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link
+            
+            </a></td></tr>
+         
+       </table>
+      <% }else{ %>
+         Status: <%= data_lookup.naming_status %>
+      <% } %>
+      
     </td>
   </tr>
+  
+  
+  
+ 
   </table>
 <!-- End Left table -->
 
@@ -508,6 +533,7 @@
 
 <!-- Start Right table -->
   <table id='right-tbl'>
+  
   <tr><td colspan='2'>
   
     <div class='desc-box'>
@@ -554,25 +580,74 @@
     </div>
 
   </td></tr>
-  
+  <!-- GENOMICS DATA -->
+  <tr><td  class='taxon-bold tbl-genomics' colspan='2'><center>GENOMICS</center></td></tr>
   <tr>
-    <td class='taxon-bold tbl-title'>Number of<br>Genome Sequences:</td>
+    <td class='taxon-bold tbl-genomics'>Taxon Genomes:  <%= data_lookup.genomes.length %></td>
+    <td class='taxon-data' nowrap>
+                
+                
+                <% if(data_lookup.genomes.length === 0){ %>
+                    <small>No Genomes</small>
+                <% }else{ %>
+                    
+                    <select class='dropdown-homd' onchange="if (this.value) window.location.href = this.value;">
+                    <optgroup>
+                    <option value=''>Select a genome</option>
+                    <% for(n in data_lookup.genomes){ %>
+                        <option value='/genome/genome_description?gid=<%= data_lookup.genomes[n] %>'>
+                          <%= parseInt(n)+1 %>-
+                          <%= data_lookup.genomes[n] %>
+                          <%= gstrains[data_lookup.genomes[n]] %>
+                        </option>
+                    <% } %>
+                    </optgroup>
+                    </select>
+                    
+                    &nbsp;&nbsp;&nbsp;OR&nbsp;&nbsp;&nbsp;
+                     <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'>Open in Table</a>
+                <% } %>
+                
+                
+                
+                
+                
+            </td>
+  </tr>
+  <tr>
+    <td class='taxon-bold tbl-genomics'>Proteomics:</td>
+    <td class='taxon-data'></td>
+  </tr>
+   <tr>
+    <td class='taxon-bold tbl-genomics'>Phylogenetic Trees:</td>
     <td class='taxon-data'>
-      
-      <% g_length = data_lookup.genomes.length %>
-      <% if(g_length === 0){ %>
-        <small>No Genomes</small>
-      <% }else{ %>
-       <%= g_length %> <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'> Open Genomes in Table</a>
-      <% } %>
-      
+    <% if(data_lookup.genomes.length > 0){ %>
+      <table class='' border='0'>
+          <tr><td>
+           <a class='link' href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>Conserved Proteins
+             
+            </a></td></tr>
+          <tr><td>
+          <a class='link' href='/genome/ribosomal_protein_tree?otid=<%= otid %>' target='_blank'>Ribosomal Proteins
+            
+          </a></td></tr>
+          <tr><td>
+          <a class='link' href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>16S rRNA Genes
+            
+          </a></td></tr>
+      </table>
+    <% }else{ %>
+      <table class='' border='0'>
+          <tr><td>View in genome tree (no genomes)</td></tr>
+          <tr><td>View in ribosome protein tree (no genomes)</td></tr>
+          <tr><td>View in 16S rRNA gene tree (no genomes)</td></tr>
+      </table>
+    <% } %>
     </td>
   </tr>
-  
-  
-  
+  <tr><td  class='taxon-bold tbl-pangenomics' colspan='2'><center>PANGENOMICS</center></td></tr>
   <tr>
-    <td class='taxon-bold tbl-title'>Pangenome(s):</td>
+    <td class='taxon-bold tbl-pangenomics'>Pangenome(s):</td>
     <td class='taxon-data'>
     
     <% if(data_lookup.pangenomes.length == 1 && data_lookup.pangenomes[0]){ %>
@@ -601,118 +676,110 @@
     <% } %>
     
     </td>
-  </tr>
+ 
+   <!-- ECOLOGY -->
+   <tr><td  class='taxon-bold tbl-ecology' colspan='2'><center>ECOLOGY</center></td></tr>
   <tr>
-    <td class='taxon-bold tbl-title'>Microbial Ecology:</td>
+    <td class='taxon-bold tbl-ecology'> Body Site/Habitat:
+      <br>&nbsp;&nbsp;<small>[<a href='body_sites?otid=<%= otid %>'>View in Body Sites Table</a>]</small>
+    </td>
+    <td class='taxon-data'>
+    <li><strong>General:</strong> <%- sites2.general_habitat %></li>
+    <li><strong>Major body site:</strong> <%- sites2.major_body_site %>  <small>(abundance: <%- sites2.major_site_abundance %>)</small></li>
+    <li><strong>Secondary body site:</strong> <%- sites2.secondary_sites %>
+    <% if(sites2.secondary_sites != "none assigned"){ %>
+      <small>(abundance:<%- sites2.secondary_site_abundance %>)</small></li>
+    <% } %>
+    <li><strong>Major oral site:</strong> <%- sites2.subsite_of_primary %>
     <% if(otid_has_abundance){ %>
-       <% if(data_lineage.subspecies){ %>
-         <% ss = encodeURIComponent(data_lineage.subspecies) %>
-         <% rankname = "subspecies" %>
-       <% }else{ %>
-         <% ss = encodeURIComponent(data_lineage.species) %>
-         <% rankname = "species" %>
-       <% } %>
+               <% if(data_lineage.subspecies){ %>
+                 <% ss = encodeURIComponent(data_lineage.subspecies) %>
+                 <% rankname = "subspecies" %>
+               <% }else{ %>
+                 <% ss = encodeURIComponent(data_lineage.species) %>
+                 <% rankname = "species" %>
+               <% } %>
+            &nbsp;&nbsp;&nbsp;
+               &nbsp;<small>Graph: [<a class='link' href='ecology?rank=<%= rankname %>&name=<%= ss %>'>link</a>]</small>
+               
+            <% }else{ %>
+                 [<small>No Abundance Data</small>]
+            <% } %>
+    </li>
+    <li>Site reason: </strong> <%- sites2.site_reason %></li>
+    <li>Curation reference </strong> <%- sites2.curation_reference %></li>
+    </td>
     
-       <td class='taxon-data'><a class='link' href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Abundance/Prevalence<br> 
-         </a>
-       </td>
-    <% }else{ %>
-         <td><small>No Abundance Data</small></td>
-    <% } %>
+  </tr>
+  
+  <tr><td  class='taxon-bold tbl-rrna16s' colspan='2'><center>16S rRNA</center></td></tr>
+   <tr>
+    <td class='taxon-bold tbl-rrna16s'>16S rRNA RefSeq Tree:</td>
+    <td>
+       
+       <span class='link'><a href='/refseq/refseq_tree?otid=<%= otid %>' target='_blank'>View Taxon in RefSeq Tree
+        </a>
+       </span>
+    </td>
   </tr>
   
   <tr>
-    <td class='taxon-bold tbl-title'>Proteomics:</td>
-    <td class='taxon-data'></td>
-  </tr>
-  
-  <tr>
-    <td class='taxon-bold tbl-title'>NCBI Taxon ID:</td>
+    <td class='taxon-bold tbl-rrna16s'>16S rRNA Reference Sequences:</td>
     <td class='taxon-data'>
-    <% if(!data_lookup.ncbi_taxid || parseInt(data_lookup.ncbi_taxid) == 0){ %>
-        <small>Not Available</small>
-    <% }else{ %>
-      
-        <%= data_lookup.ncbi_taxid %> 
-        <span class='link'>
-        [<a href='https://www.ncbi.nlm.nih.gov/datasets/taxonomy/<%= data_lookup.ncbi_taxid %>/' target='_blank' rel="noopener noreferrer">Link to NCBI</a>]
-        </span>
-      
-      <% } %>
-      </td>
-  </tr>
-  
-  <tr>
-    <td class='taxon-bold tbl-title' title='List of Prokaryotic names with Standing in Nomenclature'>LPSN.dsmz.de:</td>
-    <td class='taxon-data'>
-      <% link = "https://lpsn.dsmz.de/"+links["lpsnlink"] %>
-      <% show = data_lineage.species %>
-      
-        <span>
-        <a class='link' href='<%- link %>' target='_blank' rel="noopener noreferrer"><em><%- link %></em>
+    
+      <% if(data_lookup.naming_status != "Dropped"){ %>
         
-                      </a>
-        </span>
-      
-      </td>
-  </tr>
-  
-  
-  
-  <tr>
-    <td class='taxon-bold tbl-title'>PubMed Searches:</td>
-    <td class='taxon-data'>
-      <% if(data_lookup.naming_status === 'Named') { %>
-         
-       <table class='' border='0'>
-         
-            <tr><td></td><td class='link'><a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link
-              
-            </a></td></tr>
-            <!-- nuccore/?term="genus+species"   -->
-            <!-- nucleotide?cmd=search&term="data_lookup.genus data_lookup.species" -->
-            <tr><td></td><td class='link'><a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link
-            
-                      </a></td></tr>
-            <tr><td></td><td class='link'><a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link
-            
-            </a></td></tr>
-         
-       </table>
-      <% }else{ %>
-         Status: <%= data_lookup.naming_status %>
-      <% } %>
-      
-    </td>
-  </tr>
-  
-  <tr>
-    <td class='taxon-bold tbl-title'>Phylogenetic Trees:</td>
-    <td class='taxon-data'>
-    <% if(g_length > 0){ %>
-      <table class='' border='0'>
-          <tr><td>
-           <a class='link' href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>Genome Tree
-             
-            </a></td></tr>
-          <tr><td>
-          <a class='link' href='/genome/ribosomal_protein_tree?otid=<%= otid %>' target='_blank'>Ribosomal Protein Tree
-            
-          </a></td></tr>
-          <tr><td>
-          <a class='link' href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>16S rRNA Gene Tree
-            
-          </a></td></tr>
-      </table>
-    <% }else{ %>
-      <table class='' border='0'>
-          <tr><td>View in genome tree (no genomes)</td></tr>
-          <tr><td>View in ribosome protein tree (no genomes)</td></tr>
-          <tr><td>View in 16S rRNA gene tree (no genomes)</td></tr>
-      </table>
+        
+
+        <!-- OLD: >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
+        <!-- NEW: >81531021 | Methanobrevibacter oralis | HMT-815 | Strain: DSM 7256 | PROKKA: SEQF3102_01675 | Status: Named | Genomes: 5 -->
+        
+        <% if(data_refseq.length > 10){ %>
+            <div id='refseq-table'>
+        <% }else{ %>
+            <div id='refseq-table-no-scroll'>
+        <% } %>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RefSeq-ID(s)
+        <table class='' border='0'>
+        <% for(n in data_refseq){ %>
+            <% refseqid   = data_refseq[n].refseq_id %>
+            <% species    = data_refseq[n].species %>
+            <% seqids    = data_refseq[n].seqids %>
+            <!-- We also have seqids,seqid_count,seq_length -->
+            <tr>
+               <td class='' style='border:none;padding:0 1px;'>
+                 <span class='rs-span-1 taxon-data'><%= refseqid %></span>
+               </td><td>
+                  <a href='#' class='td-button' onclick="get_refseqV16('<%= taxidfullnameplus %>','<%= refseqid %>','<%= species %>','<%= seqids %>')">
+                    Show Sequence
+                  </a>
+               </td>
+            </tr>
+        <% } %>
+        </table>
+        </div>
+        <br>
+        
     <% } %>
+    
+    
+    <a class='link' href='/download/download/refseq'>Download latest 16S rRNA reference gene sequences.</a>
+    
+    
     </td>
   </tr>
+  
+  
+  
+  
+  </tr>
+  
+  
+  
+  
+ 
+  
+ 
   
   
   </table>

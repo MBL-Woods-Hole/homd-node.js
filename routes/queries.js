@@ -340,6 +340,7 @@ function genome_query() {
     q += ` JOIN body_sites using(otid)`;
     q += ` LEFT JOIN \`${ptbl}\` using(genome_id)`;
     q += ` LEFT JOIN \`${ntbl}\` using(genome_id)`;
+    // WARNING the follong LEFT JOINs will duplicate GIDs in the result
     q += ` LEFT JOIN pangenome_genome using(genome_id)`;
     q += ` LEFT JOIN pangenomes using(pangenome_id)`;
 
@@ -449,6 +450,23 @@ export const search_sql_stream = (
     if (limit) q += " limit " + limit;
     return q;
 };
+export const search_sql_stream_by_id = (
+    //for grep download
+    anno,
+    search_text,
+    id_list,
+    partial = false,
+    limit = 0,
+) => {
+    let q =
+        "SELECT id,genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,region,type,start,end";
+    q += " FROM " + anno + ".gff_fullsearch";
+
+    q += " WHERE id in (" + id_list + ")";
+
+    if (limit) q += " limit " + limit;
+    return q;
+};
 export const search_sql_stream_with_lengths = (
     anno,
     search_text,
@@ -483,6 +501,23 @@ export const search_sql_stream_with_lengths = (
             "\"' IN BOOLEAN MODE)";
     }
     if (limit) q += " limit " + limit;
+    return q;
+};
+export const deep_anno_search_by_id = (anno, gid, id_lst) => {
+    let q =
+        "SELECT a.id,a.genome_id as gid,attribute_product as product,attribute_gene as gene,attribute_locus_tag as pid,a.region,type,start,end,";
+    q += " length_aa as laa,length_na as lna";
+    q += " FROM " + anno + ".gff_fullsearch a";
+    q +=
+        " LEFT JOIN " +
+        anno +
+        ".ffn c on a.genome_id=c.genome_id and c.protein_id=a.attribute_locus_tag";
+    q +=
+        " LEFT JOIN " +
+        anno +
+        ".faa b on a.genome_id=b.genome_id and b.protein_id=a.attribute_locus_tag";
+    q += " WHERE a.id in (" + id_lst + ")";
+    q += " AND a.genome_id='" + gid + "'";
     return q;
 };
 export const deep_anno_search = (anno, gid, search_text, partial = false) => {
@@ -529,8 +564,16 @@ export const fasta_download_per_gid = (gid, ext, anno) => {
         "." +
         ext +
         " b on (b.protein_id=a.attribute_locus_tag and b.region=a.region)";
-    q += " WHERE a.genome_id = '" + gid + "'";
+    q += " WHERE type='CDS' AND a.genome_id = '" + gid + "'";
 
+    return q;
+};
+export const fasta_download_per_pid = (ext, anno, pid_list) => {
+    let q =
+        "SELECT protein_id as pid, genome_id as gid, UNCOMPRESS(seq_compressed) as seq from ";
+    q += anno + "." + ext + " WHERE protein_id in (";
+    q += pid_list.join(",");
+    q += ")";
     return q;
 };
 export const fasta_download_search = (
@@ -553,12 +596,12 @@ export const fasta_download_search = (
         " s on (s.protein_id=g.attribute_locus_tag and s.region=g.region)";
     if (partial) {
         q +=
-            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('+" +
+            " WHERE type='CDS' AND MATCH(attribute_product,attribute_gene) AGAINST('+" +
             search_text +
             "*' IN BOOLEAN MODE)";
     } else {
         q +=
-            " WHERE MATCH(attribute_product,attribute_gene) AGAINST('\"" +
+            " WHERE type='CDS' AND MATCH(attribute_product,attribute_gene) AGAINST('\"" +
             search_text +
             "\"' IN BOOLEAN MODE)";
     }

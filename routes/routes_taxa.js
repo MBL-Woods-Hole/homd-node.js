@@ -17,7 +17,7 @@ import logger from "../config/app_config.js";
 
 function renderTaxonTable(req, res, args) {
     res.render("pages/taxa/taxontable", {
-        title: "HOMD :: Taxon Table",
+        title: C.page_title + " :: Taxon Table",
         pgtitle: "Human Oral/Nasal Microbial Taxa",
         pgname: "taxon/taxon_table", //for AbountThisPage
         config: JSON.stringify(ENV),
@@ -98,7 +98,7 @@ router.get(
     "/advanced_taxtable_search",
     function advanced_taxtable_search(req, res) {
         res.render("pages/taxa/tax_table_filter_advanced", {
-            title: "HOMD :: Taxon Search",
+            title: C.page_title + " :: Taxon Search",
             pgname: "", // for AbountThisPage
             config: JSON.stringify(ENV),
             ver_info: JSON.stringify(C.version_information),
@@ -197,7 +197,7 @@ router.get("/tax_hierarchy", function tax_hierarchy_GET(req, res) {
     let acts = helpers_taxa.get_counts(lineage[0], "").lst;
 
     res.render("pages/taxa/taxhierarchy", {
-        title: "HOMD :: Taxon Hierarchy",
+        title: C.page_title + " :: Taxon Hierarchy",
         pgname: "taxon/hierarchy", // for AbountThisPage
         config: JSON.stringify(ENV),
         data: {},
@@ -638,7 +638,7 @@ function get_hierarchy_html(node, requested_rank) {
 
 router.get("/tax_level", function tax_level_get(req, res) {
     res.render("pages/taxa/taxlevel", {
-        title: "HOMD :: Taxon Level",
+        title: C.page_title + " :: Taxon Level",
         pgname: "taxon/level", // for AbountThisPage
         config: JSON.stringify(ENV),
         level: "domain",
@@ -781,7 +781,7 @@ router.post("/oral_counts_toggle", function oral_counts_toggle(req, res) {
 function renderTaxonDescription(req, res, args) {
     //logger.info('args',args)
     res.render("pages/taxa/taxdesc", {
-        title: "HOMD :: Taxon Info",
+        title: C.page_title + " :: Taxon Info",
         pgname: "taxon/description", // for AbountThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -806,8 +806,34 @@ function renderTaxonDescription(req, res, args) {
 }
 function renderTaxonDescriptionTEMP(req, res, args) {
     logger.info("IN TEMP");
-    res.render("pages/taxa/taxdescWORKING", {
-        title: "HOMD :: Taxon Info",
+    res.render("pages/taxa/taxdescORIGINAL", {
+        title: C.page_title + " :: Taxon Info",
+        pgname: "taxon/description", // for AbountThisPage
+        config: JSON.stringify(ENV),
+        ver_info: JSON.stringify(C.version_information),
+
+        otid: args.otid,
+        image_array: JSON.stringify(args.image_array),
+        data1: JSON.stringify(args.data1),
+        msg: args.msg,
+        text_file: args.text_file, // only 666 so far
+        tinfo: JSON.stringify(args.tinfo), // description
+        lin: JSON.stringify(args.lin), // lineage domain=>subspecies
+        data4: JSON.stringify(args.data4), // publications
+        refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
+        links: JSON.stringify(args.links),
+        sites: JSON.stringify(args.sites),
+        sites2: JSON.stringify(args.sites2),
+        gtdb: JSON.stringify(args.gtdbtax),
+        strains: JSON.stringify(args.gstrains),
+        otid_has_abundance: args.otid_has_abundance,
+        //lineage: args.lineage_string,
+    });
+}
+function renderTaxonDescriptionTEMP2(req, res, args) {
+    logger.info("IN TEMP");
+    res.render("pages/taxa/taxdescWORKING2", {
+        title: C.page_title + " :: Taxon Info",
         pgname: "taxon/description", // for AbountThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -889,6 +915,7 @@ router.get("/tax_description", async function TaxDescription(req, res) {
     let lineage;
 
     let text_file = get_rank_text("species", "", otid);
+    console.log(C.taxon_lookup["209"]);
     if (C.dropped_taxids.indexOf(otid) !== -1) {
         lookup_data = C.taxon_lookup[otid];
         let hmt = helpers.make_otid_display_name(otid);
@@ -1109,12 +1136,14 @@ router.get("/tax_description", async function TaxDescription(req, res) {
     args.sites2 = sites2;
     args.otid_has_abundance = otid_has_abundance;
     args.gstrains = gstrains;
-
+    console.log(sites2);
     //args.lineage = lineage_string
     args.lin = lineage;
 
     if (req.query.TMP == "1") {
         renderTaxonDescriptionTEMP(req, res, args);
+    } else if (req.query.TMP == "2") {
+        renderTaxonDescriptionTEMP2(req, res, args);
     } else {
         renderTaxonDescription(req, res, args);
     }
@@ -1499,7 +1528,7 @@ router.get("/life", function life(req, res) {
     lineage_string = lineage_list[0];
 
     res.render("pages/taxa/life", {
-        title: "HOMD :: " + page_title,
+        title: C.page_title + " :: " + page_title,
         pgname: "taxon/life", // for AbountThisPage
         config: JSON.stringify(ENV),
         data: {},
@@ -1703,7 +1732,7 @@ router.get("/ecology_home", function ecology_home(req, res) {
     //'Bacteria;Pseudomonadota;Gammaproteobacteria;Enterobacterales;Yersiniaceae;Yersinia;Yersinia pestis'
 
     res.render("pages/taxa/ecology_home", {
-        title: "HOMD :: Ecology",
+        title: C.page_title + " :: Ecology",
         pgname: "taxon/ecology", // for AbountThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -1807,7 +1836,7 @@ router.get("/body_sites", function body_sites(req, res) {
         return helpers.compareStrings_alpha(b.gsp, a.gsp);
     });
     res.render("pages/taxa/body_sites", {
-        title: "HOMD :: Body Sites",
+        title: C.page_title + " :: Body Sites",
         pgname: "", // for AbountThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -2187,7 +2216,7 @@ router.get("/ecology", function ecology(req, res) {
     }
     let legend_visibility = "no_show"; // show or no_show
     res.render("pages/taxa/ecology_lollipop", {
-        title: "HOMD ::" + rank_show + ":" + tax_name,
+        title: C.page_title + " ::" + rank_show + ":" + tax_name,
         pgname: "taxon/ecology", // for AbountThisPage
         config: JSON.stringify(ENV),
         tax_name: tax_name,
@@ -2284,7 +2313,7 @@ router.get("/abundance_by_site/:rank", function abundance_by_site(req, res) {
     //porder.push('NS')
     //logger.info(C.base_abundance_order,porder)
     res.render("pages/taxa/abundance_by_site", {
-        title: "HOMD ::Abundance by oral site",
+        title: C.page_title + " ::Abundance by oral site",
         pgname: "", // for AbountThisPage
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
@@ -2348,7 +2377,7 @@ router.get("/dropped", async function dropped(req, res) {
     //logger.info(q)
     const rows = await queries.run_query(q, req, res);
     res.render("pages/taxa/dropped", {
-        title: "HOMD :: Dropped Taxa",
+        title: C.page_title + " :: Dropped Taxa",
         pgname: "", // for AbountThisPage
         pgtitle: "Dropped Taxa Table",
         config: JSON.stringify(ENV),
@@ -2424,7 +2453,7 @@ router.get("/tree_d3", function tree_d3(req, res) {
                 //logger.info(refseq_tree_lookup)
 
                 res.render("pages/taxa/tree_d3", {
-                    title: "HOMD :: tree",
+                    title: C.page_title + " :: tree",
                     pgname: "", // for AbountThisPage
                     pgtitle: "D3 Tree",
                     config: JSON.stringify(ENV),

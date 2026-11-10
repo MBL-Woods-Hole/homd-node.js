@@ -8,6 +8,13 @@ form{
     background:purple;
     padding:3px;
 }
+p {
+   width:80%;
+   background:lightsteelblue;
+   border:1px solid black;
+   color:black;
+   padding:10px;
+}
 </style>
 <%- include('../partials/header_html'); %>
 
@@ -22,21 +29,29 @@ form{
        <p class='h3 title'>Download FASTA</p>
     <form id='' action='download_fasta' method='POST' enctype="multipart/form-data">
     <br>
-    Annotations:&nbsp;&nbsp;&nbsp;
-    <input type='radio' checked name='anno' value='prokka'> PROKKA&nbsp;&nbsp;&nbsp;&nbsp;
+    Annotations: (require specific protein_id formats)&nbsp;&nbsp;&nbsp;
+    <input type='radio' checked name='anno' value='bakta'> BAKTA&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type='radio'  name='anno' value='prokka'> PROKKA&nbsp;&nbsp;&nbsp;&nbsp;
     <input type='radio' name='anno' value='ncbi'> NCBI
     <br><br>
     Sequence Type:&nbsp;&nbsp;&nbsp;
-    <input type='radio' checked name='fa_type' value='protein'> Protein&nbsp;&nbsp;&nbsp;&nbsp;
-    <input type='radio' name='fa_type' value='nucleotide'> Nucleotide
+    <input type='radio' checked name='table' value='faa'> Protein&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type='radio' name='table' value='ffn'> Nucleotide
     <br><br>
     <strong>Required:</strong> File of Protein-IDs 
     <br>One ID per line and no formatting or other information.
-    <br><small>LIMIT 1000 IDs</small>
+    <br><small>LIMIT 1000 lines (one ID per line)</small>
     <br><br>
     <label for="file-upload">Choose a file of protein-IDs:</label>
     <input type="file" id="file-upload" name="myFile">
-    <br><br><br><br><br><br>
+    <br><br> 
+    <center><p>To get a list of protein_ids you can select a genome <a href='/genome/explorer'>here</a> and download an annotation table
+    or search the annotation databases <a href='/search/full_site_search'>here</a> and download an annotation table.
+    Note that BAKTA, PROKKA and NCBI protein_ids each have a different format. Only one format is allowed in the upload file.
+    We will parse the format (based on the underscore '_' count) and try to select the correct annotation database.
+    </p>
+    </center>
+    <br><br><br>
     <button id='submit-btn' type="submit">Create FASTA</button>
     </form>
   

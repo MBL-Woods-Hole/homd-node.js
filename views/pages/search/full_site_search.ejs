@@ -153,16 +153,22 @@
       <input type='radio' class='anno_cb_mysql' checked id='bakta_cb_mysql' name='anno' value='bakta'  > 
         <a href='https://github.com/oschwengers/bakta' target='_blank'>BAKTA</a>
         &nbsp;&nbsp;&nbsp;
-      <input type='radio' class='anno_cb_mysql'  id='prokka_cb_anno_mysql' name='anno' value='prokka'  > PROKKA
+      <input type='radio' class='anno_cb_mysql'  id='prokka_cb_anno_mysql' name='anno' value='prokka'  >
+        <a href='https://pubmed.ncbi.nlm.nih.gov/24642063/' target='_blank'>PROKKA</a>
         &nbsp;&nbsp;&nbsp;
       <input type='radio' class='anno_cb_mysql' id='ncbi_cb_mysql' name='anno' value='ncbi'  > NCBI
         &nbsp;&nbsp;&nbsp;
         
       <hr>
       Select a Search Type:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type='radio' checked name='whole_or_partial' value='whole' /> Whole Word Search&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type='radio'         name='whole_or_partial' value='partial' /> Partial Word Search (may be slower)
-      
+      <ul>
+      <li><input type='radio' checked name='whole_or_partial' value='whole' /> SQL Whole Word Search (fastest)
+         &nbsp;&nbsp;&nbsp;&nbsp;<small>-- Will only match whole words.</small>
+      <li><input type='radio'         name='whole_or_partial' value='partial' /> SQL Prefix Search (may be slower) 
+      &nbsp;&nbsp;&nbsp;&nbsp;<small>-- Will only find match if string is at start of word.</small>
+      <li><input type='radio'         name='whole_or_partial' value='grep' /> GREP Substring Search (may be slower) 
+      &nbsp;&nbsp;&nbsp;&nbsp;<small>-- Will match any substring in word.</small>
+      </ul>
       <hr>
           Enter Search Text: 
           <input type="text" class='search_text' placeholder="Search Annotations..." name='search_text' id='search_text_anno_mysql' value='' maxlength='80' size='50' /> 
@@ -310,13 +316,15 @@
              return
     }
     
+    
     if(anno_search_type.value === 'stream_sql_search'){
         window.open('stream_results_sql?anno='+anno+'&search_text='+ss+'&whole_or_partial='+wop, '_self');
         return
-    }else if(anno_search_type.value === 'stream_grep_search'){
-        window.open('stream_results_grep?anno='+anno+'&search_text='+ss, '_self');
-        return
-    
+   //  }    else if(anno_search_type.value === 'stream_grep_search'){
+//         window.open('stream_results_grep?anno='+anno+'&search_text='+ss, '_self');
+//         return
+    }else if(wop === 'grep'){
+        form.action = "advanced_site_search_anno_grep";
     }else{
         form.action = "advanced_site_search_anno_mysql";
     }
