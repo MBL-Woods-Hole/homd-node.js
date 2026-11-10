@@ -16,7 +16,7 @@ import path from "path";
 //
 // import * as helpers_taxa from './helpers_taxa.js'
 // import pino from 'pino';
-//global.ENV = process.env;
+global.ENV = process.env;
 import pino from "pino";
 //const logger = pino(); // Default raw JSON output
 
