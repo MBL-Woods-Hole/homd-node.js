@@ -130,9 +130,7 @@ if __name__ == "__main__":
         args.DATABASE  = 'homd'
         dbhost = '192.168.1.69'
     
-    elif args.dbhost == 'homd_v41':
-        args.DATABASE = 'homd'
-        dbhost= '192.168.1.58'
+   
     
     elif args.dbhost == 'homd_v43':
         args.DATABASE = 'homd'
@@ -140,7 +138,7 @@ if __name__ == "__main__":
     
     elif args.dbhost == 'homd_dev':
         args.DATABASE = 'homd'
-        dbhost= '192.168.1.71XXX'
+        dbhost= '192.168.1.73'
     
     elif args.dbhost == 'localhost':
         args.DATABASE = 'homd'
