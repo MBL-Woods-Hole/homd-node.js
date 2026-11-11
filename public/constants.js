@@ -175,12 +175,15 @@ constants.names_w_text = {
 };
 //constants.abundance_refs  = ['segata','eren_v1v3','eren_v3v5','dewhirst']
 constants.abundance_refs = [
-    "eren_v1v3",
-    "eren_v3v5",
-    "dewhirst",
-    "hmp_refseq_v1v3",
-    "hmp_refseq_v3v5",
+    //"eren_v1v3",
+    //"eren_v3v5",
+    //"dewhirst",
+    "hmp_mapping",
+    //"hmp_metaphlan",
+    //"hmp_refseq_v1v3",
+    //"hmp_refseq_v3v5",
 ];
+
 constants.base_abundance_order = [
     "SUBP",
     "SUPP",

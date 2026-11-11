@@ -1614,7 +1614,10 @@ router.get("/ecology_home", function ecology_home(req, res) {
     //https://observablehq.com/@d3/stacked-normalized-horizontal-bar
 
     //logger.info('site_order',site_order)
-    let tmp, sp;
+    let tmp,
+        sp,
+        maxVal,
+        sum_per_site = {};
     for (let n in abundance_graph_order) {
         //Object.keys(C.abundance_names)){
         let site = abundance_graph_order[n];
@@ -1622,6 +1625,8 @@ router.get("/ecology_home", function ecology_home(req, res) {
         tmp = {};
         tmp["site"] = site;
         sp_per_site[site] = {};
+        sum_per_site[site] = 0.0;
+
         for (let species in group_collector) {
             //logger.info('sp',species,group_collector[species])
             let sp_pts = species.split(";");
@@ -1633,32 +1638,54 @@ router.get("/ecology_home", function ecology_home(req, res) {
                 sp = sp_pts[sp_pts.length - 1];
             }
 
-            //let abund = parseFloat(group_collector[species][site])
-            //let c = group_collector[species].color
-            // let obj = C.plot_species_colors.find(o => o.name === sp);
-            //             if(!obj){
-            //                color = 'grey'
-            //             }else{
-            //                 color = obj.color
-            //             }
-            //tmp[sp] = {abundance:abund,color:colors_for_plot[species_for_plot.indexOf(sp)]}
             tmp[sp] = parseFloat(group_collector[species][site]);
-            //tmp[sp] = {abundance:abund,color:color}
-            //logger.info('sp',sp)
-            //xlogger.info('val',val)
-            //sp_per_site[site][sp] = abund  // {site,sp,sp,sp,sp,sp....}
-
-            //logger.info('sp',sp,'color',colors_for_plot[species_for_plot.indexOf(sp)])
-
-            //site_species[site].push({site:site, species:sp, abundance:abund, color:colors_for_plot[species_for_plot.indexOf(sp)]})
-            //site_species[site][sp] =
+            if (sp != "other") {
+                sum_per_site[site] += parseFloat(
+                    group_collector[species][site],
+                );
+            }
         }
         //logger.info('tmp',tmp)
         bar_graph_data.push(tmp);
     }
+    //max_site = sum_per_site.filter(el)
+    maxVal = Math.max(...Object.values(sum_per_site));
 
-    //logger.info('bar_graph_data',bar_graph_data)
+    //console.log('bar_graph_data',bar_graph_data)
+    //console.log('sum_per_site',sum_per_site)
+    //console.log('max',maxVal)
+    let new_bar_graph_data = [];
+    let site, other, keys, value, new_value, sum_site;
+    for (let n in bar_graph_data) {
+        keys = Object.keys(bar_graph_data[n]);
+        site = bar_graph_data[n].site;
+        sum_site = 0.0;
+        other = bar_graph_data[n].other;
+        //console.log(keys)
 
+        tmp = {};
+        tmp.site = site;
+        tmp.other = 0;
+        for (let i in keys) {
+            //console.log(i)
+
+            sp = keys[i];
+            if (sp != "site" && sp != "other") {
+                value = bar_graph_data[n][keys[i]];
+                new_value = parseFloat(value * (100.0 / parseFloat(maxVal)));
+                //if(site != )
+                sum_site = sum_site + new_value;
+                //console.log('sum_site',new_value,sum_site)
+                //console.log(keys[i],value)
+
+                tmp[sp] = new_value;
+            }
+        }
+        tmp.other = 100 - parseFloat(sum_site);
+        new_bar_graph_data.push(tmp);
+        //val =
+    }
+    //console.log('new_bar_graph_data',new_bar_graph_data)
     //LINKS
     let bac_phyla_only = phyla_obj.filter((x) => {
         if (
@@ -1719,7 +1746,7 @@ router.get("/ecology_home", function ecology_home(req, res) {
         // GRAPH DATA
         colors_ordered_list: JSON.stringify(colors_for_plot),
         species_ordered_list: JSON.stringify(species_for_plot),
-        bar_data2: JSON.stringify(bar_graph_data),
+        bar_data2: JSON.stringify(new_bar_graph_data),
         site_order: JSON.stringify(abundance_graph_order),
         ab_names: JSON.stringify(C.abundance_names),
     });
@@ -2487,34 +2514,33 @@ function get_rank_text(rank, tax_name, otid) {
 //
 function get_sorted_abund_names(collector, site, rank, num_to_return) {
     let tmp1 = {},
-        tmp2 = [];
+        name_ary,
+        name,
+        value,
+        obj = [];
 
     for (let taxname in collector) {
         //logger.info('taxname',taxname)
         tmp1[taxname] = collector[taxname];
-        tmp2.push(tmp1);
     }
-    //logger.info('tmp2-1',tmp2)
-    let x = tmp2.map((el) => {
-        //logger.info(Object.keys(el)[0])
-        let obj = {};
-        let name_ary = Object.keys(el)[0].split(";");
-        obj["name"] = name_ary[name_ary.length - 1];
-        obj["value"] = el[Object.keys(el)[0]][site];
+
+    for (let tname in tmp1) {
+        name_ary = tname.split(";");
+        name = name_ary[name_ary.length - 1];
+        value = tmp1[tname][site];
+        obj.push({ name: name, value: value });
         if (rank === "species") {
-            obj["otid"] =
+            obj.otid =
                 C.homd_taxonomy.taxa_tree_dict_map_by_name_n_rank[
-                    name_ary[name_ary.length - 1] + "_species"
+                    name + "_species"
                 ].otid;
         }
-        return obj;
-    });
-
+    }
     //sort by value
     if (num_to_return === "all") {
-        return sortByKeyDEC(x, "value");
+        return sortByKeyDEC(obj, "value");
     } else {
-        return sortByKeyDEC(x, "value").slice(0, 10);
+        return sortByKeyDEC(obj, "value").slice(0, 10);
     }
 }
 
@@ -2532,7 +2558,8 @@ function get_site_avgs(obj) {
     }
 
     let ref, site;
-    let abund_refs = C.abundance_refs;
+    //let abund_refs = ['hmp_mapping']//C.abundance_refs;
+    let abund_refs = C.abundance_refs; // currently use only HMP_Mapping
     //let abund_refs = ['dewhirst']
     //let abund_sites = ['BM','KG','HP','TD','PT','TH','SV','SupP','SubP','ST','NS']
     let abund_sites = Object.keys(C.abundance_names);
@@ -2568,55 +2595,57 @@ function get_site_avgs(obj) {
 
     //logger.info('counter SV',counter_per_site['SV'])
     //logger.info('countSV',count,return_obj)
-    let result;
-    for (let site in return_obj) {
-        if (
-            [
-                "AKE",
-                "BMU",
-                "HPA",
-                "PTO",
-                "SAL",
-                "SUBP",
-                "SUPP",
-                "THR",
-                "TDO",
-            ].indexOf(site) !== -1
-        ) {
-            // divide by 5
-            result = (return_obj[site] / 5).toFixed(3); // divide by 5
-            return_obj[site] = result;
-        } else if (site === "STO") {
-            // divide by 4
-            result = (return_obj[site] / 4).toFixed(3); // divide by 4 a
-            return_obj[site] = result;
-        } else if (site === "ANA") {
-            // divide by 3
-            result = (return_obj[site] / 3).toFixed(3); // divide by 3
-            return_obj[site] = result;
-        } else {
-            //#7
-            //divide by 2
-            result = (return_obj[site] / 2).toFixed(3); // divide by 2
-            return_obj[site] = result;
-        }
 
-        //let result = (return_obj[site] / counter_per_site[site]).toFixed(3)
-        // if(site == 'NS'){   // only Dewhirst
-        //             let result = (return_obj[site]).toFixed(3)  // divide by 1 ONLY Dewhirst
-        //             return_obj[site] = result
-        //           }else if(rank === 'species'){  //only dewhirst and erinx2
-        //             let result = (return_obj[site] / 3).toFixed(3)  // divide by 4 a
-        //             return_obj[site] = result
-        //           }else{
-        //             let result = (return_obj[site] / 4).toFixed(3)  // divide by 4 a
-        //             return_obj[site] = result
-        //           }
+    // IF MORE THAN ONE REF set must re-code and uncomment below
+    //     let result;
+    //     for (let site in return_obj) {
+    //         if (
+    //             [
+    //                 "AKE",
+    //                 "BMU",
+    //                 "HPA",
+    //                 "PTO",
+    //                 "SAL",
+    //                 "SUBP",
+    //                 "SUPP",
+    //                 "THR",
+    //                 "TDO",
+    //             ].indexOf(site) !== -1
+    //         ) {
+    //             // divide by 5
+    //             result = (return_obj[site] / 5).toFixed(3); // divide by 5
+    //             return_obj[site] = result;
+    //         } else if (site === "STO") {
+    //             // divide by 4
+    //             result = (return_obj[site] / 4).toFixed(3); // divide by 4 a
+    //             return_obj[site] = result;
+    //         } else if (site === "ANA") {
+    //             // divide by 3
+    //             result = (return_obj[site] / 3).toFixed(3); // divide by 3
+    //             return_obj[site] = result;
+    //         } else {
+    //             //#7
+    //             //divide by 2
+    //             result = (return_obj[site] / 2).toFixed(3); // divide by 2
+    //             return_obj[site] = result;
+    //         }
 
-        // }else{
-        //               return_obj[site] = '0.000'
-        //           }
-    }
+    //let result = (return_obj[site] / counter_per_site[site]).toFixed(3)
+    // if(site == 'NS'){   // only Dewhirst
+    //             let result = (return_obj[site]).toFixed(3)  // divide by 1 ONLY Dewhirst
+    //             return_obj[site] = result
+    //           }else if(rank === 'species'){  //only dewhirst and erinx2
+    //             let result = (return_obj[site] / 3).toFixed(3)  // divide by 4 a
+    //             return_obj[site] = result
+    //           }else{
+    //             let result = (return_obj[site] / 4).toFixed(3)  // divide by 4 a
+    //             return_obj[site] = result
+    //           }
+
+    // }else{
+    //               return_obj[site] = '0.000'
+    //           }
+    // }
 
     //logger.info('avg return SubP',return_obj['SubP'])
     //logger.info('avg return SV',return_obj['SV'])
