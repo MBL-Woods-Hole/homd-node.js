@@ -86,10 +86,9 @@
       <br>
       <center>
       <small><b>Rank Level: <%= showrank %></b>: List of the ten most abundant taxa at each oral site.
-      <br>The abundance values are taken by averaging the available relative abundance data from the four
-      studies:<br>
-      <a href='https://www.pnas.org/content/111/28/E2875.short' target='_blank'>Eren (2014) V1-V3 and V3-V5</a>
-      HMP RefSeq (V1-V3 and V3-V5) Data and Dewhirst (unpublished)
+      <br>The abundance values are taken by from 
+      <strong>The Human Microbiome Project - Mapping Data</strong> (from healthy subjects. - manuscript in revision).
+      
       </small>
       </center>  
 
@@ -102,7 +101,7 @@
         <div>
             <table class='site-table'>
               <tr class='header'><th colspan='2'><%= sitenames[site] %><span class='all-link'><a href='#' onclick="get_abund_sorted('<%= site %>','<%= rank %>')">(all)</a></span></th></tr>
-              <tr><td><center><%= showrank %></center></td><td class='right-justify'>% Abund</td></tr>
+              <tr><td><center><%= showrank %></center></td><td nowrap class='right-justify'>% Abund</td></tr>
               <% sum = 0 %>
               <% for(n in abunddata) { %>
               
