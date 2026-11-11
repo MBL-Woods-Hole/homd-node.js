@@ -126,8 +126,9 @@ a{
       <div class="list-group">
         <li id='menu-top'><a href='/download/download/all'>[MENU]</a></li>
         <li id='menu-taxon'><a href='#' onclick="shift_page_view('taxon')">Taxonomy</a></li>
-        <li id='menu-abundance'><a href='#' onclick="shift_page_view('abundance')">Abundances</a></li>
         <li id='menu-genome'><a href='#' onclick="shift_page_view('genome')">Genomic Data</a></li>
+        <li id='menu-abundance'><a href='#' onclick="shift_page_view('abundance')">Ecology/Abundances</a></li>
+        
         <li id='menu-phylo'><a href='#' onclick="shift_page_view('phylo')">Phylogenetic Data</a></li>
         <li id='menu-pangenome'><a href='#' onclick="shift_page_view('pangenome')">Pangenomes</a></li>
         <li id='menu-peptide'><a href='#' onclick="shift_page_view('peptide')">Protein/Peptide Data</a></li>
@@ -222,6 +223,26 @@ a{
   </center>
 </div>
 
+
+
+<hr>
+<a name='genome'></a>
+
+<div id='genome' class='dnld-block'>
+  <center>
+  <div class='subtitle indent'>
+    Genomic Meta Information::Batch Downloads
+  </div>
+  
+  <table class='download-table'>
+    <tr><td>All HOMD Genomes with metadata (version V11.02/V11.03)</td><td><a href='/download/download_file?filename=<%= cfg.PATH_TO_STATIC_DOWNLOADS %>/genome_tableV11.03.csv'>genome_tableV11.03.csv</a></td></tr>
+   <tr><td>NCBI Genome Annotations</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/genomes/NCBI/current'>[FTP Site for download]</a></td></tr>
+   <tr><td>PROKKA Genome Annotations</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/genomes/PROKKA/current'>[FTP Site for download]</a></td></tr>
+   <tr><td>Genomic Trees: <br>Conserved Protein, Ribosomal Protein and 16S rRNA</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/phylogenetic_trees/genome/current/'>[FTP Site for download]</a></td></tr>
+  </table>
+  </center>
+</div>
+
 <hr>
 <a name='abundance'></a>
 
@@ -287,24 +308,6 @@ a{
       <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/HOMD_abundance_table_v0.9.csv' >HOMD Abundance Table Version 0.9 (csv) (taxonomy version 4.3)</a></td>
     </tr>
     
-  </table>
-  </center>
-</div>
-
-<hr>
-<a name='genome'></a>
-
-<div id='genome' class='dnld-block'>
-  <center>
-  <div class='subtitle indent'>
-    Genomic Meta Information::Batch Downloads
-  </div>
-  
-  <table class='download-table'>
-    <tr><td>All HOMD Genomes with metadata (version V11.02/V11.03)</td><td><a href='/download/download_file?filename=<%= cfg.PATH_TO_STATIC_DOWNLOADS %>/genome_tableV11.03.csv'>genome_tableV11.03.csv</a></td></tr>
-   <tr><td>NCBI Genome Annotations</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/genomes/NCBI/current'>[FTP Site for download]</a></td></tr>
-   <tr><td>PROKKA Genome Annotations</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/genomes/PROKKA/current'>[FTP Site for download]</a></td></tr>
-   <tr><td>Genomic Trees: <br>Conserved Protein, Ribosomal Protein and 16S rRNA</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/phylogenetic_trees/genome/current/'>[FTP Site for download]</a></td></tr>
   </table>
   </center>
 </div>
