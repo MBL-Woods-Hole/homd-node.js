@@ -1,13 +1,4 @@
 <style>
-
-.site-table {
-   border-collapse: collapse;
-}
-.site-table th,td {
-   padding: 2px 10px;
-   border:1px solid black;
-   border-collapse: collapse;
-}
 .level-button{
      border:2px solid green;
      color: black;
@@ -33,12 +24,6 @@
    
 }
 
-.all-link{
-   font-size: 12px;
-   float:right;
-   color:brown;
-   
-}
 .container {
   display: grid;
   grid-template-columns: auto auto auto auto;
@@ -55,7 +40,17 @@
 <% }else{ %>
 <%  showrank = rank.charAt(0).toUpperCase() + rank.slice(1) %>
 <% } %>
+<style>
 
+.site-table {
+   border-collapse: collapse;
+}
+.site-table th,td {
+   padding: 2px 10px;
+   border:1px solid black;
+   border-collapse: collapse;
+}
+</style>
 <body>
     <div id='wrapper'>
     <%- include('../../partials/header_img'); %>
@@ -99,8 +94,8 @@
         <% abunddata = sitedata[site] %>
 
         <div>
-            <table class='site-table'>
-              <tr class='header'><th colspan='2'><%= sitenames[site] %><span class='all-link'><a href='#' onclick="get_abund_sorted('<%= site %>','<%= rank %>')">(all)</a></span></th></tr>
+            <table class='site-table' border='1' >
+              <tr class='header'><th colspan='2'><%= sitenames[site] %></th></tr>
               <tr><td><center><%= showrank %></center></td><td nowrap class='right-justify'>% Abund</td></tr>
               <% sum = 0 %>
               <% for(n in abunddata) { %>

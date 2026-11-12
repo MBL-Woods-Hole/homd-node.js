@@ -307,6 +307,75 @@ constants.hmp_mapping_abundance_order = [
 // mid-vagina = MVA
 // posterior fornix = PFO
 // Stool = STO
+
+constants.breath_plots_by_species = {
+    Veillonella_dispar: {
+        otid: 160,
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_dispar.png",
+    },
+    Veillonella_denticariosi: {
+        otid: 887,
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_denticariosi.png",
+    },
+    Veillonella_nakazawae: {
+        otid: 156,
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_nakazawae.png",
+    },
+    Veillonella_parvula: {
+        otid: 161,
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_parvula.png",
+    },
+    Veillonella_rogosae: {
+        otid: 158,
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_rogosae.png",
+    },
+    Veillonella_sp_HMT_779: {
+        otid: 779,
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_sp_HMT_779.png",
+    },
+    Veillonella_sp_HMT_780: {
+        otid: 780,
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_sp_HMT_780.png",
+    },
+    Veillonella_tobetsuensis: {
+        otid: 421,
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_tobetsuensis.png",
+    },
+};
+constants.breath_plots_by_otid = {
+    160: {
+        species: "Veillonella_dispar",
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_dispar.png",
+    },
+    887: {
+        species: "Veillonella_denticariosi",
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_denticariosi.png",
+    },
+    156: {
+        species: "Veillonella_nakazawae",
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_nakazawae.png",
+    },
+    161: {
+        species: "Veillonella_parvula",
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_parvula.png",
+    },
+    158: {
+        species: "Veillonella_rogosae",
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_rogosae.png",
+    },
+    779: {
+        species: "Veillonella_sp_HMT_779",
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_sp_HMT_779.png",
+    },
+    780: {
+        species: "Veillonella_sp_HMT_780",
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_sp_HMT_780.png",
+    },
+    421: {
+        species: "Veillonella_tobetsuensis",
+        fname: "breadth_vs_depth_coverage-subsite_subset-fit_curves-Veillonella_tobetsuensis.png",
+    },
+};
 constants.abundance_names = {
     ANA: "Anterior Nares (nasal)",
     AKE: "Attached Keratinized Gingiva (oral)",

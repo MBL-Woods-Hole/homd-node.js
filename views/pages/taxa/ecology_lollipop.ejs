@@ -25,9 +25,20 @@
     font-size:12px;
     display:none;
     color: white;
+    z-index:10;
+    
 }
 .legend_item{
    border:1px solid black;
+}
+#bplot{
+    position:relative;
+    left:10px;
+    top:200px;
+    font-size:12px;
+    z-index:1;
+    color: black;
+    
 }
 .abundance-table {
    border-collapse:collapse;
@@ -213,6 +224,14 @@
   
   <%- include('./ecology_lollipop_legend'); %>
 </div>
+<% if(breath_plot){ %>
+
+<div id="bplot" class='pill pill-aqua'>
+
+<a href="/view-pdf?fname=<%= breath_plot %>" target="_blank">Open PDF in New Tab</a>
+
+</div>
+<% } %>
 <div id="legend-return" class='pill pill-brown'>
   <a href='#' onclick='show_legend()'>Show Legend</a>
 </div>
@@ -643,7 +662,9 @@
     tooltips.mapping_log = d3.select("#plot_log_mapping_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
     
 
-
+// function open_breath_plot(){
+//     alert('open')
+// }
 function hide_legend(){
     document.getElementById('legend').style.display = 'none';
     document.getElementById('legend-return').style.display = 'block';
