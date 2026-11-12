@@ -33,10 +33,15 @@
 }
 #bplot{
     position:relative;
-    left:10px;
-    top:200px;
     font-size:12px;
     z-index:1;
+    color: black;
+    display:none;
+    float:right;
+    top:50px;
+}
+#bplot a{
+    
     color: black;
     
 }
@@ -109,10 +114,10 @@
    padding:2px 25px 2px 0;
    margin-right:8px;
    margin-top:20px;
-   background:dodgerblue;
-   color:ivory;
-   border:1px solid blue;
-   font-size:11px;
+   /* background:dodgerblue; */
+   color:black;
+   /* border:1px solid blue; */
+   font-size:13px;
 }
 </style>
 <% mapping_data = JSON.parse(mapping) %>
@@ -224,14 +229,7 @@
   
   <%- include('./ecology_lollipop_legend'); %>
 </div>
-<% if(breath_plot){ %>
 
-<div id="bplot" class='pill pill-aqua'>
-
-<a href="/view-pdf?fname=<%= breath_plot %>" target="_blank">Open PDF in New Tab</a>
-
-</div>
-<% } %>
 <div id="legend-return" class='pill pill-brown'>
   <a href='#' onclick='show_legend()'>Show Legend</a>
 </div>
@@ -282,6 +280,13 @@
 <center>No Available Datasets for <%= rank_show %>: <%= tax_name%></center>
 </div>
 <div id='mapping-div' >
+<% if(breadth_plot){ %>
+  <div id="bplot" class='pill-lg pill-aqua'>
+  <a href="https://homd.org/ftp/taxonomy/abundance/V1.0/breadth_vs_depth_plots/<%= breadth_plot %>" target="_blank">Open Breadth x Depth Coverage Plot in New Tab</a>
+  </div>
+<% }else{ %>
+    <div id="bplot"></div>
+<% } %>
      <center>
           <div class='plot-title'>
             <small>
@@ -562,6 +567,7 @@
   
   rank      =   '<%- rank %>'
   active = JSON.parse('<%- has_data %>')
+  console.log('act',active)
   mapping_data     = JSON.parse('<%- mapping %>')
   dewhirst_data     = JSON.parse('<%- dewhirst %>')
   erenv1v3_data        = JSON.parse('<%- erenv1v3 %>')
@@ -662,9 +668,7 @@
     tooltips.mapping_log = d3.select("#plot_log_mapping_here").append("div").style("position", "absolute").style('font-size','12').style("z-index", "10").style("visibility", "hidden").style("background-color", "white").style("border", "solid").style("border-width", "1px").style("border-radius", "5px").style("padding", "10px").style("text-align","left")
     
 
-// function open_breath_plot(){
-//     alert('open')
-// }
+
 function hide_legend(){
     document.getElementById('legend').style.display = 'none';
     document.getElementById('legend-return').style.display = 'block';
@@ -676,6 +680,11 @@ function show_legend(){
 function change_dataset(selected){
    console.log('selected',selected)
    dsets = ['erenv1v3','erenv3v5','hmpv1v3','hmpv3v5','metaphlan','dewhirst','mapping']
+   if(selected === 'mapping'){
+        document.getElementById('bplot').style.display = 'inline';
+   }else{
+        document.getElementById('bplot').style.display = 'none';
+   }
    var got_one_active = false
    for(n in active){
      if(active[n]){

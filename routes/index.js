@@ -220,21 +220,21 @@ router.post("/submit_phage_data", async function submit_phage_data(req, res) {
     return;
 });
 
-router.get("/view-pdf", (req, res) => {
-    const fname = req.query.fname;
-    if (ENV.DB_HOST == "localhost") {
-        res.send("Not available on localhost.");
-        return;
-    }
-    const filePath = ENV.FILEPATH_TO_FTP + "/taxonomy/abundance/V1.0/" + fname; //path.join(__dirname, 'sample.pdf');
-    console.log(filePath);
-    // Set headers for client-side inline viewing
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", 'inline; filename="sample.pdf"');
-
-    // Send the file
-    res.sendFile(filePath);
-});
+// router.get("/view-pdf", (req, res) => {
+//     const fname = req.query.fname;
+//     if (ENV.DB_HOST == "localhost") {
+//         res.send("Not available on localhost.");
+//         return;
+//     }
+//     const filePath = ENV.FILEPATH_TO_FTP + "taxonomy/abundance/V1.0/breadth_vs_depth_plots/" + fname; //path.join(__dirname, 'sample.pdf');
+//     console.log(filePath);
+//     // Set headers for client-side inline viewing
+//     res.setHeader("Content-Type", "application/pdf");
+//     res.setHeader("Content-Disposition", 'inline; filename="sample.pdf"');
+//
+//     // Send the file
+//     res.sendFile(filePath);
+// });
 // }); // end pipeline
 // })  // end anno query
 export default router;

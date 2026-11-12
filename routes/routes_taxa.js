@@ -2243,12 +2243,13 @@ router.get("/ecology", function ecology(req, res) {
         rank_show = rank.charAt(0).toUpperCase() + rank.slice(1);
     }
     let legend_visibility = "no_show"; // show or no_show
-    let breath_plot_url = "";
-    //console.log('C.breath_plots_by_otid',C.breath_plots_by_otid,breath_plot_url)
-    if (otid in C.breath_plots_by_otid) {
-        breath_plot_url = C.breath_plots_by_otid[otid].fname;
+    let breadth_plot_url = "";
+    //console.log('len',Object.keys(C.breadth_plots_by_otid).length)
+    //console.log('C.breadth_plots_by_otid',C.breadth_plots_by_otid,breadth_plot_url)
+    if (otid && Object.hasOwn(C.breadth_plots_by_otid, otid)) {
+        breadth_plot_url = C.breadth_plots_by_otid[otid].fname;
     }
-    //console.log('bp',otid,breath_plot_url)
+    //console.log('bp',otid,breadth_plot_url)
 
     res.render("pages/taxa/ecology_lollipop", {
         title: C.page_title + " ::" + rank_show + ":" + tax_name,
@@ -2262,7 +2263,7 @@ router.get("/ecology", function ecology(req, res) {
         legendvis: legend_visibility,
         //max: JSON.stringify({ 'hmp_refseqv1v3': hmp_refseqv1v3_max, 'hmp_refseqv3v5': hmp_refseqv3v5_max, 'hmp_metaphlan': hmp_metaphlan_max, 'dewhirst': dewhirst_max, 'erenv1v3': erenv1v3_max, 'erenv3v5': erenv3v5_max }),
         otid: otid, // zero unless species (or subspecies)
-        breath_plot: breath_plot_url,
+        breadth_plot: breadth_plot_url,
         bodysite: bodysite,
         genera: JSON.stringify(genera),
         text_file: text[0],
