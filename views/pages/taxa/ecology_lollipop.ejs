@@ -132,6 +132,7 @@
 <% site_colors_html = JSON.parse(site_colors) %>
 <% notes = JSON.parse(notes) %>
 <% hasdata = JSON.parse(has_data) %>
+<% cfg = JSON.parse(config) %>
 <%- include('../../partials/header_html'); %>
 
 
@@ -282,7 +283,7 @@
 <div id='mapping-div' >
 <% if(breadth_plot){ %>
   <div id="bplot" class='pill-lg pill-aqua'>
-  <a href="https://homd.org/ftp/taxonomy/abundance/V1.0/breadth_vs_depth_plots/<%= breadth_plot %>" target="_blank">Open Breadth x Depth Coverage Plot in New Tab</a>
+  <a href='<%= cfg.HOMD_FTP_URL %>taxonomy/abundance/V1.0/breadth_vs_depth_plots/<%= breadth_plot %>' target="_blank">Open Breadth x Depth Coverage Plot in New Tab</a>
   </div>
 <% }else{ %>
     <div id="bplot"></div>

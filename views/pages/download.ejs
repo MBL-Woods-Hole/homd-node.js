@@ -296,17 +296,26 @@ a{
       <td colspan='2'>Data from: <a href='<%= cfg.HOMD_FTP_URL %>taxonomy' target='_blank'>HOMD FTP Taxonomy Site</a></td>
     </tr>
     <tr>
-      <td>Abundance Data V0.7</td>
-      <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/HOMD_abundance_table_v0.7.csv' >HOMD Abundance Table Version 0.7 (csv) (taxonomy version 3.1)</a></td>
+      <td>Abundance Data V1.0 (current)</td>
+      <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/abundance/V1.0/HOMD_abundance_table_v1.0.csv' >HOMD Abundance Table Version 1.0 (csv) (taxonomy version 4.3)</a></td>
     </tr>
     <tr>
-      <td>Abundance Data V0.8</td>
-      <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/HOMD_abundance_table_v0.8.csv' >HOMD Abundance Table Version 0.8 (csv) (taxonomy version 4.2)</a></td>
+      <td>Breadth vs Depth Plots</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/abundance/V1.0/breadth_vs_depth_plots' target='_blank'>[FTP Site for download]</a></td>
     </tr>
     <tr>
       <td>Abundance Data V0.9</td>
-      <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/HOMD_abundance_table_v0.9.csv' >HOMD Abundance Table Version 0.9 (csv) (taxonomy version 4.3)</a></td>
+      <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/abundance/HOMD_abundance_table_v0.9.csv' >HOMD Abundance Table Version 0.9 (csv) (taxonomy version 4.3)</a></td>
     </tr>
+    <tr>
+      <td>Abundance Data V0.8</td>
+      <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/abundance/HOMD_abundance_table_v0.8.csv' >HOMD Abundance Table Version 0.8 (csv) (taxonomy version 4.2)</a></td>
+    </tr>
+    <tr>
+      <td>Abundance Data V0.7</td>
+      <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/abundance/HOMD_abundance_table_v0.7.csv' >HOMD Abundance Table Version 0.7 (csv) (taxonomy version 3.1)</a></td>
+    </tr>
+    
+    
     
   </table>
   </center>
@@ -331,7 +340,7 @@ a{
     <tr><td>Phylogenetic tree of HOMD 16S rRNA Reference Sequences</td>
         <td><a href="<%= cfg.HOMD_FTP_URL %><%= cfg.REFSEQ_TREE_PATH %>">svg</a></td>
         <td><a href='<%= cfg.HOMD_FTP_URL %><%= cfg.REFSEQ_NEWICK_TREE_PATH %>'>newick</a></td>
-        
+        <td></td>
     </tr>
     <tr><td>Phylogenetic tree of 16S rRNA gene sequences identified in HOMD genomes</td>
         <td><a href="<%= cfg.HOMD_FTP_URL %><%= cfg.GENE_TREE_PATH %>">svg</a></td>
