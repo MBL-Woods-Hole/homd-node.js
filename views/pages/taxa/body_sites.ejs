@@ -92,6 +92,7 @@ tr.selected td{
 <% data = JSON.parse(sites) %>
 <% has_abund_data =JSON.parse(has_data) %>
 <% subsp = JSON.parse(subs) %>
+<% ver = JSON.parse(ver_info) %>
 <%- include('../../partials/header_html'); %>
 
 <body>
@@ -103,8 +104,8 @@ tr.selected td{
     <div class='page-content' >
        
        <p class='title h3'>HOMD Taxa Preferred Body Sites <span style='font-size:.7em;'>(Torres-Morales et al., manuscript in revision)</span></p>
-       
-       <span class='small'>[<a href="javascript:window.history.back();"><-- Back</a>]&nbsp;&nbsp;&nbsp;&nbsp;[<a href='body_sites'>Reload Page</a>]</span>
+       <span >Body Sites Version: <%= ver.bsites_ver %></span>
+       <br><span class='small'>[<a href="javascript:window.history.back();"><-- Back</a>]&nbsp;&nbsp;&nbsp;&nbsp;[<a href='body_sites'>Reload Page</a>]</span>
        <a class='download_browser_text_excel'  href='/download/download/taxon' >Download Options</a> 
        <div id='main-box'>
        

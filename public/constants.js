@@ -8,6 +8,7 @@ constants.rRNA_refseq_version = "16.03"; // Used on title page header
 constants.genomic_refseq_version = "11.03"; // Used on title page header
 constants.homd_taxonomy_version = "4.3"; // Used on title page header
 constants.homd_ecology_version = "1.0";
+constants.homd_body_sites_version = "1.0";
 constants.virome_version = "1.2";
 constants.GTDB_version = "226"; // used on genome description page
 constants.version_information = {
@@ -17,6 +18,7 @@ constants.version_information = {
     vir_ver: constants.virome_version,
     gtdb_ver: constants.GTDB_version,
     eco_ver: constants.homd_ecology_version,
+    bsites_ver: constants.homd_body_sites_version,
 };
 constants.page_title = "HOMD V" + constants.homd_taxonomy_version;
 constants.page_title += ENV.ENV === "localhost" ? "Local" : "";
