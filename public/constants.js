@@ -6,7 +6,7 @@ constants.access_log_format =
 
 constants.rRNA_refseq_version = "16.03"; // Used on title page header
 constants.genomic_refseq_version = "11.03"; // Used on title page header
-constants.homd_taxonomy_version = "4.3"; // Used on title page header
+constants.homd_taxonomy_version = "4.3.1"; // Used on title page header
 constants.homd_ecology_version = "1.0";
 constants.homd_body_sites_version = "1.0";
 constants.virome_version = "1.2";
