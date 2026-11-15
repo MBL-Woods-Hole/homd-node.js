@@ -49,7 +49,9 @@ a{
   font-size:small;
   border:1px solid black;
 }
-
+.left{
+  text-align:left;
+}
 #download-refseq-table-div {
   border:1px solid grey;
   padding:8px;
@@ -68,6 +70,7 @@ a{
    border:1px solid black;
    border-collapse:collapse;
    padding:2px 5px;
+   text-align:left;
 }
 #download-refseq-table td:first-child{
    font-size:small;
@@ -183,42 +186,46 @@ a{
   </table>
   <br>
   <table class='download-table'>
-    <tr><th class='header'>Type</th><th class='header' colspan='2'>Versions</th></tr>
-    <tr>
+    <tr><th class='header'>Date</th><th class='header'>Type</th><th class='header' colspan='2'>Versions</th></tr>
+    <tr><td></td>
       <td colspan='2'>Data from: <a href='<%= cfg.HOMD_FTP_URL %>taxonomy' target='_blank'>HOMD FTP Taxonomy Site</a></td>
     </tr>
-    <tr>
+    <tr><td></td>
       <td>Comparison of V4.2 vs V3.1 HOMD Taxonomy </td>
       <td colspan='2'><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/HOMD_Compare_V4.2_V3.1_Taxonomy.csv'>V4.2 and V3.1 (csv)</a></td>
     </tr>
-    <tr>
+    <tr><td></td>
       <td>Comparison of V4.1 vs V3.1 HOMD Taxonomy </td>
       <td colspan='2'><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/HOMD_Compare_V4.1_V3.1_Taxonomy.csv'>V4.1 and V3.1 (csv)</a></td>
     </tr>
     
-    <tr>
+    <tr><td>2026-07-01</td>
+      <td>Tax Table Data File V4.3</td>
+      <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/HOMD_taxon_table_v4.3.csv' >HOMD Taxonomy Version 4.3 (csv)</a></td>
+    </tr>
+    <tr><td></td>
       <td>Tax Table Data File V4.2</td>
       <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/HOMD_taxon_table_v4.2.csv' >HOMD Taxonomy Version 4.2 (csv)</a></td>
     </tr>
-    <tr>
+    <tr><td></td>
       <td>Tax Table Data File V3.1</td>
       <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/HOMD_taxon_table_v3.1.csv' >HOMD Taxonomy Version 3.1 (csv)</a></td>
     </tr>
     
     
-    <tr>
+    <tr><td>2026-11-13</td>
       <td>Body Site Data V1.0 (current)</td>
       <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/HOMD_body_sites_table_v1.0.csv' >HOMD Body Sites Table Version 1.0 (csv) (taxonomy version 4.3)</a></td>
     </tr>
-    <tr>
+    <tr><td>2026-08-01</td>
       <td>Body Site Data V0.9</td>
       <td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/HOMD_body_sites_table_v0.9.csv' >HOMD Body Sites Table Version 0.9 (csv) (taxonomy version 4.3)</a></td>
     </tr>
-    <tr>
+    <tr><td></td>
       <td>Body Site Data V0.8</td>
       <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/HOMD_body_sites_table_v0.8.csv' >HOMD Body Sites Table Version 0.8 (csv) (taxonomy version 4.2)</a></td>
     </tr>
-    <tr>
+    <tr><td></td>
       <td>Body Site Data V0.7</td>
       <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/HOMD_body_sites_table_v0.7.csv' >HOMD Body Sites Table Version 0.7 (csv) (taxonomy version 3.1)</a></td>
     </tr>
@@ -257,7 +264,7 @@ a{
 <div id='abundance' class='dnld-block'>
   <center>
   <div class='subtitle indent'>
-    Abundance Data::Batch Downloads <small>[<a href='/taxa/ecology_home'>Visit Abundance Page</a>]</small>
+    Ecology / Abundance Data::Batch Downloads <small>[<a href='/taxa/ecology_home'>Visit Ecology Page</a>]</small>
   </div>
   <table class='download-table'>
     <tr><th class='header'>Type</th><th class='header' colspan='3'>Formats</th><th></th></tr>
@@ -299,26 +306,26 @@ a{
   </table>
   <br>
   <table class='download-table'>
-    <tr><th class='header'>Type</th><th class='header' colspan='2'>Versions</th></tr>
-    <tr>
+    <tr><th class='header'>Date</th><th class='header'>Type</th><th class='header' colspan='2'>Versions</th></tr>
+    <tr><td></td>
       <td colspan='2'>Data from: <a href='<%= cfg.HOMD_FTP_URL %>taxonomy' target='_blank'>HOMD FTP Taxonomy Site</a></td>
     </tr>
-    <tr>
+    <tr><td>2026-11-13</td>
       <td>Abundance Data V1.0 (current)</td>
       <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/abundance/V1.0/HOMD_abundance_table_v1.0.csv' >HOMD Abundance Table Version 1.0 (csv) (taxonomy version 4.3)</a></td>
     </tr>
-    <tr>
+    <tr><td>2026-11-13</td>
       <td>Breadth vs Depth Plots</td><td><a href='<%= cfg.HOMD_URL_BASE %>ftp/taxonomy/abundance/V1.0/breadth_vs_depth_plots' target='_blank'>[FTP Site for download]</a></td>
     </tr>
-    <tr>
+    <tr><td></td>
       <td>Abundance Data V0.9</td>
       <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/abundance/HOMD_abundance_table_v0.9.csv' >HOMD Abundance Table Version 0.9 (csv) (taxonomy version 4.3)</a></td>
     </tr>
-    <tr>
+    <tr><td></td>
       <td>Abundance Data V0.8</td>
       <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/abundance/HOMD_abundance_table_v0.8.csv' >HOMD Abundance Table Version 0.8 (csv) (taxonomy version 4.2)</a></td>
     </tr>
-    <tr>
+    <tr><td></td>
       <td>Abundance Data V0.7</td>
       <td><a href='<%= cfg.HOMD_FTP_URL %>taxonomy/abundance/HOMD_abundance_table_v0.7.csv' >HOMD Abundance Table Version 0.7 (csv) (taxonomy version 3.1)</a></td>
     </tr>

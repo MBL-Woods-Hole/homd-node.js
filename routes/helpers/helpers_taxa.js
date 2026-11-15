@@ -697,7 +697,7 @@ export const apply_ttable_filter = (req, filter) => {
 
     if (filter && filter.site.p_or_pst == "both") {
         // this is now default
-        console.log("filter primary_site only");
+        //console.log("filter primary_site only");
         big_tax_list = big_tax_list.filter(function (item) {
             // if (item.otid == 470) {
             //           logger.info('2-Found 470',item.otid)
