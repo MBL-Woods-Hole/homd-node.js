@@ -32,33 +32,31 @@ td, th {
   border:1px solid black;
   
 }
-#description_tbl{
-  width:100%;
-  font-size:small;
-}
-
-#description_tbl td td{
-  padding-left:5px;
-}
 
 
 .tbl-taxonomy{
   background:#deebf6;
+  border-left:1px solid grey;
 }
 .tbl-genomics{
   background:#fff1cd;
+  border-left:1px solid grey;
 }
 .tbl-pangenomics{
   background:#e3efda;
+  border-left:1px solid grey;
 }
 .tbl-rrna16s{
   background:#f9d2ba;
+  border-left:1px solid grey;
 }
 .tbl-ecology{
   background:#fec6ef;
+  border-left:1px solid grey;
 }
 .tbl-phage{
   background:#dedbf6;
+  border-left:1px solid grey;
 }
 #left-tbl td{
   padding:4px;
@@ -700,14 +698,14 @@ td, th {
                  <% rankname = "species" %>
                <% } %>
             &nbsp;&nbsp;&nbsp;
-               &nbsp;<small>Graph: [<a class='link' href='ecology?rank=<%= rankname %>&name=<%= ss %>'>link</a>]</small>
+               &nbsp;<small>[<a class='link' href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Open Abundance Plot</a>]</small>
                
             <% }else{ %>
                  [<small>No Abundance Data</small>]
             <% } %>
     </li>
-    <li>Site reason: </strong> <%- sites2.site_reason %></li>
-    <li>Curation reference </strong> <%- sites2.curation_reference %></li>
+    <li><strong>Source Notes: </strong> <%- sites2.site_reason %></li>
+    <li><strong>Reference URL: </strong> <%- sites2.curation_reference %></li>
     </td>
     
   </tr>

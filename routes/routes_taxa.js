@@ -1045,7 +1045,7 @@ router.get("/tax_description", async function TaxDescription(req, res) {
     const q_info = queries.get_taxon_info_query(otid);
     const q_pangenome = queries.get_pangenomes_query(otid);
     const q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes);
-
+    console.log("q_pangenome", q_pangenome);
     refseq = await queries.run_query(q_refseq_metadata, req, res);
     info = await queries.run_query(q_info, req, res);
     pangenomes = await queries.run_query(q_pangenome, req, res);
