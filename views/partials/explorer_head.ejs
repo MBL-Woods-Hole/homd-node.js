@@ -20,8 +20,8 @@
                  <div id='header_buttons' >
                   
                   <% if(anno_type == "prokka"){ %>
-                    &nbsp;<span class='an-button active' href=''>PROKKA</span>
                     &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=bakta'>BAKTA</a>
+                    &nbsp;<span class='an-button active' href=''>PROKKA</span>
                     <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
                         &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
                     <% }else{ %>
@@ -32,9 +32,8 @@
                   
                   
                   <% }else if(anno_type == "bakta"){ %>
-                    
-                    &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     &nbsp;<a class='an-button active' href=''>BAKTA</a>
+                    &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
                         &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
                     <% }else{ %>
@@ -45,8 +44,8 @@
                   
                   
                   <% }else if(anno_type == "ncbi"){ %>
-                    &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=bakta'>BAKTA</a>
+                    &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
                         &nbsp;<span class='an-button active' href=''>NCBI</span>
                     <% }else{ %>
@@ -56,8 +55,8 @@
                   
                   
                   <% }else { %>
-                    &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=bakta'>BAKTA</a>
+                    &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=prokka'>PROKKA</a>
                     <% if(no_ncbi_annotation.indexOf(gid) == -1 ){ %>
                         &nbsp;<a class='an-button' href='explorer?gid=<%= gid %>&anno=ncbi'>NCBI</a>
                     <% }else{ %>
@@ -78,8 +77,8 @@
                  </div>
          <% }else{ %>
              <div id='header_buttons' >
-                    &nbsp;<span class='an-button greyed' style='background:grey;'>PROKKA</span>
                     &nbsp;<span class='an-button greyed' style='background:grey;'>BAKTA</span>
+                    &nbsp;<span class='an-button greyed' style='background:grey;'>PROKKA</span>
                     &nbsp;<span class='an-button greyed' style='background:grey;'>NCBI</span>
                     &nbsp;<span class='an-button greyed' style='background:grey;'>BLAST</span>
                     

@@ -2,7 +2,9 @@
 /* Fix the tax table header */
 thead th { position: sticky; top: 0; }
 
-
+li{
+   line-height: 1.3;
+}
 
 #main-table {
   padding:5px;
@@ -87,6 +89,7 @@ tr.selected td{
 .small{
    font-size:9px;
 }
+
 </style>
 <link rel="stylesheet" type="text/css" href="/css/taxa_pages.css" >
 <% data = JSON.parse(sites) %>
@@ -161,8 +164,8 @@ tr.selected td{
                  
                  <td class='' >
                  <% for(let n in pts){ %>
-                   <a href='<%= pts[n] %>' target='_blank'>
-                   <%= pts[n] %></a>
+                   <li><a href='<%= pts[n] %>' target='_blank'>
+                   <%= pts[n] %></a></li>
                  <% } %>
                  </td> 
                

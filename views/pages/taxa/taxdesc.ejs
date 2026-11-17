@@ -5,7 +5,11 @@ td, th {
   vertical-align: top;
   text-align: left;
 }
- */
+*/
+li{
+   line-height: 1.4;
+}
+
 .taxon-data{
    /* font-family: "Lucida Console", "Courier New", monospace; */
    font-weight:normal;
@@ -32,33 +36,31 @@ td, th {
   border:1px solid black;
   
 }
-#description_tbl{
-  width:100%;
-  font-size:small;
-}
-
-#description_tbl td td{
-  padding-left:5px;
-}
 
 
 .tbl-taxonomy{
   background:#deebf6;
+  border-left:1px solid grey;
 }
 .tbl-genomics{
   background:#fff1cd;
+  border-left:1px solid grey;
 }
 .tbl-pangenomics{
   background:#e3efda;
+  border-left:1px solid grey;
 }
 .tbl-rrna16s{
   background:#f9d2ba;
+  border-left:1px solid grey;
 }
 .tbl-ecology{
   background:#fec6ef;
+  border-left:1px solid grey;
 }
 .tbl-phage{
   background:#dedbf6;
+  border-left:1px solid grey;
 }
 #left-tbl td{
   padding:4px;
@@ -258,6 +260,7 @@ td, th {
 <% links = JSON.parse(links) //refseq  %>
 <% sites = JSON.parse(sites) %>
 <% sites2 = JSON.parse(sites2) %>
+<% cfg = JSON.parse(config) %>
 
 <% taxidfullnameplus = "HMT-"+("0000" + otid).slice(-4); %>
 
@@ -446,11 +449,12 @@ td, th {
   <tr>
     <td class='taxon-bold tbl-taxonomy'>Former Names or Synonyms:</td>
     <td>
-       <table class='' border='0'>
+      
        <% for(n=0;n<data_lookup.synonyms.length;n++){ %>
-          <tr><td class='taxon-data' style='border:none;padding:0 1px;'><i><%- data_lookup.synonyms[n] %></i></td></tr>
+          <li><i><%- data_lookup.synonyms[n] %></i></li>
        <% } %>
-       </table>
+       
+       
     
     </td>
   </tr>
@@ -491,22 +495,11 @@ td, th {
     <td class='taxon-bold tbl-taxonomy'>PubMed Searches:</td>
     <td class='taxon-data'>
       <% if(data_lookup.naming_status === 'Named') { %>
-         
-       <table class='' border='0'>
-         
-            <tr><td></td><td class='link'><a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link
-              
-            </a></td></tr>
+        <li class='link'><a href='https://pubmed.ncbi.nlm.nih.gov/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI PubMed Link</a></li>
             <!-- nuccore/?term="genus+species"   -->
             <!-- nucleotide?cmd=search&term="data_lookup.genus data_lookup.species" -->
-            <tr><td></td><td class='link'><a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link
-            
-                      </a></td></tr>
-            <tr><td></td><td class='link'><a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link
-            
-            </a></td></tr>
-         
-       </table>
+        <li class='link'><a href='https://www.ncbi.nlm.nih.gov/nuccore/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Nucleotide Link</a></li>
+        <li class='link'><a href='https://www.ncbi.nlm.nih.gov/protein/?term=%22<%= links['ncbilink'] %>%22' target='_blank' rel="noopener noreferrer">NCBI (Entrez) Protein Link</a></li>
       <% }else{ %>
          Status: <%= data_lookup.naming_status %>
       <% } %>
@@ -583,9 +576,8 @@ td, th {
   <!-- GENOMICS DATA -->
   <tr><td  class='taxon-bold tbl-genomics' colspan='2'><center>GENOMICS</center></td></tr>
   <tr>
-    <td class='taxon-bold tbl-genomics'>Taxon Genomes:  <%= data_lookup.genomes.length %></td>
+    <td class='taxon-bold tbl-genomics' nowrap>Taxon Genomes:  <%= data_lookup.genomes.length %></td>
     <td class='taxon-data' nowrap>
-                
                 
                 <% if(data_lookup.genomes.length === 0){ %>
                     <small>No Genomes</small>
@@ -607,44 +599,32 @@ td, th {
                     &nbsp;&nbsp;&nbsp;OR&nbsp;&nbsp;&nbsp;
                      <a class='td-button' href='/genome/genome_table?otid=<%= otid %>'>Open in Table</a>
                 <% } %>
-                
-                
-                
-                
-                
             </td>
   </tr>
-  <tr>
-    <td class='taxon-bold tbl-genomics'>Proteomics:</td>
-    <td class='taxon-data'></td>
-  </tr>
+  
+  
    <tr>
     <td class='taxon-bold tbl-genomics'>Phylogenetic Trees:</td>
     <td class='taxon-data'>
     <% if(data_lookup.genomes.length > 0){ %>
-      <table class='' border='0'>
-          <tr><td>
-           <a class='link' href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>Conserved Proteins
-             
-            </a></td></tr>
-          <tr><td>
-          <a class='link' href='/genome/ribosomal_protein_tree?otid=<%= otid %>' target='_blank'>Ribosomal Proteins
-            
-          </a></td></tr>
-          <tr><td>
-          <a class='link' href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>16S rRNA Genes
-            
-          </a></td></tr>
-      </table>
+      <li><a class='link' href='/genome/conserved_protein_tree?otid=<%= otid %>' target='_blank'>Conserved Proteins</a></li>
+      <li><a class='link' href='/genome/ribosomal_protein_tree?otid=<%= otid %>' target='_blank'>Ribosomal Proteins</a></li>
+      <li><a class='link' href='/genome/rRNA_gene_tree?otid=<%= otid %>' target='_blank'>16S rRNA Genes</a></li>
+      
     <% }else{ %>
-      <table class='' border='0'>
-          <tr><td>View in genome tree (no genomes)</td></tr>
-          <tr><td>View in ribosome protein tree (no genomes)</td></tr>
-          <tr><td>View in 16S rRNA gene tree (no genomes)</td></tr>
-      </table>
+      <li>View in genome tree (no genomes)</li>
+      <li>View in ribosome protein tree (no genomes)</li>
+      <li>View in 16S rRNA gene tree (no genomes)</li>
     <% } %>
     </td>
   </tr>
+  <tr><td class="taxon-bold tbl-genomics">BLAST:</td>
+      <td class="taxon-data">
+         <li><a href='<%= cfg.BLAST_URL_BASE %>/genome_blast' target='_self'>Against all genomes</a></li>
+         <li><a class='' href='/genome/genome_table?otid=<%= otid %>'>Select a genome from table</a></li>
+      </td>
+  
+  
   <tr><td  class='taxon-bold tbl-pangenomics' colspan='2'><center>PANGENOMICS</center></td></tr>
   <tr>
     <td class='taxon-bold tbl-pangenomics'>Pangenome(s):</td>
@@ -681,7 +661,7 @@ td, th {
    <tr><td  class='taxon-bold tbl-ecology' colspan='2'><center>ECOLOGY</center></td></tr>
   <tr>
     <td class='taxon-bold tbl-ecology'> Body Site/Habitat:
-      <br>&nbsp;&nbsp;<small>[<a href='body_sites?otid=<%= otid %>'>View in Body Sites Table</a>]</small>
+      <br><li>&nbsp;&nbsp;<small>View in <br>&nbsp;&nbsp;[<a href='body_sites?otid=<%= otid %>'>Body Sites Table</a>]</small>
     </td>
     <td class='taxon-data'>
     <li><strong>General:</strong> <%- sites2.general_habitat %></li>
@@ -700,14 +680,28 @@ td, th {
                  <% rankname = "species" %>
                <% } %>
             &nbsp;&nbsp;&nbsp;
-               &nbsp;<small>Graph: [<a class='link' href='ecology?rank=<%= rankname %>&name=<%= ss %>'>link</a>]</small>
+               &nbsp;<small>[<a class='link' href='ecology?rank=<%= rankname %>&name=<%= ss %>'>Open Abundance Plots</a>]</small>
                
             <% }else{ %>
                  [<small>No Abundance Data</small>]
             <% } %>
     </li>
-    <li>Site reason: </strong> <%- sites2.site_reason %></li>
-    <li>Curation reference </strong> <%- sites2.curation_reference %></li>
+    <li><strong>Source Notes: </strong> <%- sites2.site_reason %></li>
+    <li>
+       <% if(sites2.curation_reference != ""){ %>
+        <% var pts = sites2.curation_reference.split(";") %>
+        
+        <strong>Reference URL(s):</strong> 
+        <% for(let n in pts){ %>
+                   <li><a href='<%= pts[n] %>' target='_blank'>
+                   <%= pts[n] %></a>
+        <% } %>
+       
+      
+      <% }else{ %>
+        <strong>Reference URL: </strong>
+      <% } %>
+    </li>
     </td>
     
   </tr>
@@ -729,8 +723,6 @@ td, th {
     
       <% if(data_lookup.naming_status != "Dropped"){ %>
         
-        
-
         <!-- OLD: >001A28SC | Bartonella schoenbuchensis | HMT-001 | Strain: A28SC | GB: GQ422708 | Status: Named | Preferred Habitat: Unassigned | Genome: yes -->
         <!-- NEW: >81531021 | Methanobrevibacter oralis | HMT-815 | Strain: DSM 7256 | PROKKA: SEQF3102_01675 | Status: Named | Genomes: 5 -->
         
@@ -767,6 +759,9 @@ td, th {
     
     
     </td>
+    <tr><td class='taxon-bold tbl-rrna16s'>BLAST:</td>
+    <td class='taxon-data'><a href='<%= cfg.BLAST_URL_BASE %>/refseq_blast'>RefSeq BLAST Server</a></td>
+    </tr>
   </tr>
   
   

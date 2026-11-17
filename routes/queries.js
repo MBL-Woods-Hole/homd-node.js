@@ -231,12 +231,7 @@ export const get_pangenomes_query = (otid) => {
     let q = "SELECT DISTINCT pangenomes.pangenome_name as pg";
     q += " FROM pangenome_genome";
     q += " JOIN pangenomes using(pangenome_id)";
-    q +=
-        " WHERE otid='" +
-        otid +
-        "' AND homd_genome_version = '" +
-        C.genomic_refseq_version +
-        "'";
+    q += " WHERE otid='" + otid + "' AND homd_genome_version = '11.02'";
     return q;
 };
 
