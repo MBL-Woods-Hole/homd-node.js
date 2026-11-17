@@ -804,58 +804,7 @@ function renderTaxonDescription(req, res, args) {
         //lineage: args.lineage_string,
     });
 }
-function renderTaxonDescriptionTEMP(req, res, args) {
-    logger.info("IN TEMP");
-    res.render("pages/taxa/taxdescORIGINAL", {
-        title: C.page_title + " :: Taxon Info",
-        pgname: "taxon/description", // for AbountThisPage
-        config: JSON.stringify(ENV),
-        ver_info: JSON.stringify(C.version_information),
 
-        otid: args.otid,
-        image_array: JSON.stringify(args.image_array),
-        data1: JSON.stringify(args.data1),
-        msg: args.msg,
-        text_file: args.text_file, // only 666 so far
-        tinfo: JSON.stringify(args.tinfo), // description
-        lin: JSON.stringify(args.lin), // lineage domain=>subspecies
-        data4: JSON.stringify(args.data4), // publications
-        refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
-        links: JSON.stringify(args.links),
-        sites: JSON.stringify(args.sites),
-        sites2: JSON.stringify(args.sites2),
-        gtdb: JSON.stringify(args.gtdbtax),
-        strains: JSON.stringify(args.gstrains),
-        otid_has_abundance: args.otid_has_abundance,
-        //lineage: args.lineage_string,
-    });
-}
-function renderTaxonDescriptionTEMP2(req, res, args) {
-    logger.info("IN TEMP");
-    res.render("pages/taxa/taxdescWORKING2", {
-        title: C.page_title + " :: Taxon Info",
-        pgname: "taxon/description", // for AbountThisPage
-        config: JSON.stringify(ENV),
-        ver_info: JSON.stringify(C.version_information),
-
-        otid: args.otid,
-        image_array: JSON.stringify(args.image_array),
-        data1: JSON.stringify(args.data1),
-        msg: args.msg,
-        text_file: args.text_file, // only 666 so far
-        tinfo: JSON.stringify(args.tinfo), // description
-        lin: JSON.stringify(args.lin), // lineage domain=>subspecies
-        data4: JSON.stringify(args.data4), // publications
-        refseq_info: JSON.stringify(args.refseq_info), // refseq, seqname, strain , genbank
-        links: JSON.stringify(args.links),
-        sites: JSON.stringify(args.sites),
-        sites2: JSON.stringify(args.sites2),
-        gtdb: JSON.stringify(args.gtdbtax),
-        strains: JSON.stringify(args.gstrains),
-        otid_has_abundance: args.otid_has_abundance,
-        //lineage: args.lineage_string,
-    });
-}
 ///
 router.get("/tax_description", async function TaxDescription(req, res) {
     logger.warn(req.query);
@@ -1140,13 +1089,7 @@ router.get("/tax_description", async function TaxDescription(req, res) {
     //args.lineage = lineage_string
     args.lin = lineage;
 
-    if (req.query.TMP == "1") {
-        renderTaxonDescriptionTEMP(req, res, args);
-    } else if (req.query.TMP == "2") {
-        renderTaxonDescriptionTEMP2(req, res, args);
-    } else {
-        renderTaxonDescription(req, res, args);
-    }
+    renderTaxonDescription(req, res, args);
 });
 
 router.post("/get_refseq", async function get_refseq(req, res) {
@@ -2426,87 +2369,6 @@ router.get("/dropped", async function dropped(req, res) {
         data: JSON.stringify(rows),
         row_count: rows.length,
     });
-});
-router.get("/tree_d3", function tree_d3(req, res) {
-    let unique_phyla_obj = {};
-    let file_name = "HOMD_16S_rRNA_RefSeq_V15.23.reroot.order.tre";
-    //let file_name = 'HOMD_16S_rRNA_RefSeq_Tree_V16.tre'
-    fs.readFile(
-        path.join("public/" + file_name),
-        "utf8",
-        function readTreeFile(err, data) {
-            if (err) {
-                console.error("xxx", err);
-            } else {
-                //let treedata = JSON.parse(data);
-                let refseq_tree_lookup = {};
-                for (let otid in C.refseq_lookup) {
-                    let hmt = helpers.make_otid_display_name(otid);
-                    //logger.info(otid, C.refseq_lookup[otid], C.taxon_lineage_lookup[otid])
-                    for (let n in C.refseq_lookup[otid]) {
-                        refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid] =
-                            {};
-                        refseq_tree_lookup[
-                            C.refseq_lookup[otid][n].refseqid
-                        ].hmt = hmt;
-                        if (Object.hasOwn(C.taxon_lineage_lookup, otid)) {
-                            unique_phyla_obj[
-                                C.taxon_lineage_lookup[otid].phylum
-                            ] = 1;
-                            refseq_tree_lookup[
-                                C.refseq_lookup[otid][n].refseqid
-                            ].phylum = C.taxon_lineage_lookup[otid].phylum;
-                            refseq_tree_lookup[
-                                C.refseq_lookup[otid][n].refseqid
-                            ].species = C.taxon_lineage_lookup[
-                                otid
-                            ].species.replace(/"/g, "");
-                            if (C.taxon_lineage_lookup[otid].subspecies) {
-                                refseq_tree_lookup[
-                                    C.refseq_lookup[otid][n].refseqid
-                                ].species =
-                                    C.taxon_lineage_lookup[
-                                        otid
-                                    ].species.replace(/"/g, "") +
-                                    " " +
-                                    C.taxon_lineage_lookup[otid].subspecies;
-                            }
-                        } else {
-                            refseq_tree_lookup[
-                                C.refseq_lookup[otid][n].refseqid
-                            ].phylum = "Dropped";
-                            refseq_tree_lookup[
-                                C.refseq_lookup[otid][n].refseqid
-                            ].species =
-                                C.taxon_lookup[otid].genus +
-                                " " +
-                                C.taxon_lookup[otid].species.replace(/"/g, "");
-                        }
-
-                        //refseq_tree_lookup[C.refseq_lookup[otid][n].refseqid].species = C.taxon_lineage_lookup[otid].species +' '+C.taxon_lineage_lookup[otid].subspecies
-                    }
-                }
-                let unique_phyla = Object.keys(unique_phyla_obj);
-                let unique_phyla_sorted = unique_phyla.sort();
-                unique_phyla_sorted.push("Dropped");
-                //unique_phyla_obj['Dropped'] = 1
-                //logger.info(refseq_tree_lookup)
-
-                res.render("pages/taxa/tree_d3", {
-                    title: C.page_title + " :: tree",
-                    pgname: "", // for AbountThisPage
-                    pgtitle: "D3 Tree",
-                    config: JSON.stringify(ENV),
-                    ver_info: JSON.stringify(C.version_information),
-
-                    mdata: JSON.stringify(refseq_tree_lookup),
-                    tdata: JSON.stringify(data),
-                    uphyla: JSON.stringify(unique_phyla_sorted),
-                    fname: file_name,
-                });
-            }
-        },
-    );
 });
 
 ////////////////////////////////////////////////////////////////////////////////////
