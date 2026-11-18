@@ -691,8 +691,8 @@ export const apply_ttable_filter = (req, filter) => {
     // PROBLEM: if there is no entry for a 'new' taxon in the otid_site table the
     // taxon will be excluded here from the taxon table
     //console.log('olength-1',big_tax_list.length)
-    //console.log('site_on',site_on)
-    //logger.info('status_on',status_on)
+    console.log("site_on", site_on);
+    //console.log('status_on',status_on)
     //logger.info('filter.site',filter.site)
 
     if (filter && filter.site.p_or_pst == "both") {
@@ -746,20 +746,41 @@ export const apply_ttable_filter = (req, filter) => {
                     C.site_lookup[item.otid].major_site_abundance +
                     ")";
                 return item;
-            } else if (
-                site_on.includes(
-                    helpers.getKeyByValue(C.tax_sites_all, item.body_site2),
-                )
-            ) {
-                //if(site_on.includes(item.sites[n].toLowerCase())){
-                //item.site = item.body_site;
-                item.site =
-                    C.site_lookup[item.otid].major_body_site +
-                    " (Abundance: " +
-                    C.site_lookup[item.otid].major_site_abundance +
-                    ")";
-                return item;
+            } else {
+                //console.log(item)
+                for (let i in site_on) {
+                    if (item.body_site2.toLowerCase().includes(site_on[i])) {
+                        item.site =
+                            C.site_lookup[item.otid].major_body_site +
+                            " (Abundance: " +
+                            C.site_lookup[item.otid].major_site_abundance +
+                            ")";
+                        return item;
+                    }
+                }
             }
+            //console.log(site_on)
+
+            // else if (
+            //                 //const hasSubstring = fruits.some(item => item.includes(substring));
+            //
+            //                 //site_on.some(item => item.body_site2 && item.includes(item.body_site2.toLowerCase()))   //540
+            //                 //
+            //                 site_on.includes(
+            //                    helpers.getKeyByValue(C.tax_sites_all, item.body_site2),   //550
+            //                 )
+            //
+            //             ) {
+            //                 //if(site_on.includes(item.sites[n].toLowerCase())){
+            //                 //item.site = item.body_site;
+            //
+            //                 item.site =
+            //                     C.site_lookup[item.otid].major_body_site +
+            //                     " (Abundance: " +
+            //                     C.site_lookup[item.otid].major_site_abundance +
+            //                     ")";
+            //                 return item;
+            //             }
         });
     } else {
         //C.site_lookup[1]

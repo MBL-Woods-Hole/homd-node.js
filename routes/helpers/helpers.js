@@ -592,13 +592,18 @@ export const calculate_homd_stats = () => {
     //logger.info(C.site_lookup['10'])
 
     count = homd_taxa.filter((item) => item.body_site === "Oral").length;
-    count_sec = homd_taxa.filter((item) => item.body_site2 === "Oral").length;
+
+    count_sec = homd_taxa.filter((item) =>
+        item.body_site2.includes("Oral"),
+    ).length;
     pct = (count / s.taxon_count) * 100;
     s.taxa_site_oral = { count: count, pct_of_taxa: pct.toFixed(1) };
     s.all_oral = count + count_sec;
 
     count = homd_taxa.filter((item) => item.body_site === "Nasal").length;
-    count_sec = homd_taxa.filter((item) => item.body_site2 === "Nasal").length;
+    count_sec = homd_taxa.filter((item) =>
+        item.body_site2.includes("Nasal"),
+    ).length;
     pct = (count / s.taxon_count) * 100;
     s.taxa_site_nasal = { count: count, pct_of_taxa: pct.toFixed(1) };
     s.all_nasal = count + count_sec;
