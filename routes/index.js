@@ -100,7 +100,7 @@ router.get("/get_fasta", async function get_fasta(req, res) {
     res.end();
 });
 
-router.get("/statistics", function poster(req, res) {
+router.get("/statistics", function statistics(req, res) {
     res.render("pages/statistics", {
         title: C.page_title + " :: Human Oral Microbiome Database",
         pgname: "", // for AbountThisPage

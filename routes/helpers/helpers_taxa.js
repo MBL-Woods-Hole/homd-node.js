@@ -746,20 +746,41 @@ export const apply_ttable_filter = (req, filter) => {
                     C.site_lookup[item.otid].major_site_abundance +
                     ")";
                 return item;
-            } else if (
-                site_on.includes(
-                    helpers.getKeyByValue(C.tax_sites_all, item.body_site2),
-                )
-            ) {
-                //if(site_on.includes(item.sites[n].toLowerCase())){
-                //item.site = item.body_site;
-                item.site =
-                    C.site_lookup[item.otid].major_body_site +
-                    " (Abundance: " +
-                    C.site_lookup[item.otid].major_site_abundance +
-                    ")";
-                return item;
+            } else {
+                //console.log(item)
+                for (let i in site_on) {
+                    if (item.body_site2.toLowerCase().includes(site_on[i])) {
+                        item.site =
+                            C.site_lookup[item.otid].major_body_site +
+                            " (Abundance: " +
+                            C.site_lookup[item.otid].major_site_abundance +
+                            ")";
+                        return item;
+                    }
+                }
             }
+            //console.log(site_on)
+
+            // else if (
+            //                 //const hasSubstring = fruits.some(item => item.includes(substring));
+            //
+            //                 //site_on.some(item => item.body_site2 && item.includes(item.body_site2.toLowerCase()))   //540
+            //                 //
+            //                 site_on.includes(
+            //                    helpers.getKeyByValue(C.tax_sites_all, item.body_site2),   //550
+            //                 )
+            //
+            //             ) {
+            //                 //if(site_on.includes(item.sites[n].toLowerCase())){
+            //                 //item.site = item.body_site;
+            //
+            //                 item.site =
+            //                     C.site_lookup[item.otid].major_body_site +
+            //                     " (Abundance: " +
+            //                     C.site_lookup[item.otid].major_site_abundance +
+            //                     ")";
+            //                 return item;
+            //             }
         });
     } else {
         //C.site_lookup[1]
