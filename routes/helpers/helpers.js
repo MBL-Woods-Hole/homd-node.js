@@ -604,7 +604,6 @@ export const calculate_homd_stats = () => {
     count = homd_taxa.filter(
         (item) =>
             item.naming_status.toLowerCase().slice(0, 5) === "named" &&
-            item.cultivation_status.toLowerCase().slice(0, 4) === "cult" &&
             (item.body_site === "Oral" || item.body_site2.includes("Oral")),
     ).length;
     pct = (count / s.all_oral) * 100;
