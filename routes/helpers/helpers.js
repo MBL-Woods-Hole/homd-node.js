@@ -580,6 +580,7 @@ export const calculate_homd_stats = () => {
             item.naming_status.toLowerCase().slice(0, 7) === "unnamed" &&
             item.cultivation_status.toLowerCase().slice(0, 4) === "cult",
     ).length;
+
     pct = (count / s.taxon_count) * 100;
     s.taxa_status_unnamed_cult = { count: count, pct_of_taxa: pct.toFixed(1) };
 
@@ -600,6 +601,45 @@ export const calculate_homd_stats = () => {
     s.taxa_site_oral = { count: count, pct_of_taxa: pct.toFixed(1) };
     s.all_oral = count + count_sec;
 
+    // Oral named,cult
+    count = homd_taxa.filter(
+        (item) =>
+            item.naming_status.toLowerCase().slice(0, 5) === "named" &&
+            item.cultivation_status.toLowerCase().slice(0, 4) === "cult" &&
+            (item.body_site === "Oral" || item.body_site2.includes("Oral")),
+    ).length;
+    pct = (count / s.all_oral) * 100;
+    s.taxa_status_oral_named_cult = {
+        count: count,
+        pct_of_oral_taxa: pct.toFixed(1),
+    };
+
+    // Oral unamed,but cultivated
+    count = homd_taxa.filter(
+        (item) =>
+            item.naming_status.toLowerCase().slice(0, 7) === "unnamed" &&
+            item.cultivation_status.toLowerCase().slice(0, 4) === "cult" &&
+            (item.body_site === "Oral" || item.body_site2.includes("Oral")),
+    ).length;
+    pct = (count / s.all_oral) * 100;
+    s.taxa_status_oral_unnamed_cult = {
+        count: count,
+        pct_of_oral_taxa: pct.toFixed(1),
+    };
+
+    // Oral phylotype
+    count = homd_taxa.filter(
+        (item) =>
+            item.naming_status.toLowerCase().slice(0, 9) === "phylotype" &&
+            (item.body_site === "Oral" || item.body_site2.includes("Oral")),
+    ).length;
+    pct = (count / s.all_oral) * 100;
+    s.taxa_status_oral_phylotype = {
+        count: count,
+        pct_of_oral_taxa: pct.toFixed(1),
+    };
+
+    // Other Body_Sites
     count = homd_taxa.filter((item) => item.body_site === "Nasal").length;
     count_sec = homd_taxa.filter((item) =>
         item.body_site2.includes("Nasal"),
