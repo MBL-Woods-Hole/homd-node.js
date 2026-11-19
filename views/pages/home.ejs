@@ -38,10 +38,10 @@
             <span class='underline'><a href='#' onclick="show_specific_ttable('nasal_only')"><%= s.all_nasal %></a></span> 
             taxa are nasal. 
             
-            Of the oral taxa, 
-            <%= parseFloat(s.taxa_status_named_cult.pct_of_taxa) + parseFloat(s.taxa_status_named_uncult.pct_of_taxa) %>% are named, 
-            <%= s.taxa_status_unnamed_cult.pct_of_taxa %>% unnamed but cultivated and 
-            <%= s.taxa_status_phylotype.pct_of_taxa %>% are known only as 
+            Of the <%= s.all_oral %> oral taxa, 
+            <%= s.taxa_status_oral_named_cult.pct_of_oral_taxa %>% are named, 
+            <%= s.taxa_status_oral_unnamed_cult.pct_of_oral_taxa %>% unnamed but cultivated and 
+            <%= s.taxa_status_oral_phylotype.pct_of_oral_taxa %>% are known only as 
             uncultivated phylotypes.
             
             View the <span class='underline'><a href='statistics'>full statistics here</a></span>.
