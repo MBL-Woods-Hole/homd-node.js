@@ -601,7 +601,7 @@ export const calculate_homd_stats = () => {
     s.taxa_site_oral = { count: count, pct_of_taxa: pct.toFixed(1) };
     s.all_oral = count + count_sec;
 
-    // Oral named,cult
+    // Oral Named (include both Named cultured and Named uncultured)
     count = homd_taxa.filter(
         (item) =>
             item.naming_status.toLowerCase().slice(0, 5) === "named" &&
@@ -614,11 +614,10 @@ export const calculate_homd_stats = () => {
         pct_of_oral_taxa: pct.toFixed(1),
     };
 
-    // Oral unamed,but cultivated
+    // Oral Nnamed
     count = homd_taxa.filter(
         (item) =>
             item.naming_status.toLowerCase().slice(0, 7) === "unnamed" &&
-            item.cultivation_status.toLowerCase().slice(0, 4) === "cult" &&
             (item.body_site === "Oral" || item.body_site2.includes("Oral")),
     ).length;
     //console.log('length UnNamed',count)
@@ -631,7 +630,7 @@ export const calculate_homd_stats = () => {
     //length UnNamed 102
     //length Phylo 162
     // sum 548
-    // Oral phylotype
+    // Oral Phylotype
     count = homd_taxa.filter(
         (item) =>
             item.naming_status.toLowerCase().slice(0, 9) === "phylotype" &&
