@@ -33,9 +33,11 @@ router.get("/download/:q", function download(req, res) {
         ver_info: JSON.stringify(C.version_information),
     });
 });
+//
 router.get("/download", function download(req, res) {
     res.redirect("download/all");
 });
+//
 router.get("/download_file", function download_file(req, res) {
     //let page = req.params.pagecode
     console.log("IN download_file");
@@ -44,9 +46,33 @@ router.get("/download_file", function download_file(req, res) {
     res.download(fullpath);
     //res.end()
 });
+//
+router.get("/dld_table/:table/:type/", async function dld_table(req, res) {
+    // table could be dropped,tax,genome
+    // type is browser-text-excel
+    let dt = helpers.get_today_obj();
+    let table = req.params.table;
+    let type = req.params.type;
+    console.log(table, type);
+    let q, rows, table_tsv;
+    if (table === "dropped") {
+        q = queries.get_dropped_taxa();
+    } else if (table === "body_sites") {
+        q = queries.get_body_sites();
+    } else {
+        return;
+    }
+    rows = await queries.run_query(q, req, res);
+    table_tsv = get_download_table(rows);
+    if (type === "browser") {
+        res.set("Content-Type", "text/plain"); // <= important - allows tabs to display
+    }
 
+    res.send(table_tsv);
+    res.end();
+});
 router.get("/dld_taxtable_all/:type/", function dld_taxtable_all(req, res) {
-    //router.get('/dld_table_all/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
+    // from downloads page
     let dt = helpers.get_today_obj();
 
     let type = req.params.type;
@@ -160,6 +186,7 @@ router.get("/dld_refseqtable_all/:type", function dld_refseqtable(req, res) {
     res.end();
 });
 router.get("/dld_taxtable/:type", function dld_taxtable(req, res) {
+    // from taxtable page (browser/text/excel)
     let dt = helpers.get_today_obj();
 
     let send_list;
@@ -274,26 +301,26 @@ router.get("/dld_tax/:type/:fxn", function dld_tax(req, res) {
     res.send(table_tsv);
     res.end();
 });
-router.get("/dld_tax_table/:version/", function dld_tax_table(req, res) {
-    // these are pre downloaded and reside in STATIC_DOWNLOADS
-    let version = req.params.version;
-    if (version === "V31") {
-        let fullpath = path.join(
-            ENV.PATH_TO_STATIC_DOWNLOADS,
-            "HOMD_taxon_tableV31.xls",
-        );
-        res.download(fullpath);
-    } else if (version === "V42") {
-        let fullpath = path.join(
-            ENV.PATH_TO_STATIC_DOWNLOADS,
-            "HOMD_taxon_tableV42.xls",
-        );
-        res.download(fullpath);
-    } else {
-        logger.error("ERROR - no version");
-    }
-    return;
-});
+// router.get("/dld_tax_table/:version/", function dld_tax_table(req, res) {
+//     // these are pre downloaded and reside in STATIC_DOWNLOADS
+//     let version = req.params.version;
+//     if (version === "V31") {
+//         let fullpath = path.join(
+//             ENV.PATH_TO_STATIC_DOWNLOADS,
+//             "HOMD_taxon_tableV31.xls",
+//         );
+//         res.download(fullpath);
+//     } else if (version === "V42") {
+//         let fullpath = path.join(
+//             ENV.PATH_TO_STATIC_DOWNLOADS,
+//             "HOMD_taxon_tableV42.xls",
+//         );
+//         res.download(fullpath);
+//     } else {
+//         logger.error("ERROR - no version");
+//     }
+//     return;
+// });
 router.get("/dld_taxabund/:type/:source/", function dld_taxabund(req, res) {
     //logger.info('in dld abund - taxon')
     let dt = helpers.get_today_obj();
@@ -2056,5 +2083,20 @@ function create_genome_table(gids, source, type, startText) {
 //         fs.unlink(destinationPath, () => callback(err));
 //     });
 // };
-
+function get_download_table(sqlrows) {
+    let tmp,
+        text = "";
+    // must have otid
+    let headers = Object.keys(sqlrows[0]);
+    text += headers.join("\t") + "\n";
+    //console.log(sqlrows)
+    for (let n in sqlrows) {
+        tmp = [];
+        for (let x in headers) {
+            tmp.push(sqlrows[n][headers[x]]);
+        }
+        text += tmp.join("\t") + "\n";
+    }
+    return text;
+}
 export default router;
