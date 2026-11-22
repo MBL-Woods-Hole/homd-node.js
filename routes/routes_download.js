@@ -44,7 +44,31 @@ router.get("/download_file", function download_file(req, res) {
     res.download(fullpath);
     //res.end()
 });
+//
+router.get("/dld_table/:table/:type/", async function dld_table(req, res) {
+    // table could be dropped,tax,genome
+    // type is browser-text-excel
+    let dt = helpers.get_today_obj();
+    let table = req.params.table;
+    let type = req.params.type;
+    console.log(table, type);
+    let q, rows, table_tsv;
+    if (table === "dropped") {
+        q = queries.get_dropped_taxa();
+    } else if (table === "body_sites") {
+        q = queries.get_body_sites();
+    } else {
+        return;
+    }
+    rows = await queries.run_query(q, req, res);
+    table_tsv = get_download_table(rows);
+    if (type === "browser") {
+        res.set("Content-Type", "text/plain"); // <= important - allows tabs to display
+    }
 
+    res.send(table_tsv);
+    res.end();
+});
 router.get("/dld_taxtable_all/:type/", function dld_taxtable_all(req, res) {
     //router.get('/dld_table_all/:type/:letter/:stati/:search_txt/:search_field', function dld_tax_table(req, res) {
     let dt = helpers.get_today_obj();
@@ -2056,5 +2080,20 @@ function create_genome_table(gids, source, type, startText) {
 //         fs.unlink(destinationPath, () => callback(err));
 //     });
 // };
-
+function get_download_table(sqlrows) {
+    let tmp,
+        text = "";
+    // must have otid
+    let headers = Object.keys(sqlrows[0]);
+    text += headers.join("\t") + "\n";
+    //console.log(sqlrows)
+    for (let n in sqlrows) {
+        tmp = [];
+        for (let x in headers) {
+            tmp.push(sqlrows[n][headers[x]]);
+        }
+        text += tmp.join("\t") + "\n";
+    }
+    return text;
+}
 export default router;

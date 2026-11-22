@@ -123,7 +123,20 @@ export const get_taxon_info_query = (otid) => {
     q += " WHERE otid='" + otid + "'";
     return q;
 };
+export const get_body_sites = () => {
+    let q = "SELECT otid,genus,species,general_habitat,major_body_site,";
+    q += " secondary_sites,major_site_abundance,";
+    q += " subsite_of_primary,secondary_site_abundance,";
+    q += " site_reason,curation_reference";
 
+    q += " FROM otid_prime";
+    q += " JOIN body_sites using(otid)";
+    q += " JOIN taxonomy using(taxonomy_id)";
+    q += " JOIN genus using(genus_id)";
+    q += " JOIN species using (species_id)";
+    q += " ORDER BY genus,species";
+    return q;
+};
 export const get_dropped_taxa = () => {
     let q =
         "SELECT otid, naming_status, cultivation_status, notes, genus, species from otid_prime";
