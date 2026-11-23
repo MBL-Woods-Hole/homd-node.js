@@ -120,7 +120,7 @@ if __name__ == "__main__":
         args.DATABASE = 'homd'
         dbhost= '192.168.1.71'
     
-    elif args.dbhost == 'homd_dev':
+    elif args.dbhost == 'homd_v431':
         args.DATABASE = 'homd'
         dbhost= '192.168.1.73'
     

@@ -16,7 +16,12 @@
 .bold-text{
    font-weight:bold;
 }
+#main_table{
 
+}
+#main_table td{
+   padding:5px;
+}
 </style>
 <div id='filter_form_div'>
 
@@ -72,13 +77,14 @@
   class="btn btn-secondary btn-sm" 
   disabled
   >
-  Reset Filters
+  Reset<br>Filters
 </a>
 
 
 </td><td>
         
 <table id='filter_table' border='1'>
+
 <tr>
 <td class=''>
        
@@ -248,9 +254,9 @@
             </span>
             <span class='nowrap'>
             <% if(statusfltr.status.dropped === 'on'){ %>
-                <input type='checkbox' checked class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
+                <input type='checkbox' checked class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped/Merged&nbsp;
             <% }else{ %>
-                <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped&nbsp;
+                <input type='checkbox' class='filter_ckbx' id='dropped' name='dropped' onclick='update_sb()' \> Dropped/Merged&nbsp;
             <% } %>
             </span>
             <span class='nowrap'>
@@ -265,14 +271,6 @@
          </small>
 </td>
 </tr>
-
-
-
-
-
-
-
-
 
  <tr><td>
  <button id='form_btn' type='submit' class='button' value='Submit'>Apply</button>

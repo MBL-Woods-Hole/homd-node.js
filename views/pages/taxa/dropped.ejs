@@ -82,6 +82,7 @@ thead th { position: sticky; top: 0; }
         <th class="col1 sorttable_nosort" nowrap></th>
         <th class="col2" nowrap>Taxon-ID</th>
         <th scope="colx" nowrap>Genus-Species</th>
+        <th scope="colx" nowrap>Status</th>
         <th nowrap>Reason for Being Dropped</th>
       </tr>
      </thead>
@@ -93,6 +94,7 @@ thead th { position: sticky; top: 0; }
        <td class='col1'><%= parseInt(n)+1 %></td>
        <td class='center'><a href='/taxa/tax_description?gid=&otid=<%= list[n].otid %>'><%= taxidfullname %></a></td>
        <td title=''><%= list[n].genus %> <%= list[n].species %></td>
+       <td title=''><%= list[n].naming_status %></td>
        <td title=''><%= list[n].notes %></td>
        </tr>
      <% } %>

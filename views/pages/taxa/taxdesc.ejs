@@ -247,6 +247,13 @@ li{
     width: 100%;
     padding:10px;
 }
+#dropped-warning{
+    color:black;
+    background:orange;
+    padding: 20px;
+    border:1px solid black;
+    font-size:20px;
+}
 </style>
 
 <%- include('../../partials/header_html'); %>
@@ -283,11 +290,19 @@ li{
   
 
 
-<center><span id='lineage'><%= data_lineage.domain %>;<%= data_lineage.phylum %>;<%= data_lineage.klass %>;<%= data_lineage.order %>;<%= data_lineage.family %>;<%= data_lineage.species %>
+<center>
+<span id='lineage'><%= data_lineage.domain %>;<%= data_lineage.phylum %>;<%= data_lineage.klass %>;<%= data_lineage.order %>;<%= data_lineage.family %>;<%= data_lineage.species %>
+            <%= data_lineage.subspecies %>
+        </span>
+<% if(data_lookup.active_status == "Dropped"){ %>
+    <div id="dropped-warning">
+        
+       This taxon has been dropped from the HOMD database.
+        <br>Reason: <%= data_lookup.notes %>
+    </div>
 
-  <%= data_lineage.subspecies %>
-
-</span></center>
+<% } %>
+</center>
 
 <div id='tables'>
 <br><!-- <div id='status'>Preferred Body Site(s): [<%= data_lookup.sites %>]</div> -->
@@ -688,7 +703,7 @@ li{
     </li>
     <li><strong>Source Notes: </strong> <%- sites2.site_reason %></li>
     <li>
-       <% if(sites2.curation_reference != ""){ %>
+       <% if(Object.keys(sites2).length && sites2.curation_reference != ""){ %>
         <% var pts = sites2.curation_reference.split(";") %>
         
         <strong>Reference URL(s):</strong> 

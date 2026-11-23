@@ -864,7 +864,8 @@ router.get("/tax_description", async function TaxDescription(req, res) {
     let lineage;
 
     let text_file = get_rank_text("species", "", otid);
-    console.log(C.taxon_lookup["209"]);
+    //console.log('175 taxonlookup',C.taxon_lookup["175"]);
+    //console.log('4 sitelookup',C.site_lookup["4"]);
     if (C.dropped_taxids.indexOf(otid) !== -1) {
         lookup_data = C.taxon_lookup[otid];
         let hmt = helpers.make_otid_display_name(otid);
@@ -917,6 +918,7 @@ router.get("/tax_description", async function TaxDescription(req, res) {
         //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
         //DROPPED-DROPPED-DROPPED-DROPPED-DROPPED-DROPPED
         //args = {filter:filter, send_list: send_list, count_txt: count_txt, pd:page_data, filter_on: get_filter_on(filter,'genome')}
+
         let args = { otid: otid };
         args.image_array = [];
         args.data1 = lookup_data;
@@ -930,6 +932,7 @@ router.get("/tax_description", async function TaxDescription(req, res) {
         args.refseq_info = {};
         args.links = links;
         args.sites = sites;
+        args.sites2 = {};
         args.otid_has_abundance = false;
         args.gstrains = {};
         //args.lineage = lineage_string
@@ -994,7 +997,7 @@ router.get("/tax_description", async function TaxDescription(req, res) {
     const q_info = queries.get_taxon_info_query(otid);
     const q_pangenome = queries.get_pangenomes_query(otid);
     const q_gtdb_tax = queries.get_gtdb_tax(lookup_data.genomes);
-    console.log("q_pangenome", q_pangenome);
+
     refseq = await queries.run_query(q_refseq_metadata, req, res);
     info = await queries.run_query(q_info, req, res);
     pangenomes = await queries.run_query(q_pangenome, req, res);
@@ -2362,7 +2365,7 @@ router.get("/dropped", async function dropped(req, res) {
     res.render("pages/taxa/dropped", {
         title: C.page_title + " :: Dropped Taxa",
         pgname: "", // for AbountThisPage
-        pgtitle: "Dropped Taxa Table",
+        pgtitle: "Dropped / Merged Taxa Table",
         config: JSON.stringify(ENV),
         ver_info: JSON.stringify(C.version_information),
 

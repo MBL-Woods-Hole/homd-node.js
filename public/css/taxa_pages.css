@@ -190,16 +190,9 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
   color:darkgrey;
   background:lightgrey;
 }
-#tax_filter_form{
-   padding:0 40px;
-}
-#main_table td{
-   padding:0 30px;
-   
-   
-}
+
 #filter_table{
-   
+   width:auto;
    border-collapse:colapse;
 }
 #filter_table td{
