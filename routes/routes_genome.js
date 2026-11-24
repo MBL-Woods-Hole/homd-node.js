@@ -310,8 +310,12 @@ router.get("/genome_description", async function Description(req, res) {
         req.session.gtable_filter.gid = req.query.gid;
     }
     const gid = req.query.gid;
-    let data;
 
+    let data,
+        warning = "";
+    if (C.wrong_hmt_genomes1.indexOf(gid) != -1) {
+        warning = C.wrong_hmt_warning1;
+    }
     //logger.info('data',data)
     const q_genome = queries.get_genome(gid);
     const q_contig = queries.get_contigs(gid);
@@ -377,6 +381,7 @@ router.get("/genome_description", async function Description(req, res) {
         gid: gid,
         contigs: JSON.stringify(contigs.sort()),
         crispr: crispr,
+        warning: warning,
         // data2: JSON.stringify(data2),
         // data3: JSON.stringify(data3),
         // data4: JSON.stringify(data4),

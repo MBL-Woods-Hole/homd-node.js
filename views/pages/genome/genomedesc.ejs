@@ -122,7 +122,11 @@
   font-family: sans-serif;
   text-align: center;
 }
-
+.warn{
+ width:60%;
+ padding:5px;
+ background: orange;
+}
 </style>
 <%- include('../../partials/header_html'); %>
 <% ginfo=JSON.parse(data1) %>
@@ -179,7 +183,9 @@
               </a>
           </div>
 
-
+<% if(warning){ %>
+    <div class='warn'><%- warning %></div>
+<% } %>
 
                   <div class="table-div">
                     <!-- https://dev.to/flippedcoding/how-to-make-a-table-without-using-the-html-table-elements-5e11 -->

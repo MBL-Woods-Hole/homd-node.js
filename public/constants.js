@@ -36,6 +36,37 @@ constants.user_security_levels = {
     99: "Guest User",
 };
 //constants.ranks = ["domain", "phylum", "klass", "order", "family", "genus", "species"];
+constants.wrong_hmt_warning1 =
+    "Note: This genome is in HMT-0031 <i>Corynebacterium amycolatum</i>, NOT HMT-0047 <i>Corynebacterium jeikeium</i> as this meta page shows. Correction will be done in the next HOMD Reference Genome update.";
+constants.wrong_hmt_genomes1 = [
+    "GCA_000411235.1",
+    "GCA_001722255.1",
+    "GCA_001807075.1",
+    "GCA_001807105.1",
+    "GCA_001809065.1",
+    "GCA_001809225.1",
+    "GCA_001809925.1",
+    "GCA_001810195.1",
+    "GCA_001810555.1",
+    "GCA_001810585.1",
+    "GCA_001811205.1",
+    "GCA_001811805.1",
+    "GCA_001812845.1",
+    "GCA_001814235.1",
+    "GCA_001815745.1",
+    "GCA_001837705.1",
+    "GCA_001838205.1",
+    "GCA_001838215.1",
+    "GCA_001975925.1",
+    "GCA_002847785.1",
+    "GCA_002861405.1",
+    "GCA_008368695.1",
+    "GCA_008726175.1",
+    "GCA_008726215.1",
+    "GCA_008726455.1",
+    "GCA_020161895.1",
+    "GCA_022346265.1",
+];
 constants.ranks = [
     "domain",
     "phylum",
