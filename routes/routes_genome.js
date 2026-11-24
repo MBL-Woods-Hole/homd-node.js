@@ -315,6 +315,10 @@ router.get("/genome_description", async function Description(req, res) {
         warning = "";
     if (C.wrong_hmt_genomes1.indexOf(gid) != -1) {
         warning = C.wrong_hmt_warning1;
+    } else if (C.wrong_hmt_genomes2.indexOf(gid) != -1) {
+        warning = C.wrong_hmt_warning2;
+    } else if (C.wrong_hmt_genomes3.indexOf(gid) != -1) {
+        warning = C.wrong_hmt_warning3;
     }
     //logger.info('data',data)
     const q_genome = queries.get_genome(gid);

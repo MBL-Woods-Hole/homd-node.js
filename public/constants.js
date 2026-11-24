@@ -67,6 +67,12 @@ constants.wrong_hmt_genomes1 = [
     "GCA_020161895.1",
     "GCA_022346265.1",
 ];
+constants.wrong_hmt_warning2 =
+    "Note: Genomic phylogenetic trees indicate this genome should be in HMT-0638 <i>Streptococcus infantis</i> clade-638, not HMT-0677 <i>Streptococcus mitis</i> as this meta page shows. Correction will be done in the next HOMD Reference Genome update.";
+constants.wrong_hmt_genomes2 = ["GCA_902159415.1"];
+constants.wrong_hmt_warning3 =
+    "Note: Genomic phylogenetic trees indicate this genome should be in HMT-0351 <i>Nanosyncoccus sp.<i>, not HMT-0364 <i>Nanosyncoccus sp.<i> as this meta page shows. Correction will be done in the next HOMD Reference Genome update.";
+constants.wrong_hmt_genomes3 = ["GCA_013333375.2"];
 constants.ranks = [
     "domain",
     "phylum",
